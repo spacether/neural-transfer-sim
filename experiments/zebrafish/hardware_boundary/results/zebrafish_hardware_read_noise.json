@@ -1,0 +1,83 @@
+{
+  "experiment": "zebrafish_hardware_read_noise",
+  "description": "Zebrafish: hardware boundary \u2014 read_noise",
+  "timestamp": "2026-11-04T07:47:38Z",
+  "git_commit": "1257c28",
+  "parameters": {
+    "seeds": 5
+  },
+  "metrics": [
+    "noise_sigma",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "decoding"
+  ],
+  "results": [
+    {
+      "noise_sigma": 0.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690856353731825,
+      "mse": 7.334975874855128,
+      "rsa": 0.9614777056914974,
+      "decoding": 0.9800000000000001
+    },
+    {
+      "noise_sigma": 0.05,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690785334886944,
+      "mse": 7.3366729972165645,
+      "rsa": 0.9614646034480326,
+      "decoding": 0.9800000000000001
+    },
+    {
+      "noise_sigma": 0.1,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690786247742761,
+      "mse": 7.336597553716203,
+      "rsa": 0.9614785125869062,
+      "decoding": 0.9800000000000001
+    },
+    {
+      "noise_sigma": 0.2,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690726355691268,
+      "mse": 7.338194009183866,
+      "rsa": 0.9614945990507368,
+      "decoding": 0.9800000000000001
+    },
+    {
+      "noise_sigma": 0.3,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690822526869116,
+      "mse": 7.336069624070002,
+      "rsa": 0.9614823863797595,
+      "decoding": 0.9800000000000001
+    },
+    {
+      "noise_sigma": 0.5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9689355071458523,
+      "mse": 7.37038583296719,
+      "rsa": 0.9613298860615526,
+      "decoding": 0.9800000000000001
+    },
+    {
+      "noise_sigma": 0.75,
+      "transfer_rate": 1.0,
+      "correlation": 0.9687562840121432,
+      "mse": 7.414160420472247,
+      "rsa": 0.9615457695496066,
+      "decoding": 0.9822222222222223
+    },
+    {
+      "noise_sigma": 1.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.9685158261919897,
+      "mse": 7.4725933876659925,
+      "rsa": 0.9612278700934482,
+      "decoding": 0.9777777777777779
+    }
+  ]
+}

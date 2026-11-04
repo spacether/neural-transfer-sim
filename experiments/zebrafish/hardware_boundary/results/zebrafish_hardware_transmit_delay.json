@@ -1,0 +1,83 @@
+{
+  "experiment": "zebrafish_hardware_transmit_delay",
+  "description": "Zebrafish: hardware boundary \u2014 transmit_delay",
+  "timestamp": "2026-11-04T07:47:38Z",
+  "git_commit": "1257c28",
+  "parameters": {
+    "seeds": 5
+  },
+  "metrics": [
+    "delay_ms",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "decoding"
+  ],
+  "results": [
+    {
+      "delay_ms": 0.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690856353731825,
+      "mse": 7.334975874855128,
+      "rsa": 0.9614777056914974,
+      "decoding": 0.9800000000000001
+    },
+    {
+      "delay_ms": 0.1,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690855296981316,
+      "mse": 7.334997638162493,
+      "rsa": 0.9614778272226931,
+      "decoding": 0.9800000000000001
+    },
+    {
+      "delay_ms": 1.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690847755071632,
+      "mse": 7.335182328536641,
+      "rsa": 0.9614756794492809,
+      "decoding": 0.9800000000000001
+    },
+    {
+      "delay_ms": 5.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690836192367998,
+      "mse": 7.335484496262775,
+      "rsa": 0.9614856205367068,
+      "decoding": 0.9800000000000001
+    },
+    {
+      "delay_ms": 20.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.969083295854676,
+      "mse": 7.335521060583188,
+      "rsa": 0.9614738974649673,
+      "decoding": 0.9800000000000001
+    },
+    {
+      "delay_ms": 100.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690444895240258,
+      "mse": 7.344521304336682,
+      "rsa": 0.9613825450467118,
+      "decoding": 0.9777777777777779
+    },
+    {
+      "delay_ms": 500.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.9689893537916149,
+      "mse": 7.357540549137414,
+      "rsa": 0.9614372910583651,
+      "decoding": 0.9777777777777779
+    },
+    {
+      "delay_ms": 2000.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.9688545035481135,
+      "mse": 7.3908930119954945,
+      "rsa": 0.961629427619768,
+      "decoding": 0.9755555555555556
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "experiment": "zebrafish_hardware_combined",
+  "description": "Zebrafish: hardware boundary \u2014 combined",
+  "timestamp": "2026-11-04T07:47:38Z",
+  "git_commit": "1257c28",
+  "parameters": {
+    "seeds": 5
+  },
+  "metrics": [
+    "step",
+    "noise_sigma",
+    "precision_bits",
+    "dropout_fraction",
+    "delay_ms",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "decoding"
+  ],
+  "results": [
+    {
+      "step": 0,
+      "noise_sigma": 0.0,
+      "precision_bits": Infinity,
+      "dropout_fraction": 0.0,
+      "delay_ms": 0.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690856353731825,
+      "mse": 7.334975874855128,
+      "rsa": 0.9614777056914974,
+      "decoding": 0.9800000000000001
+    },
+    {
+      "step": 1,
+      "noise_sigma": 0.05,
+      "precision_bits": 8,
+      "dropout_fraction": 0.05,
+      "delay_ms": 0.1,
+      "transfer_rate": 0.9977777777777778,
+      "correlation": 0.9387842617938518,
+      "mse": 15.2503904783825,
+      "rsa": 0.9123719909776782,
+      "decoding": 0.9822222222222223
+    },
+    {
+      "step": 2,
+      "noise_sigma": 0.1,
+      "precision_bits": 6,
+      "dropout_fraction": 0.1,
+      "delay_ms": 1.0,
+      "transfer_rate": 0.9866666666666667,
+      "correlation": 0.9121140841271534,
+      "mse": 21.132339111684992,
+      "rsa": 0.8884486345795505,
+      "decoding": 0.9755555555555556
+    },
+    {
+      "step": 3,
+      "noise_sigma": 0.2,
+      "precision_bits": 5,
+      "dropout_fraction": 0.15,
+      "delay_ms": 5.0,
+      "transfer_rate": 0.9777777777777779,
+      "correlation": 0.8875298726963525,
+      "mse": 26.400993564398323,
+      "rsa": 0.8682303691473084,
+      "decoding": 0.9644444444444444
+    },
+    {
+      "step": 4,
+      "noise_sigma": 0.3,
+      "precision_bits": 4,
+      "dropout_fraction": 0.2,
+      "delay_ms": 20.0,
+      "transfer_rate": 0.971111111111111,
+      "correlation": 0.8631926064405656,
+      "mse": 31.550327647523773,
+      "rsa": 0.8757247362950047,
+      "decoding": 0.9688888888888888
+    },
+    {
+      "step": 5,
+      "noise_sigma": 0.5,
+      "precision_bits": 3,
+      "dropout_fraction": 0.3,
+      "delay_ms": 100.0,
+      "transfer_rate": 0.9466666666666667,
+      "correlation": 0.8080289458328844,
+      "mse": 42.494392534207684,
+      "rsa": 0.8147982440651302,
+      "decoding": 0.9488888888888889
+    },
+    {
+      "step": 6,
+      "noise_sigma": 0.75,
+      "precision_bits": 2,
+      "dropout_fraction": 0.4,
+      "delay_ms": 500.0,
+      "transfer_rate": 0.9200000000000002,
+      "correlation": 0.7532376765738269,
+      "mse": 52.73213902846881,
+      "rsa": 0.7691573707508512,
+      "decoding": 0.9200000000000002
+    },
+    {
+      "step": 7,
+      "noise_sigma": 1.0,
+      "precision_bits": 1,
+      "dropout_fraction": 0.5,
+      "delay_ms": 2000.0,
+      "transfer_rate": 0.8488888888888889,
+      "correlation": 0.6645260960078256,
+      "mse": 67.48575762475082,
+      "rsa": 0.641612919726817,
+      "decoding": 0.9266666666666667
+    }
+  ]
+}

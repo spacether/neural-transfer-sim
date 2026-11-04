@@ -1,0 +1,83 @@
+{
+  "experiment": "zebrafish_hardware_channel_dropout",
+  "description": "Zebrafish: hardware boundary \u2014 channel_dropout",
+  "timestamp": "2026-11-04T07:47:38Z",
+  "git_commit": "1257c28",
+  "parameters": {
+    "seeds": 5
+  },
+  "metrics": [
+    "dropout_fraction",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "decoding"
+  ],
+  "results": [
+    {
+      "dropout_fraction": 0.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690856353731825,
+      "mse": 7.334975874855128,
+      "rsa": 0.9614777056914974,
+      "decoding": 0.9800000000000001
+    },
+    {
+      "dropout_fraction": 0.1,
+      "transfer_rate": 0.9888888888888889,
+      "correlation": 0.915598519315763,
+      "mse": 19.38352387614402,
+      "rsa": 0.9284801716446385,
+      "decoding": 0.9733333333333333
+    },
+    {
+      "dropout_fraction": 0.2,
+      "transfer_rate": 0.9711111111111113,
+      "correlation": 0.8736298568804919,
+      "mse": 28.521713691565417,
+      "rsa": 0.8890011648221525,
+      "decoding": 0.9577777777777777
+    },
+    {
+      "dropout_fraction": 0.3,
+      "transfer_rate": 0.9555555555555555,
+      "correlation": 0.8280264447130969,
+      "mse": 37.839717359053665,
+      "rsa": 0.8532043102045404,
+      "decoding": 0.9466666666666667
+    },
+    {
+      "dropout_fraction": 0.4,
+      "transfer_rate": 0.9022222222222223,
+      "correlation": 0.7732186419806718,
+      "mse": 48.49662937665363,
+      "rsa": 0.8233559969959865,
+      "decoding": 0.9288888888888888
+    },
+    {
+      "dropout_fraction": 0.5,
+      "transfer_rate": 0.8622222222222223,
+      "correlation": 0.7012658252940982,
+      "mse": 61.44207427326662,
+      "rsa": 0.7602867146185877,
+      "decoding": 0.9244444444444445
+    },
+    {
+      "dropout_fraction": 0.6,
+      "transfer_rate": 0.8066666666666666,
+      "correlation": 0.654070456753703,
+      "mse": 69.29162211074214,
+      "rsa": 0.6970807045763244,
+      "decoding": 0.8800000000000001
+    },
+    {
+      "dropout_fraction": 0.8,
+      "transfer_rate": 0.5355555555555556,
+      "correlation": 0.4528001970483054,
+      "mse": 96.5721859330811,
+      "rsa": 0.41325141666220927,
+      "decoding": 0.7977777777777778
+    }
+  ]
+}
