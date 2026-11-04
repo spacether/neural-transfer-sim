@@ -67,11 +67,13 @@ def _worm_efficiency(sample_counts: List[int], seeds: int, jitter: float) -> Lis
 
 
 def _larva_efficiency(sample_counts: List[int], seeds: int, jitter: float) -> List[Dict]:
-    from models.drosophila_larva import DrosophilaLarvaModel, ODOR_PROFILES, ORN_TYPES
-    from models.larva_variants import LarvaVariantGenerator
+    from models.larva_connectome import ConnectomeLarvaModel
+    from models.larva_connectome_variants import ConnectomeLarvaVariantGenerator
+    from models.drosophila_larva import ODOR_PROFILES
 
-    sender = DrosophilaLarvaModel()
-    gen = LarvaVariantGenerator(jitter_scale=jitter)
+    sender = ConnectomeLarvaModel()
+    gen = ConnectomeLarvaVariantGenerator(jitter_scale=jitter)
+    orn_order = sender._orn_order
     odor_names = list(ODOR_PROFILES.keys())
 
     cal_intensities = [0.3, 0.5, 0.75, 1.0, 1.5]
@@ -81,7 +83,7 @@ def _larva_efficiency(sample_counts: List[int], seeds: int, jitter: float) -> Li
 
     def _sig(model, name, intensity):
         rates = model._orn_rates(name, intensity)
-        return {orn: float(rates[i]) for i, orn in enumerate(ORN_TYPES)}
+        return {orn: float(rates[i]) for i, orn in enumerate(orn_order)}
 
     results = []
     for n_samples in sample_counts:
@@ -121,11 +123,13 @@ def _larva_efficiency(sample_counts: List[int], seeds: int, jitter: float) -> Li
 
 
 def _adult_efficiency(sample_counts: List[int], seeds: int, jitter: float) -> List[Dict]:
-    from models.drosophila_adult import DrosophilaAdultModel, ODOR_PROFILES, ORN_TYPES
-    from models.adult_variants import AdultVariantGenerator
+    from models.adult_connectome import ConnectomeAdultModel
+    from models.adult_connectome_variants import ConnectomeAdultVariantGenerator
+    from models.drosophila_adult import ODOR_PROFILES
 
-    sender = DrosophilaAdultModel()
-    gen = AdultVariantGenerator(jitter_scale=jitter)
+    sender = ConnectomeAdultModel()
+    gen = ConnectomeAdultVariantGenerator(jitter_scale=jitter)
+    receptor_names = list(sender._receptor_names)
     odor_names = list(ODOR_PROFILES.keys())
 
     cal_intensities = [0.3, 0.5, 0.75, 1.0, 1.5]
@@ -134,8 +138,8 @@ def _adult_efficiency(sample_counts: List[int], seeds: int, jitter: float) -> Li
     holdout = [(name, i) for name in odor_names for i in holdout_intensities]
 
     def _sig(model, name, intensity):
-        rates = model._orn_type_rates(name, intensity)
-        return {orn: float(rates[i]) for i, orn in enumerate(ORN_TYPES)}
+        rates = model._orn_rates(name, intensity)
+        return {orn: float(rates[i]) for i, orn in enumerate(receptor_names)}
 
     results = []
     for n_samples in sample_counts:

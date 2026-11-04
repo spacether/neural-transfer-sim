@@ -126,3 +126,48 @@ def odor_identification(
             correct += 1
 
     return correct / max(1, len(transferred_states))
+
+
+def bootstrap_ci(
+    values: List[float],
+    confidence: float = 0.95,
+    n_boot: int = 1000,
+    seed: int = 42,
+) -> tuple[float, float, float]:
+    """Bootstrap confidence interval for a list of per-seed metric values.
+
+    Returns (mean, ci_low, ci_high).
+    """
+    arr = np.array(values)
+    if len(arr) < 2:
+        m = float(arr.mean()) if len(arr) == 1 else 0.0
+        return m, m, m
+
+    rng = np.random.default_rng(seed)
+    boot_means = np.array([
+        rng.choice(arr, size=len(arr), replace=True).mean()
+        for _ in range(n_boot)
+    ])
+    alpha = (1 - confidence) / 2
+    lo = float(np.percentile(boot_means, 100 * alpha))
+    hi = float(np.percentile(boot_means, 100 * (1 - alpha)))
+    return float(arr.mean()), lo, hi
+
+
+def aggregate_with_ci(
+    seed_metrics: List[Dict[str, float]],
+    metric_keys: tuple[str, ...] = ("transfer_rate", "correlation", "mse", "rsa", "odor_id"),
+    confidence: float = 0.95,
+) -> Dict[str, tuple[float, float, float]]:
+    """Aggregate per-seed metrics into mean + CI for each key.
+
+    Returns {metric_name: (mean, ci_low, ci_high)}.
+    """
+    result = {}
+    for key in metric_keys:
+        values = [m[key] for m in seed_metrics if key in m]
+        if values:
+            result[key] = bootstrap_ci(values, confidence=confidence)
+        else:
+            result[key] = (0.0, 0.0, 0.0)
+    return result

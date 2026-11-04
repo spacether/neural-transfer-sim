@@ -2,6 +2,8 @@
 
 Copies sender ORN-type activity to receiver ORN layer with no learned
 translation, across a range of brain-difference levels.
+
+Uses the connectome-based adult model (FlyWire v783, Dorkenwald et al. 2024).
 """
 
 from __future__ import annotations
@@ -10,19 +12,15 @@ from typing import Dict, List
 
 import numpy as np
 
-from models.drosophila_adult import (
-    DrosophilaAdultModel,
-    ODOR_PROFILES,
-    ODOR_VALENCE,
-    ORN_TYPES,
-)
-from models.adult_variants import AdultVariantGenerator
-from link.receptor_to_receptor import ReceptorToReceptorBaseline
+from models.adult_connectome import ConnectomeAdultModel
+from models.adult_connectome_variants import ConnectomeAdultVariantGenerator
+from models.drosophila_adult import ODOR_PROFILES, ODOR_VALENCE
 from analysis.metrics import (
     correlation,
     mean_mse,
     representational_similarity,
     odor_identification,
+    bootstrap_ci,
 )
 
 
@@ -32,6 +30,19 @@ ODOR_SET: List[Dict[str, object]] = [
     for intensity in (0.5, 1.0, 1.5)
 ]
 
+METRIC_KEYS = ("transfer_rate", "correlation", "mse", "rsa", "odor_id")
+
+
+def _agg_with_ci(seed_metrics: List[Dict[str, float]]) -> Dict:
+    row: Dict = {}
+    for k in METRIC_KEYS:
+        vals = [m[k] for m in seed_metrics]
+        mean, lo, hi = bootstrap_ci(vals)
+        row[k] = mean
+        row[f"{k}_ci_lo"] = lo
+        row[f"{k}_ci_hi"] = hi
+    return row
+
 
 def run_broadcast_sweep(
     jitter_levels: List[float] | None = None,
@@ -40,11 +51,12 @@ def run_broadcast_sweep(
     if jitter_levels is None:
         jitter_levels = [0.0, 0.25, 0.50, 0.75, 1.0, 1.25, 1.5]
 
-    sender = DrosophilaAdultModel()
+    sender = ConnectomeAdultModel()
+    receptor_names = list(sender._receptor_names)
     results: List[Dict] = []
 
     for jitter in jitter_levels:
-        gen = AdultVariantGenerator(jitter_scale=jitter)
+        gen = ConnectomeAdultVariantGenerator(jitter_scale=jitter)
         seed_metrics: List[Dict[str, float]] = []
 
         for seed in range(seeds_per_level):
@@ -52,13 +64,6 @@ def run_broadcast_sweep(
             if not gen.sanity_check(receiver):
                 continue
 
-            baseline = ReceptorToReceptorBaseline(
-                sender=sender,
-                receiver=receiver,
-                source_neurons=tuple(ORN_TYPES),
-            )
-
-            odor_types: List[str] = []
             odor_names: List[str] = []
             natural_states: List[Dict[str, float]] = []
             transferred_states: List[Dict[str, float]] = []
@@ -67,17 +72,14 @@ def run_broadcast_sweep(
             for odor in ODOR_SET:
                 name = odor["odor_name"]
                 intensity = odor["odor_intensity"]
-                otype = ODOR_VALENCE[name]
-                odor_types.append(otype)
                 odor_names.append(name)
 
-                sender_orn = sender._orn_type_rates(name, intensity)
-                sender_signal = {orn: float(sender_orn[i]) for i, orn in enumerate(ORN_TYPES)}
+                sender_orn = sender._orn_rates(name, intensity)
+                sender_signal = {orn: float(sender_orn[i]) for i, orn in enumerate(receptor_names)}
                 sender_layers = sender._forward(name, intensity)
-                sender_beh = sender._behavior_from_mbon(sender_layers["mbon"])
+                sender_beh = sender._behavior_from_output(sender_layers["output"])
 
-                receiver_signal = baseline.copy_signal(sender_signal)
-                result = receiver.simulate_from_receptors(receiver_signal)
+                result = receiver.simulate_from_receptors(sender_signal)
                 if result["behavior"] == sender_beh:
                     successes += 1
 
@@ -100,13 +102,11 @@ def run_broadcast_sweep(
         if not seed_metrics:
             continue
 
-        results.append({
+        row: Dict = {
             "jitter_scale": jitter,
             "valid_seeds": len(seed_metrics),
-            **{
-                key: float(np.mean([m[key] for m in seed_metrics]))
-                for key in ("transfer_rate", "correlation", "mse", "rsa", "odor_id")
-            },
-        })
+        }
+        row.update(_agg_with_ci(seed_metrics))
+        results.append(row)
 
     return results

@@ -71,3 +71,68 @@ class CalibrationTransform:
     @property
     def is_fitted(self) -> bool:
         return self._fitted
+
+
+@dataclass
+class DiagonalCalibration:
+    """Per-channel scaling + offset: N scale params + N offset params.
+
+    Much more constrained than full ridge (2N vs N² parameters).
+    Tests whether cross-channel interactions are needed for good transfer,
+    or whether per-channel gain adjustment suffices.
+    """
+
+    neurons: Tuple[str, ...] | None = None
+    alpha: float = 0.01
+
+    _scale: np.ndarray | None = field(default=None, init=False, repr=False)
+    _offset: np.ndarray | None = field(default=None, init=False, repr=False)
+    _fitted: bool = field(default=False, init=False, repr=False)
+
+    def _to_vec(self, signal: Dict[str, float]) -> np.ndarray:
+        return np.array([signal.get(n, 0.0) for n in self.neurons])
+
+    def _from_vec(self, vec: np.ndarray) -> Dict[str, float]:
+        return {n: float(vec[i]) for i, n in enumerate(self.neurons)}
+
+    def fit(
+        self,
+        sender_signals: List[Dict[str, float]],
+        receiver_signals: List[Dict[str, float]],
+    ) -> "DiagonalCalibration":
+        if self.neurons is None:
+            keys: set = set()
+            for s in sender_signals:
+                keys.update(s.keys())
+            for r in receiver_signals:
+                keys.update(r.keys())
+            self.neurons = tuple(sorted(keys))
+
+        X = np.array([self._to_vec(s) for s in sender_signals])
+        Y = np.array([self._to_vec(r) for r in receiver_signals])
+
+        n = X.shape[1]
+        self._scale = np.ones(n)
+        self._offset = np.zeros(n)
+
+        for i in range(n):
+            x_col = X[:, i]
+            y_col = Y[:, i]
+            var_x = np.var(x_col)
+            if var_x > 1e-12:
+                self._scale[i] = np.cov(x_col, y_col)[0, 1] / (var_x + self.alpha)
+            self._offset[i] = np.mean(y_col) - self._scale[i] * np.mean(x_col)
+
+        self._fitted = True
+        return self
+
+    def transform(self, sender_signal: Dict[str, float]) -> Dict[str, float]:
+        if not self._fitted:
+            raise RuntimeError("Call fit() before transform().")
+        x = self._to_vec(sender_signal)
+        y = self._scale * x + self._offset
+        return self._from_vec(y)
+
+    @property
+    def is_fitted(self) -> bool:
+        return self._fitted

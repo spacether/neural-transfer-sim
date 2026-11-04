@@ -38,11 +38,11 @@ def _worm_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
 
 
 def _larva_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
-    """Run larva transfer metrics."""
-    from models.drosophila_larva import DrosophilaLarvaModel, ORN_TYPES, N_KC
-    from models.larva_variants import LarvaVariantGenerator
+    """Run larva transfer metrics using the connectome model."""
+    from models.larva_connectome import ConnectomeLarvaModel
     from experiments.drosophila_larva.broadcast.experiment import run_broadcast_sweep
 
+    model = ConnectomeLarvaModel()
     results = run_broadcast_sweep(
         jitter_levels=[jitter],
         seeds_per_level=seeds,
@@ -51,10 +51,10 @@ def _larva_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
 
     return {
         "organism": "D. larva",
-        "receptor_types": len(ORN_TYPES),
-        "total_receptors": len(ORN_TYPES),
-        "glomeruli": len(ORN_TYPES),
-        "kc_equivalent": N_KC,
+        "receptor_types": len(model._orn_order),
+        "total_receptors": len(model._orn_order),
+        "glomeruli": len(model._orn_order),
+        "kc_equivalent": model._n_kc,
         "bottleneck": "glomerular (1:1)",
         "signal_mode": "spiking",
         "broadcast_behavioral_match": beh_match,
@@ -62,13 +62,11 @@ def _larva_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
 
 
 def _adult_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
-    """Run adult fly transfer metrics."""
-    from models.drosophila_adult import (
-        DrosophilaAdultModel, ORN_TYPES, N_ORN_TYPES,
-        N_TOTAL_ORNS, N_PN, N_KC,
-    )
+    """Run adult fly transfer metrics using the connectome model."""
+    from models.adult_connectome import ConnectomeAdultModel
     from experiments.drosophila_adult.broadcast.experiment import run_broadcast_sweep
 
+    model = ConnectomeAdultModel()
     results = run_broadcast_sweep(
         jitter_levels=[jitter],
         seeds_per_level=seeds,
@@ -77,11 +75,11 @@ def _adult_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
 
     return {
         "organism": "D. adult",
-        "receptor_types": N_ORN_TYPES,
-        "total_receptors": N_TOTAL_ORNS,
-        "glomeruli": N_PN,
-        "kc_equivalent": N_KC,
-        "bottleneck": "glomerular (50:1)",
+        "receptor_types": model._n_glom,
+        "total_receptors": 1117,
+        "glomeruli": model._n_glom,
+        "kc_equivalent": model._n_kc,
+        "bottleneck": "glomerular (23:1)",
         "signal_mode": "spiking",
         "broadcast_behavioral_match": beh_match,
     }
@@ -122,17 +120,46 @@ def run_scaling_comparison(seeds: int = 5, jitter: float = 0.75) -> List[Dict]:
     ]
 
 
-def estimate_channel_requirements(results: List[Dict]) -> List[Dict]:
-    """Estimate minimum channel counts from the scaling data.
+def _load_calibration_thresholds() -> Dict[str, int]:
+    """Load measured calibration sample thresholds from calibration_efficiency results."""
+    import json
+    from pathlib import Path
 
-    Uses the channel sweep results if available, otherwise estimates
-    from receptor type counts.
+    path = Path(__file__).parent / "results" / "calibration_efficiency.json"
+    if not path.exists():
+        return {}
+
+    with open(path) as f:
+        data = json.load(f)
+
+    thresholds: Dict[str, int] = {}
+    from collections import defaultdict
+    by_org = defaultdict(list)
+    for r in data["results"]:
+        by_org[r["organism"]].append(r)
+
+    for org, rows in by_org.items():
+        for r in sorted(rows, key=lambda x: x["n_samples"]):
+            if r["odor_id"] >= 0.90:
+                thresholds[org] = r["n_samples"]
+                break
+    return thresholds
+
+
+def estimate_channel_requirements(results: List[Dict]) -> List[Dict]:
+    """Estimate minimum channel counts and calibration samples.
+
+    Uses measured calibration efficiency thresholds when available,
+    otherwise falls back to a heuristic estimate.
     """
+    cal_thresholds = _load_calibration_thresholds()
     enriched = []
     for r in results:
         row = dict(r)
         n_types = r["receptor_types"]
         row["min_channels_90"] = max(1, int(np.ceil(n_types * 0.7)))
-        row["calibration_samples"] = max(10, n_types * 3)
+        row["calibration_samples"] = cal_thresholds.get(
+            r["organism"], max(10, n_types * 3)
+        )
         enriched.append(row)
     return enriched

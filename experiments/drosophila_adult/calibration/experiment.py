@@ -2,6 +2,7 @@
 
 Fits a linear calibration transform on shared odors, then compares
 calibrated transfer against direct broadcast on held-out odors.
+Uses connectome-derived model (FlyWire v783).
 """
 
 from __future__ import annotations
@@ -10,16 +11,12 @@ from typing import Dict, List
 
 import numpy as np
 
-from models.drosophila_adult import (
-    DrosophilaAdultModel,
-    ODOR_PROFILES,
-    ODOR_VALENCE,
-    ORN_TYPES,
-)
-from models.adult_variants import AdultVariantGenerator
+from models.adult_connectome import ConnectomeAdultModel
+from models.adult_connectome_variants import ConnectomeAdultVariantGenerator
+from models.drosophila_adult import ODOR_PROFILES, ODOR_VALENCE
 from link.calibration import CalibrationTransform
-from link.receptor_to_receptor import ReceptorToReceptorBaseline
 from analysis.metrics import (
+    bootstrap_ci,
     correlation,
     mean_mse,
     representational_similarity,
@@ -36,27 +33,25 @@ HOLDOUT_SET = [(name, i) for name in ALL_ODOR_NAMES for i in HOLDOUT_INTENSITIES
 METRIC_KEYS = ("transfer_rate", "correlation", "mse", "rsa", "odor_id")
 
 
-def _get_orn_signal(model: DrosophilaAdultModel, odor_name: str, intensity: float) -> Dict[str, float]:
-    rates = model._orn_type_rates(odor_name, intensity)
-    return {orn: float(rates[i]) for i, orn in enumerate(ORN_TYPES)}
+def _get_orn_signal(
+    model: ConnectomeAdultModel, odor_name: str, intensity: float
+) -> Dict[str, float]:
+    rates = model._orn_rates(odor_name, intensity)
+    return {r: float(rates[i]) for i, r in enumerate(model._receptor_names)}
 
 
 def _run_one_pair(
-    sender: DrosophilaAdultModel,
-    receiver: DrosophilaAdultModel,
+    sender: ConnectomeAdultModel,
+    receiver: ConnectomeAdultModel,
 ) -> Dict:
+    receptor_names = list(sender._receptor_names)
+
     sender_cal = [_get_orn_signal(sender, name, intensity) for name, intensity in CAL_SET]
     receiver_cal = [_get_orn_signal(receiver, name, intensity) for name, intensity in CAL_SET]
 
     transform = CalibrationTransform()
     transform.fit(sender_cal, receiver_cal)
 
-    baseline = ReceptorToReceptorBaseline(
-        sender=sender, receiver=receiver,
-        source_neurons=tuple(ORN_TYPES),
-    )
-
-    odor_types: List[str] = []
     odor_names: List[str] = []
     natural_states: List[Dict[str, float]] = []
     direct_states: List[Dict[str, float]] = []
@@ -64,19 +59,17 @@ def _run_one_pair(
     direct_ok, cal_ok = 0, 0
 
     for name, intensity in HOLDOUT_SET:
-        otype = ODOR_VALENCE[name]
-        odor_types.append(otype)
         odor_names.append(name)
 
-        sender_sig = _get_orn_signal(sender, name, intensity)
+        sender_orn = sender._orn_rates(name, intensity)
+        sender_sig = {r: float(sender_orn[i]) for i, r in enumerate(receptor_names)}
         sender_layers = sender._forward(name, intensity)
-        sender_beh = sender._behavior_from_mbon(sender_layers["mbon"])
+        sender_beh = sender._behavior_from_output(sender_layers["output"])
 
         natural_layers = receiver._forward(name, intensity)
         natural_states.append(receiver._layers_to_dict(natural_layers))
 
-        direct_sig = baseline.copy_signal(sender_sig)
-        d_result = receiver.simulate_from_receptors(direct_sig)
+        d_result = receiver.simulate_from_receptors(dict(sender_sig))
         direct_states.append(d_result["neurons"])
         direct_ok += d_result["behavior"] == sender_beh
 
@@ -98,6 +91,19 @@ def _run_one_pair(
     return out
 
 
+def _agg_with_ci(pairs: List[Dict]) -> Dict:
+    row: Dict = {}
+    for prefix in ("direct", "calibrated"):
+        for k in METRIC_KEYS:
+            key = f"{prefix}_{k}"
+            vals = [p[key] for p in pairs]
+            mean, lo, hi = bootstrap_ci(vals)
+            row[key] = mean
+            row[f"{key}_ci_lo"] = lo
+            row[f"{key}_ci_hi"] = hi
+    return row
+
+
 def run_calibration_sweep(
     jitter_levels: List[float] | None = None,
     seeds_per_level: int = 5,
@@ -105,11 +111,11 @@ def run_calibration_sweep(
     if jitter_levels is None:
         jitter_levels = [0.0, 0.25, 0.50, 0.75, 1.0, 1.25, 1.5]
 
-    sender = DrosophilaAdultModel()
+    sender = ConnectomeAdultModel()
     results: List[Dict] = []
 
     for jitter in jitter_levels:
-        gen = AdultVariantGenerator(jitter_scale=jitter)
+        gen = ConnectomeAdultVariantGenerator(jitter_scale=jitter)
         pairs: List[Dict] = []
 
         for seed in range(seeds_per_level):
@@ -121,11 +127,9 @@ def run_calibration_sweep(
         if not pairs:
             continue
 
-        row: Dict = {"jitter_scale": jitter, "valid_seeds": len(pairs)}
-        for prefix in ("direct", "calibrated"):
-            for metric in METRIC_KEYS:
-                key = f"{prefix}_{metric}"
-                row[key] = float(np.mean([p[key] for p in pairs]))
+        row = _agg_with_ci(pairs)
+        row["jitter_scale"] = jitter
+        row["valid_seeds"] = len(pairs)
         results.append(row)
 
     return results

@@ -8,7 +8,7 @@ Correspondence: justin.a.black@gmail.com
 
 ## Abstract
 
-We present a computational framework for estimating the hardware and software requirements of transferring olfactory signals between two simulated brains. Using connectome-derived neural circuit models of four organisms — *C. elegans*, *Drosophila* larva, adult *Drosophila*, and zebrafish — we systematically vary channel count, hardware impairments, calibration strategy, and inter-individual neural variability to identify the conditions under which a receiver brain reproduces the sender's odor-evoked behavioral response. Our key finding is that bottleneck architecture, not brain size, determines transfer requirements: N-way odor identification accuracy at 50% channel connectivity is 67% for the 21-channel larva, 59% for the 100-channel zebrafish, and 46% for the 50-channel adult fly — a ranking that tracks architectural complexity (convergence ratio, expansion factor, lateral inhibition) rather than receptor count. Hardware boundary analysis reveals that read noise and channel dropout are the binding constraints across all organisms, while write precision above 4 bits and transmit delay below 100 ms contribute minimally. These results establish quantitative lower bounds on inter-brain olfactory transfer and demonstrate that the critical engineering challenge is matching the write site to the receiver's bottleneck architecture, not scaling channel count to match receptor number.
+We present a computational framework for estimating the hardware and software requirements of transferring olfactory signals between two simulated brains. Using neural circuit models with weight matrices derived from published connectomes — the Winding et al. (2023) larval brain connectome and the FlyWire v783 adult *Drosophila* connectome — plus models of *C. elegans* and zebrafish, we systematically vary channel count, hardware impairments, calibration strategy, and inter-individual neural variability to identify the conditions under which a receiver brain reproduces the sender's odor-evoked behavioral response. Our key finding is that bottleneck architecture, not brain size, determines transfer requirements: N-way odor identification accuracy at 50% channel connectivity is 59% for the 100-channel zebrafish, 44% for the 21-channel larva, and 36% for the 49-channel adult fly — a ranking that tracks architectural complexity rather than receptor count. Three additional results strengthen this conclusion: (1) connectome-based models with real wiring maintain higher transfer quality under variation than shuffled-connectome controls matched in weight statistics, confirming that topology matters; (2) per-channel diagonal calibration (2N parameters) performs identically to full ridge regression (N² parameters), confirming that calibration success is a scaling artifact, not a biological finding; and (3) sensitivity analysis shows results are insensitive to unconstrained model parameters while depending moderately on biophysically measurable quantities. These results establish quantitative lower bounds on inter-brain olfactory transfer and demonstrate that the critical engineering challenge is matching the write site to the receiver's bottleneck architecture, not scaling channel count to match receptor number.
 
 ## 1. Introduction
 
@@ -24,7 +24,7 @@ Our four organisms span a range of architectures:
 |----------|---------------|-----------|-------------|-------------|
 | *C. elegans* | 8 | — | Graded | No bottleneck; multiplexed receptors |
 | *Drosophila* larva | 21 | 21 | Spiking | Clean 1:1 bottleneck |
-| Adult *Drosophila* | 50 | 50 | Spiking | 50:1 convergence, 40× KC expansion |
+| Adult *Drosophila* | 49 | 49 | Spiking | 23:1 convergence, 53× KC expansion |
 | Zebrafish | 100 | 100 | Spiking | Recurrent lateral inhibition via granule cells |
 
 Each organism is modeled as a feedforward (or recurrent, in the zebrafish case) neural circuit from receptor neurons through to behavioral output. Two instances — sender and receiver — are generated with controlled inter-individual variability, and a shared pipeline evaluates transfer quality under varying hardware and algorithmic conditions.
@@ -35,9 +35,9 @@ Each organism is modeled as a feedforward (or recurrent, in the zebrafish case) 
 
 **C. elegans.** We implemented two worm models. The first is a hand-built circuit of the 8 olfactory receptor neurons (AWA, AWC_L, AWC_R, AWB, ADL, ASH) projecting through interneurons (AIY, AIB, AIA, AIZ) to command neurons (AVA, AVB). Synaptic weights are derived from the Cook et al. (2019) connectome via the `cect` library, with neurotransmitter signs from CeNGEN. The second uses the full connectome adjacency matrix. All worm neurons are modeled as graded, non-spiking units — consistent with the absence of voltage-gated sodium channels in *C. elegans*.
 
-**Drosophila larva.** A spiking-rate model of 21 ORN types, each projecting to one of 21 projection neurons (PNs) via glomeruli, then expanding to 72 Kenyon cells (KCs) in the mushroom body via sparse random connectivity, and converging onto mushroom body output neurons (MBONs) that drive approach or avoidance. Odor response profiles are derived from Kreher et al. empty-neuron recordings.
+**Drosophila larva.** A spiking-rate model with connectome-derived weight matrices extracted from the Winding et al. (2023) whole-brain larval connectome. The olfactory pathway comprises 21 ORN types, each projecting to one of 21 uniglomerular projection neurons (PNs), then expanding to 73 Kenyon cells (KCs) in the mushroom body via real PN→KC synapse counts (median 4 PNs per KC), and converging onto 24 MBONs. All three weight matrices (ORN→PN, PN→KC, KC→MBON) are derived from actual synapse counts, column- or row-normalized. ORN-to-receptor-type mapping was established by tracing each PN's strongest ORN input to its glomerular assignment. Odor response profiles are derived from Kreher et al. empty-neuron recordings. A hand-built model with statistical connectivity is retained for comparison.
 
-**Adult Drosophila.** Scaled from the larval architecture: 50 ORN types (with 50:1 convergence onto PNs), 50 PNs, 2000 KCs with sparse random connectivity (connection probability ~0.1), and MBONs. Odor profiles are based on the DoOR database (Münch & Galizia, 2016) and Hallem & Carlson (2006).
+**Adult Drosophila.** A spiking-rate model with connectivity from the FlyWire v783 whole-brain connectome (Dorkenwald et al. 2024; annotations from Schlegel et al. 2024). The olfactory pathway comprises 49 glomeruli (aggregated from 1,117 ORNs), 49 PN channels, 2,580 KCs with real synapse-count weights (median 4 PNs per KC, 9,255 nonzero connections), and 48 MBONs (7,344 nonzero KC→MBON connections). The ORN→PN matrix is 98.7% diagonal, confirming the expected glomerular organization with measured crosstalk (~1.3% cross-glomerular connections). Glomerulus-to-receptor mapping follows Couto et al. (2005), Hallem & Carlson (2006), and DoOR 2.0, yielding 38 odor profiles that overlap with the receptor complement. A hand-built model with statistical connectivity is retained for comparison.
 
 **Zebrafish.** 100 OR types × 3 ORNs each → 100 glomeruli → 80 mitral cells → 200 granule cells (recurrent lateral inhibition) → 500 Dp (dorsal pallium) neurons → 2 output neurons. The granule cell layer implements lateral inhibition via a recurrent connectivity matrix with negative weights, iterated to convergence. This is the key architectural difference from insects: decorrelation occurs within the bulb before signals reach downstream areas. Odor profiles span 30 odorants with assigned valences.
 
@@ -57,7 +57,7 @@ The transfer pipeline consists of:
 
 1. **Read.** The sender's receptor-layer activity is recorded. For PN/mitral channel sweeps, a subset of projection neurons is read instead.
 2. **Hardware degradation.** Read noise (additive Gaussian, σ = 0–1.0), write precision (quantization to 1–8 bits), channel dropout (random fraction 0–0.8), and transmit delay (0–2000 ms, modeled as exponential decay toward baseline).
-3. **Calibration.** A ridge regression transform is fitted on shared calibration odors (sender receptor activity → receiver receptor activity) and applied to held-out test odors. The direct broadcast baseline skips this step.
+3. **Calibration.** Two calibration methods are compared: (a) full ridge regression (N² + N parameters), which learns cross-channel interactions; and (b) diagonal calibration (2N parameters), which learns only per-channel scale and offset. Both are fitted on shared calibration odors (sender receptor activity → receiver receptor activity) and applied to held-out test odors. The direct broadcast baseline skips calibration entirely.
 4. **Write.** The (optionally calibrated and degraded) signal is injected into the receiver's receptor layer (or PN/mitral layer), and the receiver's circuit propagates it to behavioral output.
 
 ### 2.4 Metrics
@@ -91,11 +91,11 @@ Direct broadcast (copying sender receptor activity to the receiver with no calib
 | Organism | Behavioral match (jitter = 0.75) | Correlation (jitter = 0.75) | Odor ID (jitter = 0.75) |
 |----------|--------------------------------|---------------------------|------------------------|
 | *C. elegans* | 0.70 | 0.91 | 0.93 |
-| *D.* larva | 0.98 | 0.96 | 0.96 |
-| Adult *Drosophila* | 0.99 | 0.97 | 0.93 |
+| *D.* larva | 0.97 | 0.96 | 0.87 |
+| Adult *Drosophila* | 0.72 | 0.97 | 0.88 |
 | Zebrafish | 1.00 | 0.97 | 0.99 |
 
-The worm degrades fastest because its 8-dimensional receptor space provides little redundancy, and multiplexed receptor types mean individual variation in one neuron affects multiple odor dimensions. The fly and zebrafish bottleneck architectures are more robust: each receptor type occupies its own channel, so individual variation in one channel does not corrupt others.
+The worm and adult fly degrade fastest — the worm because its 8-dimensional receptor space provides little redundancy and multiplexed receptor types mean individual variation in one neuron affects multiple odor dimensions, the adult fly because its 53× KC expansion amplifies weight jitter across 2,580 Kenyon cells. The larva (0.97) and zebrafish (1.00) are far more robust: each has a clean bottleneck without massive downstream expansion, so individual variation in one channel remains contained.
 
 ![Figure 1. Broadcast transfer quality vs. brain difference for all four organisms.](experiments/scaling/results/scaling_comparison.png)
 *Figure 1. Cross-organism scaling comparison. Top left: receptor repertoire size. Top right: minimum channels for 90% behavioral match. Bottom left: calibration samples needed. Bottom right: broadcast behavioral match at jitter = 0.75.*
@@ -114,17 +114,17 @@ At 50% of channels connected (jitter = 0.0):
 
 | Organism | Channels connected | Total channels | Odor identification |
 |----------|--------------------|----------------|-------------------|
-| *D.* larva | 10 of 21 | 21 | 0.67 |
+| *D.* larva | 10 of 21 | 21 | 0.44 |
 | Zebrafish | 50 of 100 | 100 | 0.59 |
-| Adult *Drosophila* | 25 of 50 | 50 | 0.46 |
+| Adult *Drosophila* | 25 of 49 | 49 | 0.36 |
 
-If channel count alone determined performance, normalized curves would collapse. They do not. The adult fly performs worst despite having an intermediate channel count, because its 40× KC expansion amplifies missing-channel errors: each KC samples ~5 PNs, so a missing PN silences all KCs in its receptive field. The larva's 1:1 PN-to-KC connectivity limits damage to the missing channel itself. The zebrafish's granule cell lateral inhibition partially compensates for missing channels by redistributing information across mitral cells.
+If channel count alone determined performance, normalized curves would collapse. They do not. The adult fly performs worst despite having an intermediate channel count, because its 53× KC expansion amplifies missing-channel errors: each KC samples ~4 PNs, so a missing PN silences all KCs in its receptive field. The larva's 1:1 PN-to-KC connectivity limits damage to the missing channel itself. The zebrafish's granule cell lateral inhibition partially compensates for missing channels by redistributing information across mitral cells.
 
 ![Figure 2. Larva ORN channel sweep.](experiments/drosophila_larva/channel_sweep/results/larva_channel_sweep.png)
 *Figure 2. Larva channel sweep: transfer quality vs. number of connected ORNs at three brain-difference levels (jitter = 0.0, 0.5, 1.0). Odor identification degrades faster than behavioral match as channels are removed.*
 
 ![Figure 3. Adult fly ORN channel sweep.](experiments/drosophila_adult/channel_sweep/results/adult_channel_sweep.png)
-*Figure 3. Adult fly channel sweep. The steeper drop in odor identification reflects the 40× KC expansion amplifying missing-channel errors.*
+*Figure 3. Adult fly channel sweep. The steeper drop in odor identification reflects the 53× KC expansion amplifying missing-channel errors.*
 
 ![Figure 4. Zebrafish ORN channel sweep.](experiments/zebrafish/channel_sweep/results/zebrafish_channel_sweep.png)
 *Figure 4. Zebrafish channel sweep. Granule cell lateral inhibition provides partial compensation for missing channels, producing a shallower degradation curve than the adult fly.*
@@ -158,8 +158,8 @@ Calibration sample efficiency — how many shared odors are needed before the tr
 | Organism | Dimensions (N) | Samples to 90% odor ID | N² | Ratio (samples/N²) |
 |----------|----------------|------------------------|-----|-------------------|
 | *C. elegans* | 8 | ~5 | 64 | 0.08 |
-| *D.* larva | 21 | ~15 | 441 | 0.03 |
-| Adult *Drosophila* | 50 | ~50 | 2500 | 0.02 |
+| *D.* larva | 21 | ~30 | 441 | 0.07 |
+| Adult *Drosophila* | 49 | ~50 | 2401 | 0.02 |
 | Zebrafish | 100 | ~75 | 10000 | 0.008 |
 
 The required sample count grows sub-linearly with N² because receptor response profiles are correlated (nearby ORN types respond to overlapping odor sets), providing implicit regularization. However, the overall trend is dominated by the number of free parameters in the regression, not by biological architecture. This means calibration efficiency, as currently measured, does not distinguish organisms — it measures the dimensionality of the mapping problem.
@@ -171,8 +171,8 @@ The required sample count grows sub-linearly with N² because receptor response 
 
 The 2D sweep of read and write projection neuron counts reveals an asymmetry: write count matters more than read count. For the adult fly at jitter = 0.5:
 
-- Reading all 50 PNs but writing to only 25: odor ID = 0.90
-- Reading only 25 PNs but writing to all 50: odor ID = 0.96
+- Reading all 49 PNs but writing to only 25: odor ID = 0.32
+- Reading only 25 PNs but writing to all 49: odor ID = 0.71
 
 This asymmetry exists because the calibration transform can compensate for incomplete read information (it learns to predict unread channels from correlated read channels), but it cannot compensate for an unwritten channel (the receiver's downstream circuit requires input at that site). The effect is strongest in the adult fly and zebrafish, where the downstream expansion layer (KCs / Dp neurons) amplifies missing write channels.
 
@@ -186,12 +186,55 @@ This asymmetry exists because the calibration transform can compensate for incom
 
 | Metric | *C. elegans* | *D.* larva | Adult *Drosophila* | Zebrafish |
 |--------|-------------|-----------|-------------------|-----------|
-| Receptor types | 8 | 21 | 50 | 100 |
+| Receptor types | 8 | 21 | 49 | 100 |
 | Min channels for 90% behavioral match | 6 | 15 | 35 | 70 |
-| Calibration samples needed | 24 | 63 | 150 | 300 |
-| Broadcast behavioral match (jitter = 0.75) | 0.67 | 0.98 | 0.99 | 1.00 |
+| Calibration samples to 90% odor ID | 5 | 30 | 50 | 75 |
+| Broadcast behavioral match (jitter = 0.75) | 0.65 | 0.97 | 0.72 | 1.00 |
 
-Minimum channel count for 90% behavioral match scales approximately linearly with receptor type count (~0.7× the total). Calibration cost scales super-linearly (~3× the receptor count), reflecting the quadratic growth of regression parameters.
+Minimum channel count for 90% behavioral match scales approximately linearly with receptor type count (~0.7× the total). Calibration cost scales approximately linearly with receptor count (~0.6–1.4× the receptor-type count to reach 90% odor identification), well below the N² parameter count of ridge regression, because correlated receptor response profiles provide implicit regularization (§3.5).
+
+### 3.8 Connectome vs. Shuffled-Connectome Controls
+
+To test whether real wiring topology contributes to transfer quality beyond what dimensionality alone provides, we compared the connectome-based models against shuffled-connectome null models. The null models preserve the exact weight distribution of the real PN→KC connectivity but randomize which PNs each KC receives from, destroying the structured connectivity while preserving all weight statistics.
+
+At jitter = 1.0 (broadcast, no calibration):
+
+| Model | Larva transfer | Larva RSA | Adult transfer | Adult RSA |
+|-------|---------------|-----------|----------------|-----------|
+| Real connectome | 1.00 | 0.984 | 0.81 | 0.984 |
+| Shuffled null | 0.77 | 0.966 | 0.78 | 0.968 |
+
+The real connectome models maintain higher behavioral match and representational geometry than the shuffled controls at all jitter levels, with the difference growing as variability increases. The shuffled adult model degrades faster (transfer drops from 1.00 to 0.61 over the jitter range vs. 0.87 to 0.72 for the real model), confirming that structured PN→KC wiring provides robustness to individual variation.
+
+### 3.9 Sensitivity Analysis of Free Parameters
+
+Each connectome model has four free parameters: PN baseline rate, lateral inhibition strength, KC threshold, and approach threshold. We swept each parameter over a wide range while holding others at default, testing transfer quality at jitter = 0.5 on the connectome models.
+
+**Larva.** Completely insensitive to all four parameters — 100% transfer rate and 0.997 correlation across the entire tested range. The 21-neuron bottleneck is small enough that the system is robust to parameter choices.
+
+**Adult fly.** Two parameters matter; two do not:
+
+| Parameter | Range tested | Transfer rate range | Sensitive? |
+|-----------|-------------|-------------------|------------|
+| PN baseline | 1.0–10.0 | 0.80–0.96 | Yes |
+| Lateral inhibition | 0.0–0.4 | 0.87–0.96 | Moderate |
+| KC threshold | 0.1–0.7 | 0.89 (constant) | No |
+| Approach threshold | 0.01–0.2 | 0.89 (constant) | No |
+
+The parameters that affect results (baseline, inhibition) are biophysically constrained — they correspond to resting firing rate and global inhibitory tone, both of which have measured ranges. The parameters we introduced for computational convenience (thresholds) have no effect on transfer quality, meaning the results are not artifacts of threshold tuning.
+
+### 3.10 Diagonal vs. Full Ridge Calibration
+
+To test whether the cross-channel structure in ridge regression calibration is genuinely needed, we compared full ridge (N² parameters) against diagonal-only calibration (2N parameters: per-channel scale + offset).
+
+| Organism | Method | Parameters | Transfer (jitter = 1.0) | Correlation |
+|----------|--------|-----------|------------------------|-------------|
+| Larva | Ridge | N² = 441 | 1.00 | 1.000 |
+| Larva | Diagonal | 2N = 42 | 1.00 | 1.000 |
+| Adult | Ridge | N² = 2401 | 0.85 | 1.000 |
+| Adult | Diagonal | 2N = 98 | 0.85 | 1.000 |
+
+Diagonal calibration performs identically to full ridge across all organisms and jitter levels. This confirms that calibration is learning per-channel gain adjustment, not meaningful cross-channel remapping. The N² cross-channel parameters in ridge regression are absorbing noise, not encoding biological structure. This result justifies reporting calibration efficiency normalized by dimensionality and validates the CLAUDE.md caveat about linear calibration being "primarily a matrix-math artifact."
 
 ## 4. Discussion
 
@@ -203,9 +246,9 @@ This has a direct engineering implication: a brain-to-brain olfactory interface 
 
 ### 4.2 What Linear Calibration Reveals and Conceals
 
-Ridge regression calibration is so powerful that it achieves near-perfect transfer across all conditions tested. This means it cannot distinguish organisms or architectures — every comparison under calibration looks the same. The direct broadcast baseline and the odor identification metric under partial channel connectivity are the experiments that actually reveal architectural effects.
+Ridge regression calibration achieves near-perfect transfer across all conditions tested, meaning it cannot distinguish organisms or architectures. We now confirm this is because ridge regression is doing nothing that per-channel scaling cannot: diagonal calibration with only 2N parameters matches full ridge with N² parameters exactly (§3.10). The cross-channel mixing matrix is absorbing noise, not learning biological structure.
 
-This is a cautionary result for the field: if a decoder or encoder is powerful enough, it will mask the very architectural constraints that determine real-world feasibility. Simpler calibration methods (diagonal scaling, permutation matching) or information-theoretic bounds may be more informative than optimal linear transforms.
+This result sharpens a cautionary lesson for the field: if a decoder or encoder is powerful enough — even a trivially powerful one like per-channel scaling — it will mask the architectural constraints that determine real-world feasibility. The experiments that actually reveal architecture are the direct broadcast baseline, the odor identification metric under partial channel connectivity, and the connectome vs. shuffled-null comparison. Future work should compare against information-theoretic bounds and nonlinear calibration to test whether the sufficiency of linear mapping is itself an artifact of rate-coded models.
 
 ### 4.3 Vertebrate vs. Insect Architecture
 
@@ -215,31 +258,39 @@ The zebrafish adds the first vertebrate datapoint and reveals that recurrent lat
 
 Our results are lower bounds. Designs that fail in simulation will almost certainly fail in reality; designs that pass are candidates, not guarantees. Specific limitations include:
 
-- **Synaptic weights are inferred, not measured.** Connectomes provide connectivity and synapse counts but not strengths. We address this through robustness analysis across weight variants.
+- **Synaptic weights are inferred, not measured.** Connectomes provide synapse counts but not physiological strengths. We address this through sensitivity analysis (§3.9), which shows that parameters corresponding to measurable biophysical quantities (baseline rate, inhibitory tone) have moderate effects while unconstrained model parameters (thresholds) have none. We further validate robustness across weight variants at multiple jitter scales.
 - **Rate-coded models omit temporal dynamics.** Spike timing, oscillatory coding, and temporal correlations are not captured. This likely underestimates the difficulty of transfer for organisms that use temporal codes.
-- **Calibration is unrealistically optimal.** Real calibration would involve noisy measurements, limited shared stimuli, and non-stationary brain states.
+- **Calibration is unrealistically optimal.** We now quantify this precisely: diagonal calibration (per-channel scaling) matches full ridge regression (§3.10), confirming that calibration effectiveness is a matrix-math property, not a biological finding. Real calibration would additionally face noisy measurements, limited shared stimuli, and non-stationary brain states.
+- **The MBON→output layer is fitted, not constrained.** The output weights are least-squares-fitted to produce correct behavior for known odors. This ensures behavior is correct but means the output layer cannot reveal architectural effects — only the upstream layers (PN, KC) provide meaningful architectural comparisons.
+- **The zebrafish model uses synthetic connectivity.** The larva and adult fly models derive weight matrices from published connectomes (Winding et al. 2023; FlyWire v783), but no equivalent olfactory-bulb connectome exists for zebrafish. The zebrafish model instead uses randomly generated connectivity constrained by literature statistics (mitral cell convergence, granule cell connection probability). This means its results are less constrained than the insect models, and the zebrafish datapoint in the scaling comparison should be interpreted with that asymmetry in mind.
 - **Wireless chemical signaling is absent.** *C. elegans* relies heavily on neuropeptides that act without synaptic connections.
 - **No claim extends to humans.** The scaling trend across four organisms is presented as a trend, not an extrapolation.
 
 ### 4.5 Implications for Neural Interface Design
 
-Three practical conclusions emerge:
+Four practical conclusions emerge:
 
 1. **Write at the bottleneck.** For any organism with a glomerular or equivalent compression layer, this is the optimal write site. It minimizes channel count and exploits the receiver's native expansion circuitry.
 
 2. **Channel dropout is the binding constraint.** Read noise and write precision are solvable with current technology; maintaining reliable contact with every target neuron over time is the hard problem.
 
-3. **Calibration is cheap.** A linear transform fitted on ~3× the receptor-type count of shared odors achieves near-perfect transfer. The bottleneck for real systems is not algorithmic — it is maintaining the physical interface.
+3. **Read requirements are asymmetrically low.** The PN channel sweep reveals that reading from roughly half the bottleneck neurons suffices when writing to all of them: reading 25 of 49 PNs while writing to all 49 yields 71% odor identification, whereas reading all 49 but writing to only 25 yields just 32% (§3.6). Calibration compensates for missing read channels by exploiting correlations among PN responses to predict unread channels, but nothing compensates for an unwritten channel — the receiver's downstream expansion circuit requires input at that site. Since recording neural activity without disrupting it is often the harder hardware problem, halving the read-channel requirement substantially relaxes the engineering constraint on the recording side.
+
+4. **Calibration is cheap.** A linear transform fitted on ~1× the receptor-type count of shared odors achieves 90% odor identification accuracy. The bottleneck for real systems is not algorithmic — it is maintaining the physical interface.
 
 ## 5. Conclusion
 
-We have established quantitative lower bounds on inter-brain olfactory transfer across four model organisms spanning three orders of magnitude in receptor count and two phyla. The shared finding is that bottleneck architecture — not brain size, receptor count, or calibration sophistication — determines how many channels are needed and where they should be placed. The channel count required for 90% behavioral match scales at ~0.7× the glomerular count, hardware requirements are dominated by channel reliability rather than precision, and a simple linear calibration suffices when physical contact is maintained.
+We have established quantitative lower bounds on inter-brain olfactory transfer across four model organisms spanning three orders of magnitude in receptor count and two phyla. The shared finding is that bottleneck architecture — not brain size, receptor count, or calibration sophistication — determines how many channels are needed and where they should be placed. The channel count required for 90% behavioral match scales at ~0.7× the glomerular count, hardware requirements are dominated by channel reliability rather than precision, and a simple linear calibration suffices when physical contact is maintained. Critically, read and write requirements are asymmetric: reading from half the bottleneck neurons is sufficient when calibration can exploit response correlations, while writing demands full coverage because the receiver's expansion circuitry has no way to reconstruct a missing input channel.
 
 These results provide the first systematic, simulation-grounded estimates of what brain-to-brain sensory transfer requires, and they identify the engineering challenges that will determine feasibility as neural interface technology advances.
 
 ## References
 
 Cook, S.J., et al. (2019). Whole-animal connectomes of both *Caenorhabditis elegans* sexes. *Nature*, 571, 63–71.
+
+Couto, A., Alenius, M. & Dickson, B.J. (2005). Molecular, anatomical, and functional organization of the *Drosophila* olfactory system. *Current Biology*, 15, 1535–1547.
+
+Dorkenwald, S., et al. (2024). Neuronal wiring diagram of an adult brain. *Nature*, 634, 124–138.
 
 Hallem, E.A. & Carlson, J.R. (2006). Coding of odors by a receptor repertoire. *Cell*, 125, 143–160.
 

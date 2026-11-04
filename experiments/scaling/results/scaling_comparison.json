@@ -1,10 +1,10 @@
 {
   "experiment": "scaling_comparison",
   "description": "Cross-organism scaling: transfer requirements vs complexity",
-  "timestamp": "2026-11-04T08:45:53Z",
-  "git_commit": "580fdb2",
+  "timestamp": "2026-11-04T10:14:58Z",
+  "git_commit": "a240da9",
   "parameters": {
-    "seeds": 5,
+    "seeds": 10,
     "jitter": 0.75
   },
   "metrics": [
@@ -28,7 +28,7 @@
       "kc_equivalent": 0,
       "bottleneck": "none",
       "signal_mode": "graded",
-      "broadcast_behavioral_match": 0.6714285714285714,
+      "broadcast_behavioral_match": 0.6500000000000001,
       "min_channels_90": 6,
       "calibration_samples": 24
     },
@@ -37,24 +37,24 @@
       "receptor_types": 21,
       "total_receptors": 21,
       "glomeruli": 21,
-      "kc_equivalent": 72,
+      "kc_equivalent": 73,
       "bottleneck": "glomerular (1:1)",
       "signal_mode": "spiking",
-      "broadcast_behavioral_match": 0.9833333333333332,
+      "broadcast_behavioral_match": 0.975,
       "min_channels_90": 15,
       "calibration_samples": 63
     },
     {
       "organism": "D. adult",
-      "receptor_types": 50,
-      "total_receptors": 2500,
-      "glomeruli": 50,
-      "kc_equivalent": 2000,
-      "bottleneck": "glomerular (50:1)",
+      "receptor_types": 49,
+      "total_receptors": 1117,
+      "glomeruli": 49,
+      "kc_equivalent": 2580,
+      "bottleneck": "glomerular (23:1)",
       "signal_mode": "spiking",
-      "broadcast_behavioral_match": 0.9894736842105264,
+      "broadcast_behavioral_match": 0.718421052631579,
       "min_channels_90": 35,
-      "calibration_samples": 150
+      "calibration_samples": 147
     },
     {
       "organism": "Zebrafish",

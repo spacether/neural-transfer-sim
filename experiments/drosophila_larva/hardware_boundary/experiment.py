@@ -3,6 +3,8 @@
 Sweeps hardware impairment axes — read noise, write precision, channel
 dropout, and transmit delay — to find where ORN-to-ORN transfer breaks
 down in the larval olfactory circuit.
+
+Uses the connectome-based larva model (Winding et al. 2023).
 """
 
 from __future__ import annotations
@@ -11,19 +13,16 @@ from typing import Dict, List
 
 import numpy as np
 
-from models.drosophila_larva import (
-    DrosophilaLarvaModel,
-    ODOR_PROFILES,
-    ODOR_VALENCE,
-    ORN_TYPES,
-)
-from models.larva_variants import LarvaVariantGenerator
+from models.larva_connectome import ConnectomeLarvaModel
+from models.larva_connectome_variants import ConnectomeLarvaVariantGenerator
+from models.drosophila_larva import ODOR_PROFILES, ODOR_VALENCE
 from hardware.noise import ReadNoise, WritePrecision, ChannelDropout, TransmitDelay, HardwareChain
 from analysis.metrics import (
     correlation,
     mean_mse,
     representational_similarity,
     odor_identification,
+    bootstrap_ci,
 )
 
 ODOR_SET: List[Dict[str, object]] = [
@@ -35,14 +34,27 @@ ODOR_SET: List[Dict[str, object]] = [
 DEFAULT_JITTER = 0.75
 DEFAULT_SEEDS = 5
 
+METRIC_KEYS = ("transfer_rate", "correlation", "mse", "rsa", "odor_id")
+
+
+def _agg_with_ci(seed_metrics: List[Dict[str, float]]) -> Dict:
+    row: Dict = {}
+    for k in METRIC_KEYS:
+        vals = [m[k] for m in seed_metrics]
+        mean, lo, hi = bootstrap_ci(vals)
+        row[k] = mean
+        row[f"{k}_ci_lo"] = lo
+        row[f"{k}_ci_hi"] = hi
+    return row
+
 
 def _run_one_setting(
-    sender: DrosophilaLarvaModel,
-    receiver: DrosophilaLarvaModel,
+    sender: ConnectomeLarvaModel,
+    receiver: ConnectomeLarvaModel,
     hardware: HardwareChain,
     rng: np.random.Generator,
 ) -> Dict[str, float]:
-    odor_types: List[str] = []
+    orn_order = sender._orn_order
     odor_names: List[str] = []
     natural_states: List[Dict[str, float]] = []
     transferred_states: List[Dict[str, float]] = []
@@ -51,14 +63,12 @@ def _run_one_setting(
     for odor in ODOR_SET:
         name = odor["odor_name"]
         intensity = odor["odor_intensity"]
-        otype = ODOR_VALENCE[name]
-        odor_types.append(otype)
         odor_names.append(name)
 
         sender_orn = sender._orn_rates(name, intensity)
-        sender_signal = {orn: float(sender_orn[i]) for i, orn in enumerate(ORN_TYPES)}
+        sender_signal = {orn: float(sender_orn[i]) for i, orn in enumerate(orn_order)}
         sender_layers = sender._forward(name, intensity)
-        sender_beh = sender._behavior_from_mbon(sender_layers["mbon"])
+        sender_beh = sender._behavior_from_output(sender_layers["output"])
 
         degraded = hardware.apply(sender_signal, rng)
         result = receiver.simulate_from_receptors(degraded)
@@ -95,8 +105,8 @@ def run_hardware_sweep(
     if delay_levels is None:
         delay_levels = [0.0, 0.1, 1.0, 5.0, 20.0, 100.0, 500.0, 2000.0]
 
-    sender = DrosophilaLarvaModel()
-    gen = LarvaVariantGenerator(jitter_scale=jitter)
+    sender = ConnectomeLarvaModel()
+    gen = ConnectomeLarvaVariantGenerator(jitter_scale=jitter)
 
     def _sweep_axis(make_chain, param_values, param_name):
         rows = []
@@ -112,9 +122,8 @@ def run_hardware_sweep(
                 seed_metrics.append(m)
             if not seed_metrics:
                 continue
-            row = {param_name: val}
-            for key in ("transfer_rate", "correlation", "mse", "rsa", "odor_id"):
-                row[key] = float(np.mean([m[key] for m in seed_metrics]))
+            row = {param_name: val, "n_seeds": len(seed_metrics)}
+            row.update(_agg_with_ci(seed_metrics))
             rows.append(row)
         return rows
 
@@ -164,9 +173,8 @@ def run_hardware_sweep(
             m = _run_one_setting(sender, receiver, chain, rng)
             seed_metrics.append(m)
         if seed_metrics:
-            row = {"step": step_idx, **params}
-            for key in ("transfer_rate", "correlation", "mse", "rsa", "odor_id"):
-                row[key] = float(np.mean([m[key] for m in seed_metrics]))
+            row: Dict = {"step": step_idx, **params}
+            row.update(_agg_with_ci(seed_metrics))
             combined_rows.append(row)
     results["combined"] = combined_rows
 
