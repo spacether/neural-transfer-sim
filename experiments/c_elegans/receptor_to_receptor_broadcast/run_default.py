@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from experiments.receptor_to_receptor_broadcast.experiment import (
+from experiments.c_elegans.receptor_to_receptor_broadcast.experiment import (
     MODEL_CLASSES,
     run_receptor_to_receptor_sweep,
 )

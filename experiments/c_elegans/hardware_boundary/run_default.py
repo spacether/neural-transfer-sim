@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from experiments.hardware_boundary.experiment import MODEL_CLASSES, run_hardware_sweep
+from experiments.c_elegans.hardware_boundary.experiment import MODEL_CLASSES, run_hardware_sweep
 from analysis.results_writer import write_results
 from analysis.plotting import plot_hardware_boundary
 

@@ -1,6 +1,6 @@
 """Tests for the hardware boundary experiment."""
 
-from experiments.hardware_boundary import run_hardware_sweep
+from experiments.c_elegans.hardware_boundary import run_hardware_sweep
 from hardware.noise import ReadNoise, WritePrecision, ChannelDropout, HardwareChain
 
 import numpy as np

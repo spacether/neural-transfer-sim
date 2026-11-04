@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from experiments.calibration.experiment import (
+from experiments.c_elegans.calibration.experiment import (
     MODEL_CLASSES,
     run_calibration_sweep,
 )
