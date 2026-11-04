@@ -71,12 +71,14 @@ def _run_one_setting(
         natural_states.append(receiver._layers_to_dict(natural_layers))
         transferred_states.append(result["neurons"])
 
+    natural_kc = [{k: v for k, v in s.items() if k.startswith("KC_")} for s in natural_states]
+    transferred_kc = [{k: v for k, v in s.items() if k.startswith("KC_")} for s in transferred_states]
     return {
         "transfer_rate": successes / len(ODOR_SET),
         "correlation": correlation(transferred_states, natural_states),
         "mse": mean_mse(transferred_states, natural_states),
         "rsa": representational_similarity(natural_states, transferred_states),
-        "decoding": odor_type_decoding(odor_types, natural_states, transferred_states),
+        "decoding": odor_type_decoding(odor_types, natural_kc, transferred_kc),
     }
 
 

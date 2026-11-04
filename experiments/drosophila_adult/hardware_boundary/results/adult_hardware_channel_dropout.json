@@ -1,12 +1,12 @@
 {
   "experiment": "adult_hardware_channel_dropout",
   "description": "Adult Drosophila hardware boundary: channel_dropout sweep",
-  "timestamp": "2026-11-04T06:48:20Z",
-  "git_commit": "42896b1",
+  "timestamp": "2026-11-04T06:57:34Z",
+  "git_commit": "458f5e6",
   "parameters": {
     "axis": "channel_dropout",
     "jitter": 0.75,
-    "seeds": 3
+    "seeds": 5
   },
   "metrics": [
     "dropout_fraction",
@@ -19,67 +19,67 @@
   "results": [
     {
       "dropout_fraction": 0.0,
-      "transfer_rate": 0.9912280701754387,
-      "correlation": 0.9777166444047745,
-      "mse": 0.9046351400219423,
-      "rsa": 0.9554902079166906,
-      "decoding": 0.8128654970760234
+      "transfer_rate": 0.9894736842105264,
+      "correlation": 0.9711730106050867,
+      "mse": 1.1448877149670404,
+      "rsa": 0.9447461623279864,
+      "decoding": 0.9157894736842106
     },
     {
       "dropout_fraction": 0.1,
-      "transfer_rate": 0.97953216374269,
-      "correlation": 0.9363283736946643,
-      "mse": 2.528684305329343,
-      "rsa": 0.8931919851136025,
-      "decoding": 0.8040935672514621
+      "transfer_rate": 0.9701754385964912,
+      "correlation": 0.9175063112039515,
+      "mse": 3.177320206464212,
+      "rsa": 0.882945877163593,
+      "decoding": 0.9052631578947368
     },
     {
       "dropout_fraction": 0.2,
-      "transfer_rate": 0.9327485380116959,
-      "correlation": 0.8709895198382597,
-      "mse": 4.9176723774777615,
-      "rsa": 0.813824715849659,
-      "decoding": 0.7690058479532164
+      "transfer_rate": 0.9385964912280702,
+      "correlation": 0.8961486400830221,
+      "mse": 3.9551093401652175,
+      "rsa": 0.8562386949216714,
+      "decoding": 0.887719298245614
     },
     {
       "dropout_fraction": 0.3,
-      "transfer_rate": 0.9064327485380117,
-      "correlation": 0.8570378535045573,
-      "mse": 5.363132625804705,
-      "rsa": 0.8188636007869049,
-      "decoding": 0.7660818713450293
+      "transfer_rate": 0.8982456140350876,
+      "correlation": 0.845986041511998,
+      "mse": 5.664763155505703,
+      "rsa": 0.7888373484671283,
+      "decoding": 0.8754385964912281
     },
     {
       "dropout_fraction": 0.4,
-      "transfer_rate": 0.8888888888888888,
-      "correlation": 0.7986086684959383,
-      "mse": 7.364687088951797,
-      "rsa": 0.728680743393891,
-      "decoding": 0.7426900584795321
+      "transfer_rate": 0.8824561403508773,
+      "correlation": 0.8007561085058675,
+      "mse": 7.184575725049092,
+      "rsa": 0.7328853308769212,
+      "decoding": 0.8350877192982455
     },
     {
       "dropout_fraction": 0.5,
-      "transfer_rate": 0.8421052631578947,
-      "correlation": 0.7634081556890663,
-      "mse": 8.486826501832786,
-      "rsa": 0.6834102121860178,
-      "decoding": 0.7192982456140351
+      "transfer_rate": 0.856140350877193,
+      "correlation": 0.7378223033860694,
+      "mse": 9.14034065071717,
+      "rsa": 0.6544081912784663,
+      "decoding": 0.8491228070175438
     },
     {
       "dropout_fraction": 0.6,
-      "transfer_rate": 0.7807017543859649,
-      "correlation": 0.6861018783079027,
-      "mse": 10.749282539310101,
-      "rsa": 0.5661777739798474,
-      "decoding": 0.6929824561403509
+      "transfer_rate": 0.775438596491228,
+      "correlation": 0.6621561046880057,
+      "mse": 11.245130079179471,
+      "rsa": 0.5249124994386266,
+      "decoding": 0.7824561403508772
     },
     {
       "dropout_fraction": 0.8,
-      "transfer_rate": 0.5730994152046783,
-      "correlation": 0.562107514508711,
-      "mse": 13.968891038482662,
-      "rsa": 0.3320320772264742,
-      "decoding": 0.5555555555555556
+      "transfer_rate": 0.5631578947368421,
+      "correlation": 0.5276140401166103,
+      "mse": 14.527334369184299,
+      "rsa": 0.2689177237990075,
+      "decoding": 0.756140350877193
     }
   ]
 }

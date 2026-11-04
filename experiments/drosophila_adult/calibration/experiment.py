@@ -84,13 +84,15 @@ def _run_one_pair(
         cal_ok += c_result["behavior"] == sender_beh
 
     n = len(HOLDOUT_SET)
+    natural_kc = [{k: v for k, v in s.items() if k.startswith("KC_")} for s in natural_states]
     out: Dict = {"n_holdout": n, "n_calibration": len(CAL_SET)}
     for prefix, states, ok in [("direct", direct_states, direct_ok), ("calibrated", cal_states, cal_ok)]:
+        states_kc = [{k: v for k, v in s.items() if k.startswith("KC_")} for s in states]
         out[f"{prefix}_transfer_rate"] = ok / max(1, n)
         out[f"{prefix}_correlation"] = correlation(states, natural_states)
         out[f"{prefix}_mse"] = mean_mse(states, natural_states)
         out[f"{prefix}_rsa"] = representational_similarity(natural_states, states)
-        out[f"{prefix}_decoding"] = odor_type_decoding(odor_types, natural_states, states)
+        out[f"{prefix}_decoding"] = odor_type_decoding(odor_types, natural_kc, states_kc)
     return out
 
 

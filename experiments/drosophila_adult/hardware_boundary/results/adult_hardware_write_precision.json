@@ -1,12 +1,12 @@
 {
   "experiment": "adult_hardware_write_precision",
   "description": "Adult Drosophila hardware boundary: write_precision sweep",
-  "timestamp": "2026-11-04T06:48:20Z",
-  "git_commit": "42896b1",
+  "timestamp": "2026-11-04T06:57:34Z",
+  "git_commit": "458f5e6",
   "parameters": {
     "axis": "write_precision",
     "jitter": 0.75,
-    "seeds": 3
+    "seeds": 5
   },
   "metrics": [
     "precision_bits",
@@ -19,67 +19,67 @@
   "results": [
     {
       "precision_bits": Infinity,
-      "transfer_rate": 0.9912280701754387,
-      "correlation": 0.9777166444047745,
-      "mse": 0.9046351400219423,
-      "rsa": 0.9554902079166906,
-      "decoding": 0.8128654970760234
+      "transfer_rate": 0.9894736842105264,
+      "correlation": 0.9711730106050867,
+      "mse": 1.1448877149670404,
+      "rsa": 0.9447461623279864,
+      "decoding": 0.9157894736842106
     },
     {
       "precision_bits": 8,
-      "transfer_rate": 0.9912280701754387,
-      "correlation": 0.9772375999394042,
-      "mse": 0.9239835008780979,
-      "rsa": 0.9552691499122034,
-      "decoding": 0.8128654970760234
+      "transfer_rate": 0.9894736842105264,
+      "correlation": 0.9699002204691268,
+      "mse": 1.1916415334022918,
+      "rsa": 0.9442166139643893,
+      "decoding": 0.9157894736842106
     },
     {
       "precision_bits": 6,
-      "transfer_rate": 0.9941520467836257,
-      "correlation": 0.9771057596335124,
-      "mse": 0.929105748900391,
-      "rsa": 0.954963282074956,
-      "decoding": 0.8099415204678362
+      "transfer_rate": 0.987719298245614,
+      "correlation": 0.969728516006068,
+      "mse": 1.1983956735201797,
+      "rsa": 0.9440900234850955,
+      "decoding": 0.9122807017543859
     },
     {
       "precision_bits": 5,
-      "transfer_rate": 0.9941520467836257,
-      "correlation": 0.9768058032898371,
-      "mse": 0.9409375370879097,
-      "rsa": 0.9549601580369332,
-      "decoding": 0.8099415204678362
+      "transfer_rate": 0.9842105263157895,
+      "correlation": 0.9694481876539651,
+      "mse": 1.2091868181260939,
+      "rsa": 0.943881314305053,
+      "decoding": 0.9105263157894736
     },
     {
       "precision_bits": 4,
-      "transfer_rate": 0.9941520467836257,
-      "correlation": 0.9755744453635765,
-      "mse": 0.9889407701283023,
-      "rsa": 0.9537204910947586,
-      "decoding": 0.8070175438596491
+      "transfer_rate": 0.9842105263157895,
+      "correlation": 0.9683130986738242,
+      "mse": 1.2540662928314326,
+      "rsa": 0.9421503769173656,
+      "decoding": 0.9140350877192983
     },
     {
       "precision_bits": 3,
-      "transfer_rate": 0.9883040935672515,
-      "correlation": 0.9693695727523588,
-      "mse": 1.2351180592261872,
-      "rsa": 0.9476444589014671,
-      "decoding": 0.8099415204678362
+      "transfer_rate": 0.9859649122807017,
+      "correlation": 0.96242935422803,
+      "mse": 1.4899810968852132,
+      "rsa": 0.9380827509350104,
+      "decoding": 0.9105263157894736
     },
     {
       "precision_bits": 2,
       "transfer_rate": 0.9473684210526315,
-      "correlation": 0.9438560650822652,
-      "mse": 2.332923899652007,
-      "rsa": 0.9283918964918696,
-      "decoding": 0.7748538011695906
+      "correlation": 0.9359770233679973,
+      "mse": 2.6395299760863318,
+      "rsa": 0.9184445842916015,
+      "decoding": 0.9017543859649123
     },
     {
       "precision_bits": 1,
-      "transfer_rate": 0.6812865497076023,
-      "correlation": 0.8535306205833395,
-      "mse": 5.9741296613028965,
-      "rsa": 0.8570493025487291,
-      "decoding": 0.7076023391812866
+      "transfer_rate": 0.6771929824561403,
+      "correlation": 0.8468124630472843,
+      "mse": 6.208948634003266,
+      "rsa": 0.8450460641304547,
+      "decoding": 0.7982456140350876
     }
   ]
 }
