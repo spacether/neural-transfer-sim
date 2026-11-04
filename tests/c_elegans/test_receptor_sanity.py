@@ -5,8 +5,8 @@ correct general direction, without claiming quantitative agreement with the
 published calcium-imaging datasets.
 """
 
-from models.worm_connectome import HandBuiltWormModel
-from models.cook2019_connectome import Cook2019WormModel
+from neural_transfer.models.c_elegans.hand_built import HandBuiltWormModel
+from neural_transfer.models.c_elegans.cook2019 import Cook2019WormModel
 
 
 def test_hand_built_model_repellent_odor_increases_aversive_signal() -> None:

@@ -1,1 +1,0 @@
-from experiments.drosophila_larva.calibration.experiment import run_calibration_sweep

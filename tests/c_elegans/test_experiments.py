@@ -1,7 +1,7 @@
 """Tests for the receptor-to-receptor and calibration experiments."""
 
-from experiments.c_elegans.receptor_to_receptor_broadcast import run_receptor_to_receptor_sweep
-from experiments.c_elegans.calibration import run_calibration_sweep
+from experiments.olfactory.c_elegans.receptor_to_receptor_broadcast import run_receptor_to_receptor_sweep
+from experiments.olfactory.c_elegans.calibration import run_calibration_sweep
 
 
 def test_receptor_to_receptor_sweep_returns_expected_shape() -> None:
@@ -67,8 +67,8 @@ def test_calibration_sweep_cook2019() -> None:
 
 
 def test_generate_model_variant_sanity() -> None:
-    from models.worm_connectome import HandBuiltWormModel
-    from models.worm_variants import WormVariantGenerator
+    from neural_transfer.models.c_elegans.hand_built import HandBuiltWormModel
+    from neural_transfer.models.c_elegans.variants import WormVariantGenerator
 
     sender = HandBuiltWormModel()
     generator = WormVariantGenerator(jitter_scale=0.3)

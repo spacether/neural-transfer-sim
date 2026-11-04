@@ -1,5 +1,5 @@
-from models.worm_connectome import HandBuiltWormModel
-from models.worm_variants import WormVariantGenerator
+from neural_transfer.models.c_elegans.hand_built import HandBuiltWormModel
+from neural_transfer.models.c_elegans.variants import WormVariantGenerator
 
 
 def test_worm_variant_generator_keeps_behavioral_invariants() -> None:

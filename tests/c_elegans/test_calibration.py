@@ -2,7 +2,7 @@
 
 import pytest
 
-from link.calibration import CalibrationTransform
+from neural_transfer.link.calibration import CalibrationTransform
 
 
 def test_fit_and_transform_returns_all_neurons() -> None:

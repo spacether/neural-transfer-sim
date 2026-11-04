@@ -1,9 +1,9 @@
 """Tests for Drosophila larva experiments."""
 
-from experiments.drosophila_larva.broadcast import run_broadcast_sweep
-from experiments.drosophila_larva.calibration import run_calibration_sweep
-from experiments.drosophila_larva.hardware_boundary import run_hardware_sweep
-from experiments.drosophila_larva.channel_sweep import run_channel_sweep
+from experiments.olfactory.drosophila_larva.broadcast import run_broadcast_sweep
+from experiments.olfactory.drosophila_larva.calibration import run_calibration_sweep
+from experiments.olfactory.drosophila_larva.hardware_boundary import run_hardware_sweep
+from experiments.olfactory.drosophila_larva.channel_sweep import run_channel_sweep
 
 def test_broadcast_sweep_shape() -> None:
     results = run_broadcast_sweep(jitter_levels=[0.0, 0.5], seeds_per_level=2)

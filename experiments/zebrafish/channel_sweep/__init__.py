@@ -1,1 +1,0 @@
-from experiments.zebrafish.channel_sweep.experiment import run_channel_sweep

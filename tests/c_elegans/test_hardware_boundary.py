@@ -1,7 +1,7 @@
 """Tests for the hardware boundary experiment."""
 
-from experiments.c_elegans.hardware_boundary import run_hardware_sweep
-from hardware.noise import ReadNoise, WritePrecision, ChannelDropout, HardwareChain
+from experiments.olfactory.c_elegans.hardware_boundary import run_hardware_sweep
+from neural_transfer.hardware.noise import ReadNoise, WritePrecision, ChannelDropout, HardwareChain
 
 import numpy as np
 
@@ -54,7 +54,7 @@ def test_hardware_sweep_returns_all_axes() -> None:
 
 
 def test_transmit_delay_adds_drift() -> None:
-    from hardware.noise import TransmitDelay
+    from neural_transfer.hardware.noise import TransmitDelay
     rng = np.random.default_rng(42)
     td = TransmitDelay(delay_ms=1000.0, tau_ms=3000.0)
     signal = {"AWA": 1.0, "AWC_L": 0.8}
@@ -63,7 +63,7 @@ def test_transmit_delay_adds_drift() -> None:
 
 
 def test_transmit_delay_zero_is_identity() -> None:
-    from hardware.noise import TransmitDelay
+    from neural_transfer.hardware.noise import TransmitDelay
     rng = np.random.default_rng(0)
     td = TransmitDelay(delay_ms=0.0)
     signal = {"AWA": 1.0}

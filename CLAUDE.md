@@ -207,7 +207,8 @@ Three headline results. Each should be reported as a curve or a map, never a sin
 models/      per-organism brain models and individual-variation generators
 hardware/    read, write, noise, and compression models
 link/        translate, encode, transmit
-experiments/ sweep definitions and success criteria
+experiments/ organized by sensory modality (e.g. experiments/olfactory/)
+papers/      write-ups and manuscripts
 validation/  comparisons against published data, incl. indicator models
 analysis/    metrics and figures
 ```

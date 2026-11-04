@@ -1,12 +1,18 @@
-# Simulated Brain-to-Brain Smell Transfer
+# Neural Transfer Simulation
 
-Connectome-based simulations that derive the hardware and software requirements for transferring a smell signal from one brain to another. Runs entirely in simulation — no animals, no hardware, no lab.
+Connectome-based simulations that derive the hardware and software requirements for transferring sensory signals from one brain to another. Runs entirely in simulation — no animals, no hardware, no lab.
 
 See [CLAUDE.md](CLAUDE.md) for the full project brief and design rationale.
 
-## Status
+## Papers
 
-All four organisms are implemented and all experiments run end to end. Results are saved as JSON and plotted as PNG in each experiment's `results/` directory.
+- [Olfactory paper draft](papers/olfactory_paper_draft.md) — cross-organism smell-transfer results and scaling analysis
+
+## Subject areas
+
+### Olfactory (smell)
+
+The first and most complete subject area. Four organisms of increasing complexity, each using the shared transfer pipeline.
 
 | Stage | Organism | Receptor types | Bottleneck | Signal mode | Status |
 |-------|----------|---------------|------------|-------------|--------|
@@ -15,9 +21,7 @@ All four organisms are implemented and all experiments run end to end. Results a
 | 3 | Adult *Drosophila* | 50 ORN types | 50 glomeruli → 2000 KCs | spiking | Complete |
 | 4 | Zebrafish | 100 OR types | 100 glomeruli → 80 mitral → 200 granule (recurrent) → 500 Dp | spiking | Complete |
 
-### Experiments per organism
-
-Each organism runs the same set of experiments through the shared pipeline:
+**Experiments per organism:**
 
 - **Broadcast** — direct receptor-to-receptor copy with no calibration, across brain-difference levels
 - **Calibration** — ridge regression transform vs. direct broadcast on held-out odors
@@ -25,10 +29,24 @@ Each organism runs the same set of experiments through the shared pipeline:
 - **Hardware boundary** — sweeps of read noise, write precision, channel dropout, and transmit delay, annotated with real technology operating points
 - **PN/mitral channel sweep** (larva, adult, zebrafish) — 2D sweep of read and write projection neuron counts with calibration
 
-### Cross-organism scaling
+**Cross-organism scaling:**
 
 - **Scaling comparison** — channels needed, calibration cost, and broadcast quality vs. organism complexity
 - **Calibration efficiency** — how odor identification accuracy grows with training set size per organism
+
+**Cross-cutting analyses:**
+
+- **Calibration comparison** — ridge (N²) vs. diagonal (2N) calibration across organisms
+- **Connectome vs. null** — real wiring topology vs. shuffled-connectome controls
+- **Sensitivity analysis** — free-parameter robustness for connectome models
+- **Rerun connectome** — full connectome rerun with bootstrap CIs
+
+**Key findings:**
+
+- **Bottleneck architecture determines transfer requirements more than brain size.** Channel sweep curves do not collapse when normalized by bottleneck fraction — at 50% of channels connected, larva achieves 67% odor identification, zebrafish 59%, adult fly 46%.
+- **Linear calibration (ridge regression) is very powerful.** It achieves near-perfect correlation and behavioral match across all organisms, which means it masks architectural differences. Calibration sample efficiency scales with dimensionality (N² parameters), making it primarily a matrix-math result rather than a biological one.
+- **Hardware boundary is consistent across organisms.** Read noise and channel dropout are the binding constraints; write precision is forgiving above 4 bits; transmit delay matters only at hundreds of milliseconds.
+- **The zebrafish's granule cell recurrent lateral inhibition** is the key vertebrate architectural difference from insects — it decorrelates mitral cell representations before they reach the pallium (Dp).
 
 ### Key metrics
 
@@ -66,13 +84,19 @@ analysis/        metrics, plotting, results I/O
   plotting.py              all experiment plot functions
   results_writer.py        JSON result serialization
 
-experiments/     per-organism experiment directories, each with experiment.py + run_default.py
-  c_elegans/               broadcast, calibration, hardware boundary
-  drosophila_larva/        broadcast, calibration, channel sweep, hardware boundary, PN channel sweep
-  drosophila_adult/        broadcast, calibration, channel sweep, hardware boundary, PN channel sweep
-  zebrafish/               broadcast, calibration, channel sweep, hardware boundary, mitral channel sweep
-  scaling/                 cross-organism scaling comparison + calibration efficiency
+experiments/     experiment modules organized by sensory modality
+  olfactory/               smell-transfer experiments
+    c_elegans/             broadcast, calibration, hardware boundary
+    drosophila_larva/      broadcast, calibration, channel sweep, hardware boundary, PN channel sweep
+    drosophila_adult/      broadcast, calibration, channel sweep, hardware boundary, PN channel sweep
+    zebrafish/             broadcast, calibration, channel sweep, hardware boundary, mitral channel sweep
+    scaling/               cross-organism scaling comparison + calibration efficiency
+    calibration_comparison/ ridge vs diagonal calibration across organisms
+    connectome_vs_null/    real connectome vs shuffled-null wiring topology
+    sensitivity_analysis/  free-parameter sensitivity for connectome models
+    rerun_connectome/      full connectome rerun with bootstrap CIs
 
+papers/          write-ups and manuscripts
 validation/      comparisons against published data
 tests/           automated tests (pytest)
 ```
@@ -92,28 +116,21 @@ python -m pytest -q
 
 Run a single experiment (e.g., larva broadcast):
 ```bash
-python -m experiments.drosophila_larva.broadcast.run_default
+python -m experiments.olfactory.drosophila_larva.broadcast.run_default
 ```
 
 Run all experiments for one organism:
 ```bash
 for exp in broadcast calibration channel_sweep hardware_boundary pn_channel_sweep; do
-  python -m experiments.drosophila_larva.${exp}.run_default
+  python -m experiments.olfactory.drosophila_larva.${exp}.run_default
 done
 ```
 
 Run the cross-organism scaling comparison:
 ```bash
-python -m experiments.scaling.run_default
-python -m experiments.scaling.run_calibration_efficiency
+python -m experiments.olfactory.scaling.run_default
+python -m experiments.olfactory.scaling.run_calibration_efficiency
 ```
-
-## Key findings so far
-
-- **Bottleneck architecture determines transfer requirements more than brain size.** Channel sweep curves do not collapse when normalized by bottleneck fraction — at 50% of channels connected, larva achieves 67% odor identification, zebrafish 59%, adult fly 46%.
-- **Linear calibration (ridge regression) is very powerful.** It achieves near-perfect correlation and behavioral match across all organisms, which means it masks architectural differences. Calibration sample efficiency scales with dimensionality (N² parameters), making it primarily a matrix-math result rather than a biological one.
-- **Hardware boundary is consistent across organisms.** Read noise and channel dropout are the binding constraints; write precision is forgiving above 4 bits; transmit delay matters only at hundreds of milliseconds.
-- **The zebrafish's granule cell recurrent lateral inhibition** is the key vertebrate architectural difference from insects — it decorrelates mitral cell representations before they reach the pallium (Dp).
 
 ## Known limitations
 

@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from models.drosophila_larva import (
+from neural_transfer.models.drosophila_larva import (
     DrosophilaLarvaModel,
     ORN_TYPES,
     PN_NAMES,

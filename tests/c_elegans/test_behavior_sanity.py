@@ -6,8 +6,8 @@ They are intentionally not final quantitative validation against published
 measurements.
 """
 
-from models.worm_connectome import HandBuiltWormModel
-from models.cook2019_connectome import Cook2019WormModel
+from neural_transfer.models.c_elegans.hand_built import HandBuiltWormModel
+from neural_transfer.models.c_elegans.cook2019 import Cook2019WormModel
 
 
 def test_hand_built_model_attractive_odor_drives_forward_behavior() -> None:

@@ -1,7 +1,7 @@
 """Tests for the Drosophila larva variant generator."""
 
-from models.drosophila_larva import DrosophilaLarvaModel
-from models.larva_variants import LarvaVariantGenerator
+from neural_transfer.models.drosophila_larva import DrosophilaLarvaModel
+from neural_transfer.models.drosophila_larva.variants import LarvaVariantGenerator
 
 
 def test_variant_passes_sanity() -> None:
