@@ -1,1 +1,0 @@
-from experiments.drosophila_larva.broadcast.experiment import run_broadcast_sweep

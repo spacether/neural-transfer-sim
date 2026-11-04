@@ -1,1 +1,0 @@
-from experiments.zebrafish.pn_channel_sweep.experiment import run_mitral_channel_sweep

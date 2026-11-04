@@ -1,7 +1,7 @@
 """Tests for the receptor-to-receptor and calibration experiments."""
 
-from experiments.c_elegans.receptor_to_receptor_broadcast import run_receptor_to_receptor_sweep
-from experiments.c_elegans.calibration import run_calibration_sweep
+from experiments.olfactory.c_elegans.receptor_to_receptor_broadcast import run_receptor_to_receptor_sweep
+from experiments.olfactory.c_elegans.calibration import run_calibration_sweep
 
 
 def test_receptor_to_receptor_sweep_returns_expected_shape() -> None:

@@ -1,1 +1,1 @@
-"""Experiment definitions and sweep harnesses."""
+"""Experiment modules organized by sensory modality."""
