@@ -1,8 +1,8 @@
 {
   "experiment": "hardware_write_precision_cook2019",
   "description": "Hardware boundary: write_precision sweep (cook2019)",
-  "timestamp": "2026-11-04T05:46:26Z",
-  "git_commit": "8e28098",
+  "timestamp": "2026-11-04T08:41:04Z",
+  "git_commit": "580fdb2",
   "parameters": {
     "model": "cook2019",
     "axis": "write_precision",
@@ -16,80 +16,80 @@
     "correlation",
     "mse",
     "rsa",
-    "decoding"
+    "odor_id"
   ],
   "results": [
     {
       "model": "cook2019",
       "precision_bits": Infinity,
-      "transfer_rate": 0.7714285714285714,
-      "correlation": 0.9076442120999507,
-      "mse": 0.05102496682710913,
-      "rsa": 0.9602516324255456,
-      "decoding": 0.9571428571428571
+      "transfer_rate": 0.7428571428571429,
+      "correlation": 0.9101358391051708,
+      "mse": 0.05058241459986301,
+      "rsa": 0.9666698518872432,
+      "odor_id": 0.9428571428571428
     },
     {
       "model": "cook2019",
       "precision_bits": 8,
-      "transfer_rate": 0.7714285714285714,
-      "correlation": 0.907640090812856,
-      "mse": 0.05103036666251448,
-      "rsa": 0.9600254817646123,
-      "decoding": 0.9428571428571428
+      "transfer_rate": 0.7428571428571429,
+      "correlation": 0.910132887053796,
+      "mse": 0.050586123444836886,
+      "rsa": 0.966845039018952,
+      "odor_id": 0.9285714285714286
     },
     {
       "model": "cook2019",
       "precision_bits": 6,
-      "transfer_rate": 0.7857142857142857,
-      "correlation": 0.9076212879741468,
-      "mse": 0.05102235290028099,
-      "rsa": 0.9601783723522853,
-      "decoding": 0.9571428571428571
+      "transfer_rate": 0.7428571428571429,
+      "correlation": 0.9101139914316987,
+      "mse": 0.050584099488341264,
+      "rsa": 0.9666061474757127,
+      "odor_id": 0.9428571428571428
     },
     {
       "model": "cook2019",
       "precision_bits": 5,
-      "transfer_rate": 0.7857142857142857,
-      "correlation": 0.9076212879741468,
-      "mse": 0.05102235290028099,
-      "rsa": 0.9601783723522853,
-      "decoding": 0.9571428571428571
+      "transfer_rate": 0.7428571428571429,
+      "correlation": 0.9101139914316987,
+      "mse": 0.050584099488341264,
+      "rsa": 0.9666061474757127,
+      "odor_id": 0.9428571428571428
     },
     {
       "model": "cook2019",
       "precision_bits": 4,
-      "transfer_rate": 0.7571428571428571,
-      "correlation": 0.9071184739892708,
-      "mse": 0.051331030920271914,
-      "rsa": 0.9578945691989171,
-      "decoding": 0.9285714285714286
+      "transfer_rate": 0.7142857142857142,
+      "correlation": 0.9097192384054921,
+      "mse": 0.05082273805347459,
+      "rsa": 0.9650294632903329,
+      "odor_id": 0.9142857142857143
     },
     {
       "model": "cook2019",
       "precision_bits": 3,
-      "transfer_rate": 0.7571428571428571,
-      "correlation": 0.9071184739892708,
-      "mse": 0.051331030920271914,
-      "rsa": 0.9578945691989171,
-      "decoding": 0.9285714285714286
+      "transfer_rate": 0.7142857142857142,
+      "correlation": 0.9097192384054921,
+      "mse": 0.05082273805347459,
+      "rsa": 0.9650294632903329,
+      "odor_id": 0.9142857142857143
     },
     {
       "model": "cook2019",
       "precision_bits": 2,
-      "transfer_rate": 0.7714285714285714,
-      "correlation": 0.8938579720434868,
-      "mse": 0.057636480112372844,
-      "rsa": 0.9157839717383723,
-      "decoding": 0.9714285714285715
+      "transfer_rate": 0.7571428571428571,
+      "correlation": 0.8971540138850077,
+      "mse": 0.0568442014770149,
+      "rsa": 0.9186759144065375,
+      "odor_id": 0.9714285714285715
     },
     {
       "model": "cook2019",
       "precision_bits": 1,
-      "transfer_rate": 0.6428571428571429,
-      "correlation": 0.859993098739871,
-      "mse": 0.07763585201617418,
-      "rsa": 0.8277745151144759,
-      "decoding": 0.8571428571428571
+      "transfer_rate": 0.6571428571428573,
+      "correlation": 0.8641436871910413,
+      "mse": 0.0762165052868784,
+      "rsa": 0.8323369597295297,
+      "odor_id": 0.8571428571428571
     }
   ]
 }

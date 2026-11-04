@@ -37,10 +37,10 @@ def plot_receptor_to_receptor_sweep(results: List[Dict], output_path: Path) -> P
     ax.set_ylim(None, 1.05)
 
     ax = axes[1, 1]
-    ax.plot(jitter, [r["decoding"] for r in results], "o-", color="#d97706")
+    ax.plot(jitter, [r["odor_id"] for r in results], "o-", color="#d97706")
     ax.set_ylabel("Accuracy")
     ax.set_xlabel("Brain difference (× biological CV)")
-    ax.set_title("Odor-type decoding (attractive vs repellent)")
+    ax.set_title("Odor identification (N-way)")
     ax.set_ylim(None, 1.05)
 
     fig.tight_layout()
@@ -57,7 +57,7 @@ def plot_calibration_comparison(results: List[Dict], output_path: Path) -> Path:
         ("correlation", "Correlation (Pearson r)", True),
         ("mse", "MSE (reconstruction error)", False),
         ("rsa", "RSA (representational similarity)", True),
-        ("decoding", "Odor-type decoding (attractive vs repellent)", True),
+        ("odor_id", "Odor identification (N-way)", True),
     ]
 
     fig, axes = plt.subplots(2, 2, figsize=(10, 8))
@@ -177,7 +177,7 @@ def plot_hardware_boundary(all_results: Dict[str, list], output_path: Path) -> P
 
     metric_styles = [
         ("correlation", "Pearson r", "#2563eb", "o-"),
-        ("decoding", "Odor-type decoding", "#d97706", "s--"),
+        ("odor_id", "Odor identification", "#d97706", "s--"),
         ("transfer_rate", "Behavioral match", "#059669", "^:"),
     ]
 
@@ -230,7 +230,7 @@ def plot_channel_sweep(results: List[Dict], output_path: Path) -> Path:
     metrics = [
         ("correlation", "Pearson r"),
         ("transfer_rate", "Behavioral match rate"),
-        ("decoding", "Odor-type decoding"),
+        ("odor_id", "Odor identification"),
     ]
 
     for ax, (key, ylabel) in zip(axes, metrics):
@@ -261,7 +261,7 @@ def plot_pn_channel_sweep(results: List[Dict], output_path: Path) -> Path:
     metrics = [
         ("correlation", "KC correlation (Pearson r)"),
         ("transfer_rate", "Behavioral match"),
-        ("decoding", "Odor-type decoding"),
+        ("odor_id", "Odor identification"),
     ]
 
     n_m = len(metrics)

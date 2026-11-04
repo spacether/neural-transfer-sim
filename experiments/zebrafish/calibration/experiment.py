@@ -14,7 +14,7 @@ from link.calibration import CalibrationTransform
 from link.receptor_to_receptor import ReceptorToReceptorBaseline
 from analysis.metrics import (
     correlation, mean_mse, representational_similarity,
-    odor_type_decoding, odor_identification,
+    odor_identification,
 )
 
 ALL_ODOR_NAMES = list(ODOR_PROFILES.keys())
@@ -24,7 +24,7 @@ HOLDOUT_INTENSITIES = [0.4, 0.9, 1.25]
 CAL_SET = [(name, i) for name in ALL_ODOR_NAMES for i in CAL_INTENSITIES]
 HOLDOUT_SET = [(name, i) for name in ALL_ODOR_NAMES for i in HOLDOUT_INTENSITIES]
 
-METRIC_KEYS = ("transfer_rate", "correlation", "mse", "rsa", "decoding", "odor_id")
+METRIC_KEYS = ("transfer_rate", "correlation", "mse", "rsa", "odor_id")
 
 
 def _get_orn_signal(model: ZebrafishModel, odor_name: str, intensity: float) -> Dict[str, float]:
@@ -81,7 +81,6 @@ def _run_one_pair(sender: ZebrafishModel, receiver: ZebrafishModel) -> Dict:
         out[f"{prefix}_correlation"] = correlation(states, natural_states)
         out[f"{prefix}_mse"] = mean_mse(states, natural_states)
         out[f"{prefix}_rsa"] = representational_similarity(natural_states, states)
-        out[f"{prefix}_decoding"] = odor_type_decoding(odor_types, natural_dp, states_dp)
         out[f"{prefix}_odor_id"] = odor_identification(odor_names, natural_dp, states_dp)
     return out
 

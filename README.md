@@ -1,93 +1,120 @@
-# olfactory-transfer-sim
+# Simulated Brain-to-Brain Smell Transfer
 
-Simulating what it takes to transfer a smell signal from one brain to another.
+Connectome-based simulations that derive the hardware and software requirements for transferring a smell signal from one brain to another. Runs entirely in simulation — no animals, no hardware, no lab.
 
-This repository follows the project brief in [CLAUDE.md](CLAUDE.md): a staged simulation pipeline for worm, larval fly, and adult fly olfactory transfer, with a shared architecture for read, reduce, transmit, translate, encode, write, and score stages.
+See [CLAUDE.md](CLAUDE.md) for the full project brief and design rationale.
 
-## Project goal
+## Status
 
-The long-term goal is to understand how much connection quality, channel count, and calibration are needed to transfer an odor representation from a sender brain to a receiver brain in simulation. The work is intentionally scoped to smell and follows a three-stage progression:
+All four organisms are implemented and all experiments run end to end. Results are saved as JSON and plotted as PNG in each experiment's `results/` directory.
 
-1. Worm as the end-to-end pipeline test
-2. Larval fly with a real olfactory bottleneck
-3. Adult fly with convergence and expansion in the olfactory pathway
+| Stage | Organism | Receptor types | Bottleneck | Signal mode | Status |
+|-------|----------|---------------|------------|-------------|--------|
+| 1 | *C. elegans* (worm) | 8 | none | graded | Complete |
+| 2 | *Drosophila* larva | 21 ORN types | 21 glomeruli | spiking | Complete |
+| 3 | Adult *Drosophila* | 50 ORN types | 50 glomeruli → 2000 KCs | spiking | Complete |
+| 4 | Zebrafish | 100 OR types | 100 glomeruli → 80 mitral → 200 granule (recurrent) → 500 Dp | spiking | Complete |
+
+### Experiments per organism
+
+Each organism runs the same set of experiments through the shared pipeline:
+
+- **Broadcast** — direct receptor-to-receptor copy with no calibration, across brain-difference levels
+- **Calibration** — ridge regression transform vs. direct broadcast on held-out odors
+- **Channel sweep** — transfer quality vs. number of connected ORNs at each brain-difference level
+- **Hardware boundary** — sweeps of read noise, write precision, channel dropout, and transmit delay, annotated with real technology operating points
+- **PN/mitral channel sweep** (larva, adult, zebrafish) — 2D sweep of read and write projection neuron counts with calibration
+
+### Cross-organism scaling
+
+- **Scaling comparison** — channels needed, calibration cost, and broadcast quality vs. organism complexity
+- **Calibration efficiency** — how odor identification accuracy grows with training set size per organism
+
+### Key metrics
+
+All experiments report:
+- **Behavioral match** — does the receiver produce the sender's behavioral response?
+- **Correlation** (Pearson r) — how well transferred activity tracks natural response
+- **MSE** — reconstruction error
+- **RSA** — representational similarity (geometry preservation)
+- **Odor identification** — N-way nearest-centroid classification (which specific odor, not just attractive/repellent)
 
 ## Repository structure
 
-The workspace is organized around the architecture described in the project brief.
+```
+models/          per-organism brain models and individual-variation generators
+  worm_connectome.py       hand-built graded worm (AWA, AWC, AWB, ADL, ASH pathway)
+  cook2019_connectome.py   Cook et al. 2019 connectome via cect with CeNGEN signs
+  worm_variants.py         worm individual-difference generator
+  drosophila_larva.py      21-ORN → 21-PN → 72-KC → MBON larval model
+  larva_variants.py        larva variant generator
+  drosophila_adult.py      50-ORN → 50-PN → 2000-KC → MBON adult fly model
+  adult_variants.py        adult variant generator
+  zebrafish.py             100-ORN → 100-glomeruli → 80-mitral → 200-granule → 500-Dp model
+  zebrafish_variants.py    zebrafish variant generator
 
-### models/
+hardware/        read, write, noise, and compression models
+  noise.py                 ReadNoise, WritePrecision, ChannelDropout, TransmitDelay, HardwareChain
+  technologies.py          real technology operating points for plot annotations
 
-Contains organism-specific brain models and the simulation primitives that define each nervous system. This is the layer where the sender and receiver brains are represented, and where model variants such as individual differences and sensitivity adjustments are introduced.
+link/            translate, encode, transmit
+  receptor_to_receptor.py  direct broadcast baseline (no translation)
+  calibration.py           ridge regression calibration transform
 
-Current status:
-- [models/worm.py](models/worm.py): compact graded worm model used for the first milestone
+analysis/        metrics, plotting, results I/O
+  metrics.py               correlation, MSE, RSA, odor identification
+  plotting.py              all experiment plot functions
+  results_writer.py        JSON result serialization
 
-### hardware/
+experiments/     per-organism experiment directories, each with experiment.py + run_default.py
+  c_elegans/               broadcast, calibration, hardware boundary
+  drosophila_larva/        broadcast, calibration, channel sweep, hardware boundary, PN channel sweep
+  drosophila_adult/        broadcast, calibration, channel sweep, hardware boundary, PN channel sweep
+  zebrafish/               broadcast, calibration, channel sweep, hardware boundary, mitral channel sweep
+  scaling/                 cross-organism scaling comparison + calibration efficiency
 
-Stores read/write hardware models: recording devices, stimulation devices, noise models, and any signal-conditioning elements that sit between the brain and the communication channel. This module is where the project distinguishes between graded and spiking signals.
-
-This directory is intentionally reserved for hardware abstractions rather than specific experiments.
-
-### link/
-
-Contains the communication path itself: direct broadcast, learned translation, encoding, and transmission logic. This is the place where the project compares a simple copy baseline to more sophisticated mapping and channel-based transfers.
-
-Current status:
-- [link/direct_broadcast.py](link/direct_broadcast.py): direct sender-to-receiver copy baseline with no translation
-
-### experiments/
-
-Defines runnable experiments and sweep definitions. This is the top-level execution layer that runs a single trial, a benchmark, or a search over parameters.
-
-Current status:
-- [experiments/worm_milestone.py](experiments/worm_milestone.py): first worm milestone validation and single-odor trial driver
-
-### validation/
-
-Holds checks that compare model output against expected biological behavior and published data. Validation is used before transfer experiments so the sender and receiver models match the organism-specific signals and expected responses.
-
-Current status:
-- [validation/odor_validation.py](validation/odor_validation.py): validates that a worm receives an attractive odor and produces the expected forward movement pattern
-
-### analysis/
-
-Contains metrics, summaries, and plotting logic used after a run. This is where transfer quality, noise sensitivity, calibration performance, and downstream behavioral comparisons are aggregated and visualized.
-
-### tests/
-
-Stores automated tests that lock in the baseline behavior for the current milestone before moving on to more advanced transfer experiments.
-
-Current status:
-- [tests/test_direct_broadcast.py](tests/test_direct_broadcast.py): verifies direct broadcast preserves sender activity and produces the expected worm reaction
-
-## Current milestone
-
-This repository is currently at the first milestone described in [CLAUDE.md](CLAUDE.md):
-
-- one worm
-- one attractive odor
-- one expected behavior
-
-The active baseline is a simple graded worm model that responds to an attractive odor by driving forward motion, and the direct broadcast link is implemented as the no-translation comparison case.
+validation/      comparisons against published data
+tests/           automated tests (pytest)
+```
 
 ## Getting started
-
-Create the project virtual environment and install dependencies:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install pytest numpy scipy scikit-learn matplotlib Brian2 optuna
+pip install -r requirements.txt   # or: pip install numpy scipy scikit-learn matplotlib cect
 ```
 
-Then run the validation checks:
-
+Run tests:
 ```bash
 python -m pytest -q
 ```
 
-## Next development direction
+Run a single experiment (e.g., larva broadcast):
+```bash
+python -m experiments.drosophila_larva.broadcast.run_default
+```
 
-The immediate next work is to expand the worm model toward the direct-broadcast baseline described in the brief, then add calibration and a learned translation layer before moving to the larval fly stage.
+Run all experiments for one organism:
+```bash
+for exp in broadcast calibration channel_sweep hardware_boundary pn_channel_sweep; do
+  python -m experiments.drosophila_larva.${exp}.run_default
+done
+```
+
+Run the cross-organism scaling comparison:
+```bash
+python -m experiments.scaling.run_default
+python -m experiments.scaling.run_calibration_efficiency
+```
+
+## Key findings so far
+
+- **Bottleneck architecture determines transfer requirements more than brain size.** Channel sweep curves do not collapse when normalized by bottleneck fraction — at 50% of channels connected, larva achieves 67% odor identification, zebrafish 59%, adult fly 46%.
+- **Linear calibration (ridge regression) is very powerful.** It achieves near-perfect correlation and behavioral match across all organisms, which means it masks architectural differences. Calibration sample efficiency scales with dimensionality (N² parameters), making it primarily a matrix-math result rather than a biological one.
+- **Hardware boundary is consistent across organisms.** Read noise and channel dropout are the binding constraints; write precision is forgiving above 4 bits; transmit delay matters only at hundreds of milliseconds.
+- **The zebrafish's granule cell recurrent lateral inhibition** is the key vertebrate architectural difference from insects — it decorrelates mitral cell representations before they reach the pallium (Dp).
+
+## Known limitations
+
+See [CLAUDE.md § Known limitations](CLAUDE.md) for the full list. In brief: results are lower bounds, synaptic weights are unknown, calibration is unrealistically powerful (masks real architectural effects), and no claim is made about human transfer.

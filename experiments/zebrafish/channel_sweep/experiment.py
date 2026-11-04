@@ -16,7 +16,7 @@ from models.zebrafish import (
 from models.zebrafish_variants import ZebrafishVariantGenerator
 from analysis.metrics import (
     correlation, mean_mse, representational_similarity,
-    odor_type_decoding, odor_identification,
+    odor_identification,
 )
 
 ODOR_SET: List[Dict[str, object]] = [
@@ -91,7 +91,6 @@ def run_channel_sweep(
                         "correlation": correlation(transferred_states, natural_states),
                         "mse": mean_mse(transferred_states, natural_states),
                         "rsa": representational_similarity(natural_states, transferred_states),
-                        "decoding": odor_type_decoding(odor_types, natural_dp, transferred_dp),
                         "odor_id": odor_identification(odor_names, natural_dp, transferred_dp),
                     })
 
@@ -104,7 +103,7 @@ def run_channel_sweep(
                 "valid_trials": len(all_metrics),
                 **{
                     key: float(np.mean([m[key] for m in all_metrics]))
-                    for key in ("transfer_rate", "correlation", "mse", "rsa", "decoding", "odor_id")
+                    for key in ("transfer_rate", "correlation", "mse", "rsa", "odor_id")
                 },
             })
 

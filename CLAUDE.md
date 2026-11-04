@@ -9,12 +9,12 @@ This project uses connectome-based simulations to derive the hardware and softwa
 The scope is deliberately narrow.
 
 - **One sense: smell.** No touch, hearing, or vision in this project.
-- **Three organisms, in order.** Worm (*C. elegans*) first, then *Drosophila* larva, then adult fly. Each stage must work before the next begins.
+- **Four organisms, in order.** Worm (*C. elegans*) first, then *Drosophila* larva, then adult fly, then zebrafish. Each stage must work before the next begins.
 - **One question per stage.** How much connection, of what quality, and at which point in the pathway, is needed to make a receiver brain register the odor a sender brain is detecting?
 
-Stage 1 (worm) is the pipeline test. Its job is to prove the whole chain runs end to end on the simplest available nervous system. Stages 2 and 3 add a real olfactory bottleneck and test how requirements change as that bottleneck grows.
+Stage 1 (worm) is the pipeline test. Its job is to prove the whole chain runs end to end on the simplest available nervous system. Stages 2–4 add real olfactory bottlenecks and test how requirements change as the bottleneck grows and the architecture changes (insect vs. vertebrate).
 
-Out of scope: any claim about human brain-to-brain communication beyond what the scaling trend across three organisms supports.
+Out of scope: any claim about human brain-to-brain communication beyond what the scaling trend across four organisms supports.
 
 ## Why these three organisms
 
@@ -23,6 +23,7 @@ Out of scope: any claim about human brain-to-brain communication beyond what the
 | *C. elegans* | ~10 | none | Simplest possible pipeline test; no bottleneck |
 | *Drosophila* larva | ~21 | ~21 | Minimal clean bottleneck, one neuron per receptor |
 | Adult *Drosophila* | ~2,600 per antenna | ~50 per side | Full bottleneck with convergence and expansion |
+| Zebrafish | ~300 (100 types × 3) | ~100 | Vertebrate architecture with recurrent lateral inhibition |
 
 ## Shared pipeline architecture
 
@@ -99,8 +100,8 @@ Stage 2 introduces a real bottleneck: roughly 21 olfactory receptor neurons, app
 
 **Experiments deferred from Stage 1** (the worm lacks distinct channels and a bottleneck, making these questions meaningful only here):
 
-- [ ] Channel sweep: transfer quality versus number of connected neurons, at each level of brain difference
-- [ ] Read site versus write site: every usable pairing of receptor, glomerular, and downstream sites
+- [x] Channel sweep: transfer quality versus number of connected neurons, at each level of brain difference
+- [x] PN channel sweep: 2D sweep of read and write projection neuron counts with calibration
 
 **Reuse rule.** The pipeline modules, metrics, and sweep harness carry over unchanged from Stage 1. If Stage 2 requires modifying a shared module, that is a signal the Stage 1 abstraction was wrong and should be fixed in both.
 
@@ -112,10 +113,29 @@ Roughly 2,600 receptor neurons per antenna converging onto about 50 glomeruli pe
 
 - **Convergence and expansion in one pathway.** Both operations can now be tested as read and write sites.
 - **Individual variability becomes structural.** Glomerular wiring is consistent across flies; the projections into the mushroom body are not. This is the clearest test of the claim that bottlenecks are more alike between individuals than expanded layers are, and therefore better write targets.
-- **Receiver learning becomes possible.** A learning rule in the mushroom body lets the receiver adapt to an imperfect incoming code, testing how much learning substitutes for hardware precision.
-- **The richest validation data.** DoOR covers most receptor types against hundreds of odors, and a published whole-brain spiking model provides both a reference implementation and a comparison point.
+- **The richest insect validation data.** DoOR covers most receptor types against hundreds of odors, and a published whole-brain spiking model provides both a reference implementation and a comparison point.
 
-**Scaling result.** With all three stages complete, plot the requirements — channels, precision, calibration cost — against receptor-neuron count and glomerular count. That trend across three measured architectures is the project's most transferable output, and the only defensible basis for saying anything about larger brains.
+## Stage 4: Zebrafish (*Danio rerio*)
+
+Stage 4 adds a vertebrate olfactory system with fundamentally different architecture: recurrent lateral inhibition via granule cells in the olfactory bulb.
+
+**Circuit.** 100 OR types × 3 ORNs each → 100 glomeruli → 80 mitral cells → 200 granule cells (recurrent lateral inhibition) → 500 Dp (dorsal pallium) neurons → 2 output neurons.
+
+**What changes from Stage 3.**
+
+- **Vertebrate architecture.** The granule cell layer provides recurrent lateral inhibition between mitral cells — a computation absent from the insect pathway. This decorrelates representations before they reach downstream areas.
+- **Mitral cells as the bottleneck.** Unlike insects where PNs map one-to-one from glomeruli, zebrafish mitral cells receive convergent input, creating a tighter bottleneck (80 mitral cells for 100 glomeruli).
+- **30 odor profiles** spanning attractive and repellent valences, compared against the insect odor panels.
+
+**Experiments.** All four standard experiments plus the mitral cell channel sweep (the zebrafish equivalent of the PN channel sweep).
+
+- [x] Broadcast baseline across brain-difference levels
+- [x] Calibration vs. direct broadcast
+- [x] ORN channel sweep
+- [x] Hardware boundary with technology annotations
+- [x] Mitral cell channel sweep (2D read/write)
+
+**Scaling result.** With all four stages complete, the scaling comparison plots requirements — channels, precision, calibration cost — against receptor-neuron count and glomerular count. That trend across four organisms (including the first vertebrate) is the project's most transferable output.
 
 ## Data sources
 
@@ -126,6 +146,7 @@ All required data is public. No data collection is needed at any stage.
 | Worm | Cook et al. 2019 connectome (via cect); CeNGEN for neurotransmitter signs | Calcium imaging of AWA, AWC, AWB, ASH odor responses | Published whole-brain calcium recordings, including systematic single-neuron stimulation datasets |
 | Larva | Larval brain connectome (2023) | Kreher et al. empty-neuron recordings of the larval receptor repertoire | Larval behavioral and imaging studies |
 | Adult fly | FlyWire | DoOR database; Hallem & Carlson 2006 | Published glomerular imaging; the 2024 connectome-based whole-brain spiking model |
+| Zebrafish | Published olfactory bulb circuit models | OR response profiles across 30 odors | Published glomerular and mitral cell imaging |
 
 **Reference sources for neuron identity and function:** WormAtlas and WormBase for the worm; FlyWire and Virtual Fly Brain for the fly. Both use standard neuron naming that maps directly into simulation code.
 
@@ -159,7 +180,6 @@ Three headline results. Each should be reported as a curve or a map, never a sin
 **Supporting results.**
 
 - Calibration cost: how many shared odors are needed before the transform generalises to unseen odors, and whether a linear mapping suffices
-- Learning versus precision: how much receiver adaptation substitutes for better hardware
 - Information rate: distinct messages, or bits per second, under realistic conditions
 - Compression limits: how far the signal can be reduced before transfer degrades
 - Drift tolerance: how fast performance falls as the read and write sites shift, and how often recalibration is needed
@@ -201,17 +221,32 @@ analysis/    metrics and figures
 - **Wireless chemical signaling is missing.** Worms rely heavily on neuropeptides that act between neurons with no synapse between them. Studies stimulating neurons one at a time have found real signal flow often departs from the wiring diagram.
 - **Worm olfactory input data is coarse.** Responses cannot be decomposed receptor by receptor, and calcium imaging is an imperfect proxy for the underlying signal.
 - **Extracted subnetworks are not the whole brain.** Removing neurons removes inputs, including inhibition and background drive.
-- **No claim is made about human transfer.** The only human-facing output is the scaling trend across three organisms, presented as a trend, not an extrapolation.
+- **No claim is made about human transfer.** The only human-facing output is the scaling trend across four organisms, presented as a trend, not an extrapolation.
+- **Linear calibration is unrealistically powerful.** Ridge regression achieves near-perfect correlation across all organisms, masking architectural differences. Calibration sample efficiency scales with dimensionality (N² parameters), making it primarily a matrix-math artifact rather than a biological finding.
 - **Nothing here establishes subjective equivalence.** A perfect transfer could only show that the receiver reacts to, describes, and uses the signal as the sender would.
 
 ## First milestone
 
 **Milestone 1: one worm, one odor, one behavior.** Before any linking, two brains, or sweeps, get a single simulated worm whose AWA and AWC neurons respond to an attractive odor and whose command neurons produce the correct movement response. Everything else in the project depends on this working.
 
-**Immediate next steps.**
+**Completed milestones.**
 
 - [x] Set up the project directory with the module structure above
 - [x] Decide the worm model source — chose Cook et al. 2019 connectome with CeNGEN neurotransmitter signs; also kept a hand-built model for comparison
 - [x] Build Milestone 1 and validate it against published odor-response data
 - [x] Add the individual-variation generator and confirm variants pass the sanity check
 - [x] Implement the direct-broadcast baseline before building translation — it is the comparison every later result is measured against
+- [x] Stage 1 complete: worm broadcast, calibration, and hardware boundary experiments all pass
+- [x] Stage 2 complete: larva with 21-ORN bottleneck, channel sweep, PN channel sweep
+- [x] Stage 3 complete: adult fly with 50-PN → 2000-KC expansion, all experiments
+- [x] Stage 4 complete: zebrafish with vertebrate recurrent lateral inhibition architecture
+- [x] Cross-organism scaling comparison across all four organisms
+- [x] Replaced 2-way odor-type decoding with N-way odor identification metric
+- [x] Removed receiver learning experiments (calibration handles the transform)
+- [x] Calibration efficiency sweep across organisms
+
+**Open questions.**
+
+- Calibration sample efficiency is mostly a matrix-math artifact (N² parameters need proportionally more samples). Normalize by dimensionality or compare against synthetic random-mapping baselines to isolate biological effects.
+- Channel sweep curves do not collapse when normalized by bottleneck fraction under odor identification — this is the strongest evidence of real architectural effects. Further analysis needed.
+- Whether the granule cell lateral inhibition in zebrafish measurably affects transfer requirements beyond what dimensionality predicts.

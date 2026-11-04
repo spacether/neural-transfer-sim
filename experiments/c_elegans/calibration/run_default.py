@@ -34,7 +34,7 @@ def _print_results(results, model_name: str) -> None:
             f"{row['direct_correlation']:6.3f} {row['calibrated_correlation']:6.3f}  "
             f"{row['direct_mse']:8.4f} {row['calibrated_mse']:8.4f}  "
             f"{row['direct_rsa']:6.3f} {row['calibrated_rsa']:6.3f}  "
-            f"{row['direct_decoding']:6.3f} {row['calibrated_decoding']:6.3f}"
+            f"{row['direct_odor_id']:6.3f} {row['calibrated_odor_id']:6.3f}"
         )
 
 

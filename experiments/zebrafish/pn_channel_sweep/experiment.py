@@ -16,7 +16,7 @@ from models.zebrafish import (
 )
 from models.zebrafish_variants import ZebrafishVariantGenerator
 from link.calibration import CalibrationTransform
-from analysis.metrics import correlation, mean_mse, odor_type_decoding
+from analysis.metrics import correlation, mean_mse, odor_identification
 
 ALL_ODOR_NAMES = list(ODOR_PROFILES.keys())
 CAL_INTENSITIES = [0.3, 0.5, 0.75, 1.0, 1.5]
@@ -65,14 +65,13 @@ def run_mitral_channel_sweep(
                 transform = CalibrationTransform()
                 transform.fit(sender_cal, receiver_cal)
 
-                odor_types: List[str] = []
+                odor_names: List[str] = []
                 natural_dp: List[Dict[str, float]] = []
                 transferred_dp: List[Dict[str, float]] = []
                 successes = 0
 
                 for name, inten in HOLDOUT_SET:
-                    otype = ODOR_VALENCE[name]
-                    odor_types.append(otype)
+                    odor_names.append(name)
 
                     sender_layers = sender._forward(name, inten)
                     sender_beh = sender._behavior_from_output(sender_layers["output"])
@@ -95,7 +94,7 @@ def run_mitral_channel_sweep(
                     "transfer_rate": successes / max(1, n),
                     "correlation": correlation(transferred_dp, natural_dp),
                     "mse": mean_mse(transferred_dp, natural_dp),
-                    "decoding": odor_type_decoding(odor_types, natural_dp, transferred_dp),
+                    "odor_id": odor_identification(odor_names, natural_dp, transferred_dp),
                 })
 
             if not all_metrics:
@@ -106,7 +105,7 @@ def run_mitral_channel_sweep(
                 "n_write": n_write,
                 **{
                     key: float(np.mean([m[key] for m in all_metrics]))
-                    for key in ("transfer_rate", "correlation", "mse", "decoding")
+                    for key in ("transfer_rate", "correlation", "mse", "odor_id")
                 },
             })
 

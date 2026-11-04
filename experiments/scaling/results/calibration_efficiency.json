@@ -1,8 +1,8 @@
 {
   "experiment": "calibration_efficiency",
   "description": "Calibration sample efficiency: odor identification vs training set size",
-  "timestamp": "2026-11-04T08:20:41Z",
-  "git_commit": "3cc718a",
+  "timestamp": "2026-11-04T08:46:13Z",
+  "git_commit": "580fdb2",
   "parameters": {
     "seeds": 5,
     "jitter": 0.75

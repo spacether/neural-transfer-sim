@@ -21,11 +21,11 @@ def main() -> None:
     results = run_mitral_channel_sweep(seeds=args.seeds)
 
     print("=== Zebrafish: Mitral Cell Channel Sweep ===")
-    print(f"{'read':>5}  {'write':>5}  {'rate':>6}  {'corr':>6}  {'decode':>6}")
+    print(f"{'read':>5}  {'write':>5}  {'rate':>6}  {'corr':>6}  {'odor_id':>6}")
     print("-" * 35)
     for r in results:
         print(f"{r['n_read']:5d}  {r['n_write']:5d}  {r['transfer_rate']:6.3f}  "
-              f"{r['correlation']:6.3f}  {r['decoding']:6.3f}")
+              f"{r['correlation']:6.3f}  {r['odor_id']:6.3f}")
 
     if not args.no_save:
         RESULTS_DIR.mkdir(parents=True, exist_ok=True)

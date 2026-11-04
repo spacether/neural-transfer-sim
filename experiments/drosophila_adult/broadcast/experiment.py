@@ -22,7 +22,6 @@ from analysis.metrics import (
     correlation,
     mean_mse,
     representational_similarity,
-    odor_type_decoding,
     odor_identification,
 )
 
@@ -95,7 +94,6 @@ def run_broadcast_sweep(
                     "correlation": correlation(transferred_states, natural_states),
                     "mse": mean_mse(transferred_states, natural_states),
                     "rsa": representational_similarity(natural_states, transferred_states),
-                    "decoding": odor_type_decoding(odor_types, natural_kc, transferred_kc),
                     "odor_id": odor_identification(odor_names, natural_kc, transferred_kc),
                 })
 
@@ -107,7 +105,7 @@ def run_broadcast_sweep(
             "valid_seeds": len(seed_metrics),
             **{
                 key: float(np.mean([m[key] for m in seed_metrics]))
-                for key in ("transfer_rate", "correlation", "mse", "rsa", "decoding", "odor_id")
+                for key in ("transfer_rate", "correlation", "mse", "rsa", "odor_id")
             },
         })
 

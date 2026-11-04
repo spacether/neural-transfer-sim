@@ -1,8 +1,8 @@
 {
   "experiment": "adult_hardware_channel_dropout",
   "description": "Adult Drosophila hardware boundary: channel_dropout sweep",
-  "timestamp": "2026-11-04T06:57:34Z",
-  "git_commit": "458f5e6",
+  "timestamp": "2026-11-04T08:42:35Z",
+  "git_commit": "580fdb2",
   "parameters": {
     "axis": "channel_dropout",
     "jitter": 0.75,
@@ -14,7 +14,7 @@
     "correlation",
     "mse",
     "rsa",
-    "decoding"
+    "odor_id"
   ],
   "results": [
     {
@@ -23,63 +23,63 @@
       "correlation": 0.9711730106050867,
       "mse": 1.1448877149670404,
       "rsa": 0.9447461623279864,
-      "decoding": 0.9157894736842106
+      "odor_id": 0.9263157894736842
     },
     {
       "dropout_fraction": 0.1,
-      "transfer_rate": 0.9701754385964912,
-      "correlation": 0.9175063112039515,
-      "mse": 3.177320206464212,
-      "rsa": 0.882945877163593,
-      "decoding": 0.9052631578947368
+      "transfer_rate": 0.9666666666666668,
+      "correlation": 0.9257484756455282,
+      "mse": 2.848628549604479,
+      "rsa": 0.886865899611279,
+      "odor_id": 0.8263157894736842
     },
     {
       "dropout_fraction": 0.2,
-      "transfer_rate": 0.9385964912280702,
-      "correlation": 0.8961486400830221,
-      "mse": 3.9551093401652175,
-      "rsa": 0.8562386949216714,
-      "decoding": 0.887719298245614
+      "transfer_rate": 0.9421052631578947,
+      "correlation": 0.8804045561627076,
+      "mse": 4.511059854181218,
+      "rsa": 0.8352231528554446,
+      "odor_id": 0.7035087719298245
     },
     {
       "dropout_fraction": 0.3,
-      "transfer_rate": 0.8982456140350876,
-      "correlation": 0.845986041511998,
-      "mse": 5.664763155505703,
-      "rsa": 0.7888373484671283,
-      "decoding": 0.8754385964912281
+      "transfer_rate": 0.9035087719298245,
+      "correlation": 0.8270754706322462,
+      "mse": 6.310325752170409,
+      "rsa": 0.7688390180821955,
+      "odor_id": 0.6263157894736843
     },
     {
       "dropout_fraction": 0.4,
       "transfer_rate": 0.8824561403508773,
-      "correlation": 0.8007561085058675,
-      "mse": 7.184575725049092,
-      "rsa": 0.7328853308769212,
-      "decoding": 0.8350877192982455
+      "correlation": 0.8137375815784662,
+      "mse": 6.763521807130877,
+      "rsa": 0.7445437414174334,
+      "odor_id": 0.5385964912280701
     },
     {
       "dropout_fraction": 0.5,
-      "transfer_rate": 0.856140350877193,
-      "correlation": 0.7378223033860694,
-      "mse": 9.14034065071717,
-      "rsa": 0.6544081912784663,
-      "decoding": 0.8491228070175438
+      "transfer_rate": 0.8508771929824561,
+      "correlation": 0.7502770433341046,
+      "mse": 8.765222565355149,
+      "rsa": 0.6621003162486943,
+      "odor_id": 0.47192982456140353
     },
     {
       "dropout_fraction": 0.6,
-      "transfer_rate": 0.775438596491228,
-      "correlation": 0.6621561046880057,
-      "mse": 11.245130079179471,
-      "rsa": 0.5249124994386266,
-      "decoding": 0.7824561403508772
+      "transfer_rate": 0.7912280701754387,
+      "correlation": 0.6796771974472696,
+      "mse": 10.755917674314915,
+      "rsa": 0.5460578352395224,
+      "odor_id": 0.3736842105263158
     },
     {
       "dropout_fraction": 0.8,
-      "transfer_rate": 0.5631578947368421,
-      "correlation": 0.5276140401166103,
-      "mse": 14.527334369184299,
-      "rsa": 0.2689177237990075,
-      "decoding": 0.756140350877193
+      "transfer_rate": 0.5684210526315789,
+      "correlation": 0.5880215032899028,
+      "mse": 13.19862952267998,
+      "rsa": 0.39231747791039756,
+      "odor_id": 0.20526315789473681
     }
   ]
 }

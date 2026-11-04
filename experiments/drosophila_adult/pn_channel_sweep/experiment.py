@@ -27,7 +27,7 @@ from analysis.metrics import (
     correlation,
     mean_mse,
     representational_similarity,
-    odor_type_decoding,
+    odor_identification,
 )
 
 
@@ -74,14 +74,14 @@ def _run_one(
     transform.neurons = tuple(sorted(set(read_pns) | set(write_pns)))
     transform.fit(sender_cal, receiver_cal)
 
-    odor_types: List[str] = []
+    odor_names: List[str] = []
     natural_kc: List[Dict[str, float]] = []
     transferred_kc: List[Dict[str, float]] = []
     successes = 0
 
     write_set = set(write_pns)
     for name, inten in HOLDOUT_SET:
-        odor_types.append(ODOR_VALENCE[name])
+        odor_names.append(name)
 
         sender_sig = _read_pn(sender, name, inten, read_indices)
         sender_layers = sender._forward(name, inten)
@@ -101,7 +101,7 @@ def _run_one(
     return {
         "transfer_rate": successes / max(1, n),
         "correlation": correlation(transferred_kc, natural_kc),
-        "decoding": odor_type_decoding(odor_types, natural_kc, transferred_kc),
+        "odor_id": odor_identification(odor_names, natural_kc, transferred_kc),
     }
 
 
@@ -143,7 +143,7 @@ def run_pn_channel_sweep(
                 "jitter_scale": jitter,
                 "valid_trials": len(seed_metrics),
                 **{key: float(np.mean([m[key] for m in seed_metrics]))
-                   for key in ("transfer_rate", "correlation", "decoding")},
+                   for key in ("transfer_rate", "correlation", "odor_id")},
             })
 
     return results

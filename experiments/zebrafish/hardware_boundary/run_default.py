@@ -24,12 +24,12 @@ def main() -> None:
         print(f"\n  --- {axis} ---")
         if not rows:
             continue
-        param_key = [k for k in rows[0] if k not in ("transfer_rate", "correlation", "mse", "rsa", "decoding", "step")][0]
-        print(f"  {param_key:>8}  {'rate':>6}  {'corr':>6}  {'mse':>9}  {'decode':>6}")
-        print("  " + "-" * 48)
+        param_key = [k for k in rows[0] if k not in ("transfer_rate", "correlation", "mse", "rsa", "odor_id", "step")][0]
+        print(f"  {param_key:>8}  {'rate':>6}  {'corr':>6}  {'mse':>9}  {'odor_id':>7}")
+        print("  " + "-" * 50)
         for r in rows:
             print(f"  {r[param_key]:8.2f}  {r['transfer_rate']:6.3f}  "
-                  f"{r['correlation']:6.3f}  {r['mse']:9.2f}  {r['decoding']:6.3f}")
+                  f"{r['correlation']:6.3f}  {r['mse']:9.2f}  {r['odor_id']:7.3f}")
 
     if not args.no_save:
         RESULTS_DIR.mkdir(parents=True, exist_ok=True)

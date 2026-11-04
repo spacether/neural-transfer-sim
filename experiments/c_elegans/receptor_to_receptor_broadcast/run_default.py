@@ -17,7 +17,7 @@ RESULTS_DIR = Path(__file__).parent / "results"
 
 def _print_results(results, model_name: str) -> None:
     print(f"\n=== {model_name} ===")
-    print(f"{'jitter':>6}  {'rate':>6}  {'corr':>6}  {'mse':>8}  {'rsa':>6}  {'decode':>6}")
+    print(f"{'jitter':>6}  {'rate':>6}  {'corr':>6}  {'mse':>8}  {'rsa':>6}  {'odor_id':>6}")
     print("-" * 50)
     for row in results:
         print(
@@ -26,7 +26,7 @@ def _print_results(results, model_name: str) -> None:
             f"{row['correlation']:6.3f}  "
             f"{row['mse']:8.4f}  "
             f"{row['rsa']:6.3f}  "
-            f"{row['decoding']:6.3f}"
+            f"{row['odor_id']:6.3f}"
         )
 
 

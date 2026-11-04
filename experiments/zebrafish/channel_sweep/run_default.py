@@ -21,11 +21,11 @@ def main() -> None:
     results = run_channel_sweep(seeds_per_level=args.seeds)
 
     print("=== Zebrafish: ORN Channel Sweep ===")
-    print(f"{'ch':>3}  {'jitter':>6}  {'rate':>6}  {'corr':>6}  {'mse':>9}  {'rsa':>6}  {'decode':>6}")
+    print(f"{'ch':>3}  {'jitter':>6}  {'rate':>6}  {'corr':>6}  {'mse':>9}  {'rsa':>6}  {'odor_id':>6}")
     print("-" * 55)
     for r in results:
         print(f"{r['n_channels']:3d}  {r['jitter_scale']:6.2f}  {r['transfer_rate']:6.3f}  "
-              f"{r['correlation']:6.3f}  {r['mse']:9.2f}  {r['rsa']:6.3f}  {r['decoding']:6.3f}")
+              f"{r['correlation']:6.3f}  {r['mse']:9.2f}  {r['rsa']:6.3f}  {r['odor_id']:6.3f}")
 
     if not args.no_save:
         RESULTS_DIR.mkdir(parents=True, exist_ok=True)

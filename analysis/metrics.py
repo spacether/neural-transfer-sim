@@ -7,7 +7,7 @@ the odor directly).  Each metric answers a different question:
 - Correlation (r): how well does the transferred activity track the natural response?
 - MSE: how close is the receiver's state to its natural response?
 - RSA: is the geometry of odor representations preserved?
-- Odor-type decoding: can we tell attractive from repellent after transfer?
+- Odor identification: can we tell which specific odor was transferred (N-way)?
 """
 
 from __future__ import annotations
@@ -95,37 +95,6 @@ def representational_similarity(
     return float(corr)
 
 
-def odor_type_decoding(
-    odor_types: List[str],
-    natural_states: List[Dict[str, float]],
-    transferred_states: List[Dict[str, float]],
-) -> float:
-    """Classify each transferred state as attractive or repellent.
-
-    Computes the centroid of natural-response vectors for each odor type,
-    then assigns each transferred state to the nearest centroid.
-    Returns fraction correctly classified.
-    """
-    keys = _shared_keys(natural_states, transferred_states)
-    nat_vecs = np.array([state_to_vec(s, keys) for s in natural_states])
-    trans_vecs = np.array([state_to_vec(s, keys) for s in transferred_states])
-
-    categories = sorted(set(odor_types))
-    centroids = {}
-    for cat in categories:
-        mask = [i for i, t in enumerate(odor_types) if t == cat]
-        centroids[cat] = nat_vecs[mask].mean(axis=0)
-
-    correct = 0
-    for i, tv in enumerate(trans_vecs):
-        dists = {cat: np.linalg.norm(tv - c) for cat, c in centroids.items()}
-        predicted = min(dists, key=dists.get)
-        if predicted == odor_types[i]:
-            correct += 1
-
-    return correct / max(1, len(transferred_states))
-
-
 def odor_identification(
     odor_labels: List[str],
     natural_states: List[Dict[str, float]],
@@ -135,9 +104,9 @@ def odor_identification(
 
     Computes the centroid of natural-response vectors for each distinct odor
     label, then assigns each transferred state to the nearest centroid.
-    Returns fraction correctly identified. Unlike odor_type_decoding (2-way),
-    this tests whether the transfer preserves enough structure to distinguish
-    similar odors within the same valence category.
+    Returns fraction correctly identified — tests whether the transfer
+    preserves enough structure to distinguish similar odors within the
+    same valence category.
     """
     keys = _shared_keys(natural_states, transferred_states)
     nat_vecs = np.array([state_to_vec(s, keys) for s in natural_states])
