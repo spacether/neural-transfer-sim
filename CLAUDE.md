@@ -245,8 +245,8 @@ analysis/    metrics and figures
 - [x] Removed receiver learning experiments (calibration handles the transform)
 - [x] Calibration efficiency sweep across organisms
 
-**Open questions.**
+**Resolved questions.**
 
-- Calibration sample efficiency is mostly a matrix-math artifact (N² parameters need proportionally more samples). Normalize by dimensionality or compare against synthetic random-mapping baselines to isolate biological effects.
-- Channel sweep curves do not collapse when normalized by bottleneck fraction under odor identification — this is the strongest evidence of real architectural effects. Further analysis needed.
-- Whether the granule cell lateral inhibition in zebrafish measurably affects transfer requirements beyond what dimensionality predicts.
+- **Calibration sample efficiency is primarily dimensional.** Samples to 90% odor ID scale ~linearly with N (ratios: 0.63, 1.43, 1.02, 0.75 for N = 8, 21, 49, 100), not with N². The sub-N² scaling comes from correlations in receptor response profiles that ridge regularization exploits. No clear biological effect beyond dimensionality — calibration efficiency does not distinguish organisms.
+- **Channel sweep curves do not collapse when normalized by bottleneck fraction.** Confirmed: at 50% of channels connected (jitter=0.0), odor ID is 0.44 (larva), 0.36 (adult), 0.59 (zebrafish). The adult fly is consistently worst despite having an intermediate channel count, because its 53× KC expansion amplifies missing-channel errors. This is the strongest evidence that architecture — not dimensionality — determines transfer requirements.
+- **Zebrafish granule cell lateral inhibition outperforms the adult fly at matched channel fractions** (e.g., +0.23 odor ID gap at 50% channels), and zebrafish broadcast maintains perfect behavioral match even at jitter=1.5 while the adult fly drops to 0.72 at jitter=0.75. However, the zebrafish model uses synthetic connectivity, so the granule cell effect could be an artifact of the hand-built model. This cannot be resolved without a zebrafish olfactory bulb connectome.
