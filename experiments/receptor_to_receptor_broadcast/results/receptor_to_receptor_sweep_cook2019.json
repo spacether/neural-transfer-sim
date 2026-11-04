@@ -1,0 +1,99 @@
+{
+  "experiment": "receptor_to_receptor_sweep_cook2019",
+  "description": "Transfer quality vs brain difference using receptor-to-receptor baseline (cook2019)",
+  "timestamp": "2026-11-04T04:35:30Z",
+  "git_commit": "1b8499a",
+  "parameters": {
+    "model": "cook2019",
+    "jitter_levels": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0,
+      1.25,
+      1.5
+    ],
+    "seeds_per_level": 5
+  },
+  "metrics": [
+    "model",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "decoding"
+  ],
+  "results": [
+    {
+      "model": "cook2019",
+      "jitter_scale": 0.0,
+      "transfer_rate": 1.0,
+      "correlation": 1.0,
+      "mse": 0.0,
+      "rsa": 1.0,
+      "decoding": 1.0,
+      "seeds": 5
+    },
+    {
+      "model": "cook2019",
+      "jitter_scale": 0.25,
+      "transfer_rate": 0.9428571428571428,
+      "correlation": 0.9831970910108687,
+      "mse": 0.008181690719587378,
+      "rsa": 0.9947443860487339,
+      "decoding": 0.9857142857142858,
+      "seeds": 5
+    },
+    {
+      "model": "cook2019",
+      "jitter_scale": 0.5,
+      "transfer_rate": 0.8428571428571429,
+      "correlation": 0.9457726286600581,
+      "mse": 0.029940457704817507,
+      "rsa": 0.9810160853639115,
+      "decoding": 0.9714285714285715,
+      "seeds": 5
+    },
+    {
+      "model": "cook2019",
+      "jitter_scale": 0.75,
+      "transfer_rate": 0.7714285714285715,
+      "correlation": 0.9075722941324896,
+      "mse": 0.06074807380289028,
+      "rsa": 0.9636279662366618,
+      "decoding": 0.9428571428571428,
+      "seeds": 5
+    },
+    {
+      "model": "cook2019",
+      "jitter_scale": 1.0,
+      "transfer_rate": 0.7714285714285714,
+      "correlation": 0.871175735176027,
+      "mse": 0.10291681603004707,
+      "rsa": 0.9491033604077082,
+      "decoding": 0.9,
+      "seeds": 5
+    },
+    {
+      "model": "cook2019",
+      "jitter_scale": 1.25,
+      "transfer_rate": 0.6857142857142857,
+      "correlation": 0.8392357705631358,
+      "mse": 0.15504363974355923,
+      "rsa": 0.93296066252588,
+      "decoding": 0.8571428571428571,
+      "seeds": 5
+    },
+    {
+      "model": "cook2019",
+      "jitter_scale": 1.5,
+      "transfer_rate": 0.6571428571428571,
+      "correlation": 0.8125336560275501,
+      "mse": 0.2146189684423796,
+      "rsa": 0.9211371237458195,
+      "decoding": 0.8285714285714286,
+      "seeds": 5
+    }
+  ]
+}

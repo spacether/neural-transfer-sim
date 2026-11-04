@@ -1,0 +1,95 @@
+{
+  "experiment": "hardware_read_noise_cook2019",
+  "description": "Hardware boundary: read_noise sweep (cook2019)",
+  "timestamp": "2026-11-04T04:50:03Z",
+  "git_commit": "1b8499a",
+  "parameters": {
+    "model": "cook2019",
+    "axis": "read_noise",
+    "jitter": 0.75,
+    "seeds": 5
+  },
+  "metrics": [
+    "model",
+    "noise_sigma",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "decoding"
+  ],
+  "results": [
+    {
+      "model": "cook2019",
+      "noise_sigma": 0.0,
+      "transfer_rate": 0.6857142857142857,
+      "correlation": 0.9046954220161206,
+      "mse": 0.062164175870184725,
+      "rsa": 0.9657015448319797,
+      "decoding": 0.9285714285714286
+    },
+    {
+      "model": "cook2019",
+      "noise_sigma": 0.05,
+      "transfer_rate": 0.6857142857142857,
+      "correlation": 0.9071625287171152,
+      "mse": 0.06065314672747375,
+      "rsa": 0.966558369167065,
+      "decoding": 0.9142857142857143
+    },
+    {
+      "model": "cook2019",
+      "noise_sigma": 0.1,
+      "transfer_rate": 0.6714285714285714,
+      "correlation": 0.9014007883977291,
+      "mse": 0.06393487426398303,
+      "rsa": 0.9633699633699635,
+      "decoding": 0.9142857142857143
+    },
+    {
+      "model": "cook2019",
+      "noise_sigma": 0.2,
+      "transfer_rate": 0.6714285714285714,
+      "correlation": 0.879866010809328,
+      "mse": 0.07675414962469185,
+      "rsa": 0.9410606784519828,
+      "decoding": 0.9142857142857143
+    },
+    {
+      "model": "cook2019",
+      "noise_sigma": 0.3,
+      "transfer_rate": 0.6571428571428573,
+      "correlation": 0.8710798080048804,
+      "mse": 0.08396450755171778,
+      "rsa": 0.8942952699474439,
+      "decoding": 0.9285714285714286
+    },
+    {
+      "model": "cook2019",
+      "noise_sigma": 0.5,
+      "transfer_rate": 0.6428571428571428,
+      "correlation": 0.8366837426929823,
+      "mse": 0.10787602420359912,
+      "rsa": 0.8451377607899347,
+      "decoding": 0.9142857142857143
+    },
+    {
+      "model": "cook2019",
+      "noise_sigma": 0.75,
+      "transfer_rate": 0.7428571428571429,
+      "correlation": 0.7745241166223593,
+      "mse": 0.1721416681155038,
+      "rsa": 0.7027934384456124,
+      "decoding": 0.9857142857142858
+    },
+    {
+      "model": "cook2019",
+      "noise_sigma": 1.0,
+      "transfer_rate": 0.7285714285714286,
+      "correlation": 0.7110689703673909,
+      "mse": 0.24605313380259952,
+      "rsa": 0.5871954132823699,
+      "decoding": 0.9428571428571428
+    }
+  ]
+}

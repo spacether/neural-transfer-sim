@@ -1,0 +1,95 @@
+{
+  "experiment": "hardware_channel_dropout_cook2019",
+  "description": "Hardware boundary: channel_dropout sweep (cook2019)",
+  "timestamp": "2026-11-04T04:50:03Z",
+  "git_commit": "1b8499a",
+  "parameters": {
+    "model": "cook2019",
+    "axis": "channel_dropout",
+    "jitter": 0.75,
+    "seeds": 5
+  },
+  "metrics": [
+    "model",
+    "dropout_fraction",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "decoding"
+  ],
+  "results": [
+    {
+      "model": "cook2019",
+      "dropout_fraction": 0.0,
+      "transfer_rate": 0.6857142857142857,
+      "correlation": 0.9046954220161206,
+      "mse": 0.062164175870184725,
+      "rsa": 0.9657015448319797,
+      "decoding": 0.9285714285714286
+    },
+    {
+      "model": "cook2019",
+      "dropout_fraction": 0.1,
+      "transfer_rate": 0.6285714285714287,
+      "correlation": 0.8704365694605662,
+      "mse": 0.08347617562804673,
+      "rsa": 0.9386813186813188,
+      "decoding": 0.8857142857142856
+    },
+    {
+      "model": "cook2019",
+      "dropout_fraction": 0.2,
+      "transfer_rate": 0.6285714285714286,
+      "correlation": 0.8295064563630934,
+      "mse": 0.10652193168030558,
+      "rsa": 0.9053893932154802,
+      "decoding": 0.9
+    },
+    {
+      "model": "cook2019",
+      "dropout_fraction": 0.3,
+      "transfer_rate": 0.5428571428571429,
+      "correlation": 0.6768231832997127,
+      "mse": 0.19569421766231437,
+      "rsa": 0.7466211577746241,
+      "decoding": 0.8142857142857143
+    },
+    {
+      "model": "cook2019",
+      "dropout_fraction": 0.4,
+      "transfer_rate": 0.4999999999999999,
+      "correlation": 0.6927521753886919,
+      "mse": 0.19228272501182944,
+      "rsa": 0.6680062756945222,
+      "decoding": 0.7428571428571429
+    },
+    {
+      "model": "cook2019",
+      "dropout_fraction": 0.5,
+      "transfer_rate": 0.4714285714285714,
+      "correlation": 0.6187633647124527,
+      "mse": 0.2324617618741352,
+      "rsa": 0.6328437286459844,
+      "decoding": 0.7999999999999999
+    },
+    {
+      "model": "cook2019",
+      "dropout_fraction": 0.6,
+      "transfer_rate": 0.37142857142857144,
+      "correlation": 0.5284034650154654,
+      "mse": 0.27937053777297816,
+      "rsa": 0.42510749603444464,
+      "decoding": 0.7285714285714286
+    },
+    {
+      "model": "cook2019",
+      "dropout_fraction": 0.8,
+      "transfer_rate": 0.27142857142857146,
+      "correlation": 0.466037369361709,
+      "mse": 0.3225175073012288,
+      "rsa": 0.33057264759241506,
+      "decoding": 0.6285714285714287
+    }
+  ]
+}
