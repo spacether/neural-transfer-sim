@@ -38,11 +38,11 @@ def _worm_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
 
 
 def _larva_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
-    """Run larva transfer metrics."""
-    from models.drosophila_larva import DrosophilaLarvaModel, ORN_TYPES, N_KC
-    from models.larva_variants import LarvaVariantGenerator
+    """Run larva transfer metrics using the connectome model."""
+    from models.larva_connectome import ConnectomeLarvaModel
     from experiments.drosophila_larva.broadcast.experiment import run_broadcast_sweep
 
+    model = ConnectomeLarvaModel()
     results = run_broadcast_sweep(
         jitter_levels=[jitter],
         seeds_per_level=seeds,
@@ -51,10 +51,10 @@ def _larva_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
 
     return {
         "organism": "D. larva",
-        "receptor_types": len(ORN_TYPES),
-        "total_receptors": len(ORN_TYPES),
-        "glomeruli": len(ORN_TYPES),
-        "kc_equivalent": N_KC,
+        "receptor_types": len(model._orn_order),
+        "total_receptors": len(model._orn_order),
+        "glomeruli": len(model._orn_order),
+        "kc_equivalent": model._n_kc,
         "bottleneck": "glomerular (1:1)",
         "signal_mode": "spiking",
         "broadcast_behavioral_match": beh_match,
@@ -62,13 +62,11 @@ def _larva_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
 
 
 def _adult_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
-    """Run adult fly transfer metrics."""
-    from models.drosophila_adult import (
-        DrosophilaAdultModel, ORN_TYPES, N_ORN_TYPES,
-        N_TOTAL_ORNS, N_PN, N_KC,
-    )
+    """Run adult fly transfer metrics using the connectome model."""
+    from models.adult_connectome import ConnectomeAdultModel
     from experiments.drosophila_adult.broadcast.experiment import run_broadcast_sweep
 
+    model = ConnectomeAdultModel()
     results = run_broadcast_sweep(
         jitter_levels=[jitter],
         seeds_per_level=seeds,
@@ -77,11 +75,11 @@ def _adult_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
 
     return {
         "organism": "D. adult",
-        "receptor_types": N_ORN_TYPES,
-        "total_receptors": N_TOTAL_ORNS,
-        "glomeruli": N_PN,
-        "kc_equivalent": N_KC,
-        "bottleneck": "glomerular (50:1)",
+        "receptor_types": model._n_glom,
+        "total_receptors": 1117,
+        "glomeruli": model._n_glom,
+        "kc_equivalent": model._n_kc,
+        "bottleneck": "glomerular (23:1)",
         "signal_mode": "spiking",
         "broadcast_behavioral_match": beh_match,
     }

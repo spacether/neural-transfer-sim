@@ -6,6 +6,8 @@ down in the adult fly olfactory circuit.
 
 Uses a shorter behavioral decision timescale (tau=200ms) than the worm
 (tau=3000ms), reflecting the fly's faster escape response.
+
+Uses the connectome-based adult model (FlyWire v783, Dorkenwald et al. 2024).
 """
 
 from __future__ import annotations
@@ -14,19 +16,16 @@ from typing import Dict, List
 
 import numpy as np
 
-from models.drosophila_adult import (
-    DrosophilaAdultModel,
-    ODOR_PROFILES,
-    ODOR_VALENCE,
-    ORN_TYPES,
-)
-from models.adult_variants import AdultVariantGenerator
+from models.adult_connectome import ConnectomeAdultModel
+from models.adult_connectome_variants import ConnectomeAdultVariantGenerator
+from models.drosophila_adult import ODOR_PROFILES, ODOR_VALENCE
 from hardware.noise import ReadNoise, WritePrecision, ChannelDropout, TransmitDelay, HardwareChain
 from analysis.metrics import (
     correlation,
     mean_mse,
     representational_similarity,
     odor_identification,
+    bootstrap_ci,
 )
 
 ODOR_SET: List[Dict[str, object]] = [
@@ -39,14 +38,27 @@ DEFAULT_JITTER = 0.75
 DEFAULT_SEEDS = 5
 FLY_TAU_MS = 200.0
 
+METRIC_KEYS = ("transfer_rate", "correlation", "mse", "rsa", "odor_id")
+
+
+def _agg_with_ci(seed_metrics: List[Dict[str, float]]) -> Dict:
+    row: Dict = {}
+    for k in METRIC_KEYS:
+        vals = [m[k] for m in seed_metrics]
+        mean, lo, hi = bootstrap_ci(vals)
+        row[k] = mean
+        row[f"{k}_ci_lo"] = lo
+        row[f"{k}_ci_hi"] = hi
+    return row
+
 
 def _run_one_setting(
-    sender: DrosophilaAdultModel,
-    receiver: DrosophilaAdultModel,
+    sender: ConnectomeAdultModel,
+    receiver: ConnectomeAdultModel,
     hardware: HardwareChain,
     rng: np.random.Generator,
 ) -> Dict[str, float]:
-    odor_types: List[str] = []
+    receptor_names = list(sender._receptor_names)
     odor_names: List[str] = []
     natural_states: List[Dict[str, float]] = []
     transferred_states: List[Dict[str, float]] = []
@@ -55,14 +67,12 @@ def _run_one_setting(
     for odor in ODOR_SET:
         name = odor["odor_name"]
         intensity = odor["odor_intensity"]
-        otype = ODOR_VALENCE[name]
-        odor_types.append(otype)
         odor_names.append(name)
 
-        sender_orn = sender._orn_type_rates(name, intensity)
-        sender_signal = {orn: float(sender_orn[i]) for i, orn in enumerate(ORN_TYPES)}
+        sender_orn = sender._orn_rates(name, intensity)
+        sender_signal = {orn: float(sender_orn[i]) for i, orn in enumerate(receptor_names)}
         sender_layers = sender._forward(name, intensity)
-        sender_beh = sender._behavior_from_mbon(sender_layers["mbon"])
+        sender_beh = sender._behavior_from_output(sender_layers["output"])
 
         degraded = hardware.apply(sender_signal, rng)
         result = receiver.simulate_from_receptors(degraded)
@@ -101,8 +111,8 @@ def run_hardware_sweep(
     if delay_levels is None:
         delay_levels = [0.0, 0.1, 1.0, 5.0, 20.0, 100.0, 500.0, 2000.0]
 
-    sender = DrosophilaAdultModel()
-    gen = AdultVariantGenerator(jitter_scale=jitter)
+    sender = ConnectomeAdultModel()
+    gen = ConnectomeAdultVariantGenerator(jitter_scale=jitter)
 
     def _sweep_axis(make_chain, param_values, param_name):
         rows = []
@@ -118,9 +128,8 @@ def run_hardware_sweep(
                 seed_metrics.append(m)
             if not seed_metrics:
                 continue
-            row = {param_name: val}
-            for key in ("transfer_rate", "correlation", "mse", "rsa", "odor_id"):
-                row[key] = float(np.mean([m[key] for m in seed_metrics]))
+            row = {param_name: val, "n_seeds": len(seed_metrics)}
+            row.update(_agg_with_ci(seed_metrics))
             rows.append(row)
         return rows
 
@@ -173,9 +182,8 @@ def run_hardware_sweep(
             m = _run_one_setting(sender, receiver, chain, rng)
             seed_metrics.append(m)
         if seed_metrics:
-            row = {"step": step_idx, **params}
-            for key in ("transfer_rate", "correlation", "mse", "rsa", "odor_id"):
-                row[key] = float(np.mean([m[key] for m in seed_metrics]))
+            row: Dict = {"step": step_idx, **params}
+            row.update(_agg_with_ci(seed_metrics))
             combined_rows.append(row)
     results["combined"] = combined_rows
 

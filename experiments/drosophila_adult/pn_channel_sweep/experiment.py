@@ -5,7 +5,9 @@ with calibration mapping the read subset to the write subset.  Measures KC
 correlation — does the receiver's odor representation match what it would
 produce naturally?
 
-With 50 PNs (vs 21 in larva), this tests how the PN bottleneck scales.
+With 49 PNs (vs 21 in larva), this tests how the PN bottleneck scales.
+
+Uses the connectome-based adult model (FlyWire v783, Dorkenwald et al. 2024).
 """
 
 from __future__ import annotations
@@ -14,20 +16,14 @@ from typing import Dict, List
 
 import numpy as np
 
-from models.drosophila_adult import (
-    DrosophilaAdultModel,
-    ODOR_PROFILES,
-    ODOR_VALENCE,
-    PN_NAMES,
-    KC_NAMES,
-)
-from models.adult_variants import AdultVariantGenerator
+from models.adult_connectome import ConnectomeAdultModel
+from models.adult_connectome_variants import ConnectomeAdultVariantGenerator
+from models.drosophila_adult import ODOR_PROFILES, ODOR_VALENCE
 from link.calibration import CalibrationTransform
 from analysis.metrics import (
     correlation,
-    mean_mse,
-    representational_similarity,
     odor_identification,
+    bootstrap_ci,
 )
 
 
@@ -37,15 +33,29 @@ HOLDOUT_INTENSITIES = [0.4, 0.9, 1.25]
 CAL_SET = [(name, i) for name in ALL_ODOR_NAMES for i in CAL_INTENSITIES]
 HOLDOUT_SET = [(name, i) for name in ALL_ODOR_NAMES for i in HOLDOUT_INTENSITIES]
 
+METRIC_KEYS = ("transfer_rate", "correlation", "odor_id")
 
-def _read_pn(model: DrosophilaAdultModel, odor_name: str, intensity: float,
+
+def _agg_with_ci(seed_metrics: List[Dict[str, float]]) -> Dict:
+    row: Dict = {}
+    for k in METRIC_KEYS:
+        vals = [m[k] for m in seed_metrics]
+        mean, lo, hi = bootstrap_ci(vals)
+        row[k] = mean
+        row[f"{k}_ci_lo"] = lo
+        row[f"{k}_ci_hi"] = hi
+    return row
+
+
+def _read_pn(model: ConnectomeAdultModel, odor_name: str, intensity: float,
              pn_indices: List[int]) -> Dict[str, float]:
     layers = model._forward(odor_name, intensity)
-    return {PN_NAMES[i]: float(layers["pn"][i]) for i in pn_indices}
+    pn_names = model.pn_names
+    return {pn_names[i]: float(layers["pn"][i]) for i in pn_indices}
 
 
-def _write_pn(model: DrosophilaAdultModel, signal: Dict[str, float]) -> Dict:
-    full_pn = {pn: model.pn_baseline for pn in PN_NAMES}
+def _write_pn(model: ConnectomeAdultModel, signal: Dict[str, float]) -> Dict:
+    full_pn = {pn: model.pn_baseline for pn in model.pn_names}
     full_pn.update(signal)
     return model.simulate_from_pn(full_pn)
 
@@ -55,20 +65,22 @@ def _extract_kc(state: Dict[str, float]) -> Dict[str, float]:
 
 
 def _run_one(
-    sender: DrosophilaAdultModel,
-    receiver: DrosophilaAdultModel,
+    sender: ConnectomeAdultModel,
+    receiver: ConnectomeAdultModel,
     read_indices: List[int],
     write_indices: List[int],
 ) -> Dict[str, float]:
-    read_pns = [PN_NAMES[i] for i in read_indices]
-    write_pns = [PN_NAMES[i] for i in write_indices]
+    pn_names = sender.pn_names
+    read_pns = [pn_names[i] for i in read_indices]
+    write_pns = [pn_names[i] for i in write_indices]
 
     sender_cal = [_read_pn(sender, n, i, read_indices) for n, i in CAL_SET]
     receiver_cal = []
     for name, inten in CAL_SET:
         layers = receiver._forward(name, inten)
+        r_pn_names = receiver.pn_names
         receiver_cal.append({pn: float(layers["pn"][j])
-                             for j, pn in enumerate(PN_NAMES) if pn in write_pns})
+                             for j, pn in enumerate(r_pn_names) if pn in write_pns})
 
     transform = CalibrationTransform()
     transform.neurons = tuple(sorted(set(read_pns) | set(write_pns)))
@@ -85,7 +97,7 @@ def _run_one(
 
         sender_sig = _read_pn(sender, name, inten, read_indices)
         sender_layers = sender._forward(name, inten)
-        sender_beh = sender._behavior_from_mbon(sender_layers["mbon"])
+        sender_beh = sender._behavior_from_output(sender_layers["output"])
 
         cal_sig = transform.transform(sender_sig)
         write_sig = {k: v for k, v in cal_sig.items() if k in write_set}
@@ -112,10 +124,11 @@ def run_pn_channel_sweep(
     channel_seeds: int = 3,
 ) -> List[Dict]:
     if channel_counts is None:
-        channel_counts = [1, 5, 10, 15, 20, 25, 30, 40, 50]
+        channel_counts = [1, 5, 10, 15, 20, 25, 30, 40, 49]
 
-    sender = DrosophilaAdultModel()
-    gen = AdultVariantGenerator(jitter_scale=jitter)
+    sender = ConnectomeAdultModel()
+    gen = ConnectomeAdultVariantGenerator(jitter_scale=jitter)
+    n_pn = len(sender.pn_names)
     results: List[Dict] = []
 
     for n_read in channel_counts:
@@ -124,8 +137,8 @@ def run_pn_channel_sweep(
 
             for cs in range(channel_seeds):
                 rng = np.random.default_rng(cs + 1000)
-                read_idx = sorted(rng.choice(len(PN_NAMES), size=n_read, replace=False).tolist())
-                write_idx = sorted(rng.choice(len(PN_NAMES), size=n_write, replace=False).tolist())
+                read_idx = sorted(rng.choice(n_pn, size=min(n_read, n_pn), replace=False).tolist())
+                write_idx = sorted(rng.choice(n_pn, size=min(n_write, n_pn), replace=False).tolist())
 
                 for s in range(seeds):
                     receiver = gen.generate_variant(sender, seed=s)
@@ -137,13 +150,13 @@ def run_pn_channel_sweep(
             if not seed_metrics:
                 continue
 
-            results.append({
+            row: Dict = {
                 "n_read": n_read,
                 "n_write": n_write,
                 "jitter_scale": jitter,
                 "valid_trials": len(seed_metrics),
-                **{key: float(np.mean([m[key] for m in seed_metrics]))
-                   for key in ("transfer_rate", "correlation", "odor_id")},
-            })
+            }
+            row.update(_agg_with_ci(seed_metrics))
+            results.append(row)
 
     return results
