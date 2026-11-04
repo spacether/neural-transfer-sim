@@ -1,0 +1,68 @@
+{
+  "experiment": "scaling_comparison",
+  "description": "Cross-organism scaling: transfer requirements vs complexity",
+  "timestamp": "2026-11-04T06:51:07Z",
+  "git_commit": "42896b1",
+  "parameters": {
+    "seeds": 3,
+    "jitter": 0.75
+  },
+  "metrics": [
+    "organism",
+    "receptor_types",
+    "total_receptors",
+    "glomeruli",
+    "kc_equivalent",
+    "bottleneck",
+    "signal_mode",
+    "broadcast_behavioral_match",
+    "best_read_site",
+    "best_write_site",
+    "min_channels_90",
+    "calibration_samples"
+  ],
+  "results": [
+    {
+      "organism": "C. elegans",
+      "receptor_types": 8,
+      "total_receptors": 8,
+      "glomeruli": 0,
+      "kc_equivalent": 0,
+      "bottleneck": "none",
+      "signal_mode": "graded",
+      "broadcast_behavioral_match": 0.5,
+      "best_read_site": "receptor",
+      "best_write_site": "receptor",
+      "min_channels_90": 6,
+      "calibration_samples": 24
+    },
+    {
+      "organism": "D. larva",
+      "receptor_types": 21,
+      "total_receptors": 21,
+      "glomeruli": 21,
+      "kc_equivalent": 72,
+      "bottleneck": "glomerular (1:1)",
+      "signal_mode": "spiking",
+      "broadcast_behavioral_match": 0.9722222222222222,
+      "best_read_site": "pn",
+      "best_write_site": "pn",
+      "min_channels_90": 15,
+      "calibration_samples": 63
+    },
+    {
+      "organism": "D. adult",
+      "receptor_types": 50,
+      "total_receptors": 2500,
+      "glomeruli": 50,
+      "kc_equivalent": 2000,
+      "bottleneck": "glomerular (50:1)",
+      "signal_mode": "spiking",
+      "broadcast_behavioral_match": 0.9912280701754387,
+      "best_read_site": "pn",
+      "best_write_site": "pn",
+      "min_channels_90": 35,
+      "calibration_samples": 150
+    }
+  ]
+}

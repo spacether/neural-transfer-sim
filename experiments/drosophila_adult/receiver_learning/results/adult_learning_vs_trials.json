@@ -1,0 +1,82 @@
+{
+  "experiment": "adult_learning_vs_trials",
+  "description": "Adult Drosophila: receiver MBON adaptation vs number of learning trials",
+  "timestamp": "2026-11-04T06:50:57Z",
+  "git_commit": "42896b1",
+  "parameters": {
+    "seeds": 3
+  },
+  "metrics": [
+    "n_learning_odors",
+    "valid_seeds",
+    "transfer_rate",
+    "kc_correlation",
+    "decoding"
+  ],
+  "results": [
+    {
+      "n_learning_odors": 0,
+      "jitter_scale": 0.75,
+      "valid_seeds": 3,
+      "transfer_rate": 1.0,
+      "kc_correlation": 0.99999999999979,
+      "decoding": 0.912280701754386
+    },
+    {
+      "n_learning_odors": 1,
+      "jitter_scale": 0.75,
+      "valid_seeds": 3,
+      "transfer_rate": 0.5350877192982456,
+      "kc_correlation": 0.99999999999979,
+      "decoding": 0.912280701754386
+    },
+    {
+      "n_learning_odors": 3,
+      "jitter_scale": 0.75,
+      "valid_seeds": 3,
+      "transfer_rate": 1.0,
+      "kc_correlation": 0.99999999999979,
+      "decoding": 0.912280701754386
+    },
+    {
+      "n_learning_odors": 5,
+      "jitter_scale": 0.75,
+      "valid_seeds": 3,
+      "transfer_rate": 1.0,
+      "kc_correlation": 0.99999999999979,
+      "decoding": 0.912280701754386
+    },
+    {
+      "n_learning_odors": 10,
+      "jitter_scale": 0.75,
+      "valid_seeds": 3,
+      "transfer_rate": 1.0,
+      "kc_correlation": 0.99999999999979,
+      "decoding": 0.912280701754386
+    },
+    {
+      "n_learning_odors": 15,
+      "jitter_scale": 0.75,
+      "valid_seeds": 3,
+      "transfer_rate": 1.0,
+      "kc_correlation": 0.99999999999979,
+      "decoding": 0.912280701754386
+    },
+    {
+      "n_learning_odors": 20,
+      "jitter_scale": 0.75,
+      "valid_seeds": 3,
+      "transfer_rate": 1.0,
+      "kc_correlation": 0.99999999999979,
+      "decoding": 0.912280701754386
+    },
+    {
+      "n_learning_odors": 30,
+      "jitter_scale": 0.75,
+      "valid_seeds": 3,
+      "transfer_rate": 1.0,
+      "kc_correlation": 0.99999999999979,
+      "decoding": 0.912280701754386
+    }
+  ]
+}

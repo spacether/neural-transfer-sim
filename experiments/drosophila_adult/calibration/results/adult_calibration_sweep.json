@@ -1,0 +1,122 @@
+{
+  "experiment": "adult_calibration_sweep",
+  "description": "Adult Drosophila calibration vs direct broadcast",
+  "timestamp": "2026-11-04T06:47:57Z",
+  "git_commit": "42896b1",
+  "parameters": {
+    "seeds_per_level": 3
+  },
+  "metrics": [
+    "valid_seeds",
+    "direct_transfer_rate",
+    "direct_correlation",
+    "direct_mse",
+    "direct_rsa",
+    "direct_decoding",
+    "calibrated_transfer_rate",
+    "calibrated_correlation",
+    "calibrated_mse",
+    "calibrated_rsa",
+    "calibrated_decoding"
+  ],
+  "results": [
+    {
+      "jitter_scale": 0.0,
+      "valid_seeds": 3,
+      "direct_transfer_rate": 1.0,
+      "direct_correlation": 1.0,
+      "direct_mse": 0.0,
+      "direct_rsa": 0.9999999999999999,
+      "direct_decoding": 0.8070175438596491,
+      "calibrated_transfer_rate": 1.0,
+      "calibrated_correlation": 0.9999999999993548,
+      "calibrated_mse": 1.889843115222962e-11,
+      "calibrated_rsa": 0.9999999999550923,
+      "calibrated_decoding": 0.8070175438596491
+    },
+    {
+      "jitter_scale": 0.25,
+      "valid_seeds": 3,
+      "direct_transfer_rate": 1.0,
+      "direct_correlation": 0.9974646848812584,
+      "direct_mse": 0.07526244675119396,
+      "direct_rsa": 0.9939833691386917,
+      "direct_decoding": 0.8099415204678362,
+      "calibrated_transfer_rate": 1.0,
+      "calibrated_correlation": 0.9999999999993486,
+      "calibrated_mse": 1.9406968586793976e-11,
+      "calibrated_rsa": 0.9999999999101844,
+      "calibrated_decoding": 0.8099415204678362
+    },
+    {
+      "jitter_scale": 0.5,
+      "valid_seeds": 3,
+      "direct_transfer_rate": 1.0,
+      "direct_correlation": 0.9901484412594769,
+      "direct_mse": 0.29618924065972646,
+      "direct_rsa": 0.9770713760387841,
+      "direct_decoding": 0.8011695906432749,
+      "calibrated_transfer_rate": 1.0,
+      "calibrated_correlation": 0.9999999999993289,
+      "calibrated_mse": 2.0295220961643167e-11,
+      "calibrated_rsa": 0.9999999999550923,
+      "calibrated_decoding": 0.8099415204678363
+    },
+    {
+      "jitter_scale": 0.75,
+      "valid_seeds": 3,
+      "direct_transfer_rate": 0.9912280701754387,
+      "direct_correlation": 0.9785612951796704,
+      "direct_mse": 0.6559608268432018,
+      "direct_rsa": 0.9525276600187377,
+      "direct_decoding": 0.8099415204678362,
+      "calibrated_transfer_rate": 1.0,
+      "calibrated_correlation": 0.9999999999992988,
+      "calibrated_mse": 2.1545551927696828e-11,
+      "calibrated_rsa": 0.9999999998952153,
+      "calibrated_decoding": 0.8216374269005847
+    },
+    {
+      "jitter_scale": 1.0,
+      "valid_seeds": 3,
+      "direct_transfer_rate": 0.9912280701754387,
+      "direct_correlation": 0.9634253550072165,
+      "direct_mse": 1.1434254591690882,
+      "direct_rsa": 0.9240677161054299,
+      "direct_decoding": 0.8070175438596491,
+      "calibrated_transfer_rate": 1.0,
+      "calibrated_correlation": 0.9999999999992664,
+      "calibrated_mse": 2.3137206125688556e-11,
+      "calibrated_rsa": 0.9999999998503074,
+      "calibrated_decoding": 0.8216374269005847
+    },
+    {
+      "jitter_scale": 1.25,
+      "valid_seeds": 3,
+      "direct_transfer_rate": 0.9824561403508772,
+      "direct_correlation": 0.945598399787203,
+      "direct_mse": 1.7430302174420937,
+      "direct_rsa": 0.8945747905199634,
+      "direct_decoding": 0.8070175438596491,
+      "calibrated_transfer_rate": 1.0,
+      "calibrated_correlation": 0.9999999999992255,
+      "calibrated_mse": 2.50455914507305e-11,
+      "calibrated_rsa": 0.9999999999251538,
+      "calibrated_decoding": 0.8333333333333334
+    },
+    {
+      "jitter_scale": 1.5,
+      "valid_seeds": 3,
+      "direct_transfer_rate": 0.9736842105263158,
+      "direct_correlation": 0.9262335345631988,
+      "direct_mse": 2.4283752819809,
+      "direct_rsa": 0.8655988437607122,
+      "direct_decoding": 0.8070175438596491,
+      "calibrated_transfer_rate": 1.0,
+      "calibrated_correlation": 0.9999999999991763,
+      "calibrated_mse": 2.725789275863898e-11,
+      "calibrated_rsa": 0.9999999998952153,
+      "calibrated_decoding": 0.8216374269005847
+    }
+  ]
+}
