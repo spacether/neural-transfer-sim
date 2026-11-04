@@ -1,0 +1,82 @@
+{
+  "experiment": "zebrafish_broadcast_sweep",
+  "description": "Zebrafish: direct broadcast transfer vs brain difference",
+  "timestamp": "2026-11-04T08:42:39Z",
+  "git_commit": "580fdb2",
+  "parameters": {
+    "seeds": 5
+  },
+  "metrics": [
+    "valid_seeds",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "odor_id"
+  ],
+  "results": [
+    {
+      "jitter_scale": 0.0,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 1.0,
+      "mse": 0.0,
+      "rsa": 1.0,
+      "odor_id": 1.0
+    },
+    {
+      "jitter_scale": 0.25,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9963813881818077,
+      "mse": 0.8194853622116787,
+      "rsa": 0.9953900752847277,
+      "odor_id": 1.0
+    },
+    {
+      "jitter_scale": 0.5,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9858253579297983,
+      "mse": 3.2673716501416954,
+      "rsa": 0.9821445494544836,
+      "odor_id": 0.9955555555555555
+    },
+    {
+      "jitter_scale": 0.75,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690856353731825,
+      "mse": 7.334975874855128,
+      "rsa": 0.9614777056914974,
+      "odor_id": 0.9911111111111112
+    },
+    {
+      "jitter_scale": 1.0,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9472558332202958,
+      "mse": 13.012073157689041,
+      "rsa": 0.9349315090174588,
+      "odor_id": 0.9822222222222223
+    },
+    {
+      "jitter_scale": 1.25,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9216411120126583,
+      "mse": 20.27643249182382,
+      "rsa": 0.9039355324565712,
+      "odor_id": 0.9644444444444444
+    },
+    {
+      "jitter_scale": 1.5,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.8941075508615104,
+      "mse": 28.972635818008417,
+      "rsa": 0.871568652924821,
+      "odor_id": 0.9488888888888889
+    }
+  ]
+}

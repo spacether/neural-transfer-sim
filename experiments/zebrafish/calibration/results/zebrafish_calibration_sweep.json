@@ -1,0 +1,122 @@
+{
+  "experiment": "zebrafish_calibration_sweep",
+  "description": "Zebrafish: calibration vs direct broadcast on held-out odors",
+  "timestamp": "2026-11-04T08:42:43Z",
+  "git_commit": "580fdb2",
+  "parameters": {
+    "seeds": 5
+  },
+  "metrics": [
+    "valid_seeds",
+    "direct_transfer_rate",
+    "direct_correlation",
+    "direct_mse",
+    "direct_rsa",
+    "direct_odor_id",
+    "calibrated_transfer_rate",
+    "calibrated_correlation",
+    "calibrated_mse",
+    "calibrated_rsa",
+    "calibrated_odor_id"
+  ],
+  "results": [
+    {
+      "jitter_scale": 0.0,
+      "valid_seeds": 5,
+      "direct_transfer_rate": 1.0,
+      "direct_correlation": 1.0,
+      "direct_mse": 0.0,
+      "direct_rsa": 1.0,
+      "direct_odor_id": 1.0,
+      "calibrated_transfer_rate": 1.0,
+      "calibrated_correlation": 0.9999999999999923,
+      "calibrated_mse": 1.3558899879891592e-12,
+      "calibrated_rsa": 1.0,
+      "calibrated_odor_id": 1.0
+    },
+    {
+      "jitter_scale": 0.25,
+      "valid_seeds": 5,
+      "direct_transfer_rate": 1.0,
+      "direct_correlation": 0.9964045311596921,
+      "direct_mse": 0.5938528100202312,
+      "direct_rsa": 0.9947663094551752,
+      "direct_odor_id": 0.9977777777777778,
+      "calibrated_transfer_rate": 1.0,
+      "calibrated_correlation": 0.9999999999999953,
+      "calibrated_mse": 1.3702073151773081e-12,
+      "calibrated_rsa": 0.9999999999626403,
+      "calibrated_odor_id": 1.0
+    },
+    {
+      "jitter_scale": 0.5,
+      "valid_seeds": 5,
+      "direct_transfer_rate": 1.0,
+      "direct_correlation": 0.9859177755652647,
+      "direct_mse": 2.3670971579168834,
+      "direct_rsa": 0.9797653341327719,
+      "direct_odor_id": 0.9955555555555555,
+      "calibrated_transfer_rate": 1.0,
+      "calibrated_correlation": 0.9999999999999944,
+      "calibrated_mse": 1.402020376118657e-12,
+      "calibrated_rsa": 0.9999999999626403,
+      "calibrated_odor_id": 1.0
+    },
+    {
+      "jitter_scale": 0.75,
+      "valid_seeds": 5,
+      "direct_transfer_rate": 1.0,
+      "direct_correlation": 0.9692840568252095,
+      "direct_mse": 5.31325779107226,
+      "direct_rsa": 0.9569344733213537,
+      "direct_odor_id": 0.9911111111111112,
+      "calibrated_transfer_rate": 1.0,
+      "calibrated_correlation": 0.9999999999999961,
+      "calibrated_mse": 1.4508824724315226e-12,
+      "calibrated_rsa": 1.0,
+      "calibrated_odor_id": 1.0
+    },
+    {
+      "jitter_scale": 1.0,
+      "valid_seeds": 5,
+      "direct_transfer_rate": 1.0,
+      "direct_correlation": 0.9475822805740222,
+      "direct_mse": 9.42505007070929,
+      "direct_rsa": 0.9277512545438746,
+      "direct_odor_id": 0.9844444444444445,
+      "calibrated_transfer_rate": 1.0,
+      "calibrated_correlation": 0.9999999999999943,
+      "calibrated_mse": 1.5157671583177973e-12,
+      "calibrated_rsa": 0.9999999999252805,
+      "calibrated_odor_id": 1.0
+    },
+    {
+      "jitter_scale": 1.25,
+      "valid_seeds": 5,
+      "direct_transfer_rate": 1.0,
+      "direct_correlation": 0.9221023525982709,
+      "direct_mse": 14.686517536755815,
+      "direct_rsa": 0.8948533798134678,
+      "direct_odor_id": 0.9622222222222222,
+      "calibrated_transfer_rate": 1.0,
+      "calibrated_correlation": 0.9999999999999959,
+      "calibrated_mse": 1.5999602529456816e-12,
+      "calibrated_rsa": 0.9999999999626403,
+      "calibrated_odor_id": 0.9977777777777778
+    },
+    {
+      "jitter_scale": 1.5,
+      "valid_seeds": 5,
+      "direct_transfer_rate": 0.9977777777777778,
+      "direct_correlation": 0.8947003073197939,
+      "direct_mse": 20.984091262005546,
+      "direct_rsa": 0.8618229698035831,
+      "direct_odor_id": 0.9466666666666667,
+      "calibrated_transfer_rate": 1.0,
+      "calibrated_correlation": 0.9999999999999941,
+      "calibrated_mse": 1.7010267779546082e-12,
+      "calibrated_rsa": 0.9999999999252805,
+      "calibrated_odor_id": 0.9977777777777778
+    }
+  ]
+}

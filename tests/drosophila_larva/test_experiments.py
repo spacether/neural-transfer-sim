@@ -11,7 +11,7 @@ def test_broadcast_sweep_shape() -> None:
     for row in results:
         assert 0.0 <= row["transfer_rate"] <= 1.0
         assert -1.0 <= row["correlation"] <= 1.0
-        assert 0.0 <= row["decoding"] <= 1.0
+        assert 0.0 <= row["odor_id"] <= 1.0
 
 
 def test_broadcast_perfect_at_zero_jitter() -> None:

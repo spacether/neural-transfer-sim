@@ -1,8 +1,8 @@
 {
   "experiment": "larva_broadcast_sweep",
   "description": "Drosophila larva direct broadcast baseline: transfer quality vs brain difference",
-  "timestamp": "2026-11-04T05:28:17Z",
-  "git_commit": "8e28098",
+  "timestamp": "2026-11-04T08:41:06Z",
+  "git_commit": "580fdb2",
   "parameters": {
     "seeds_per_level": 5
   },
@@ -12,7 +12,7 @@
     "correlation",
     "mse",
     "rsa",
-    "decoding"
+    "odor_id"
   ],
   "results": [
     {
@@ -22,7 +22,7 @@
       "correlation": 1.0,
       "mse": 0.0,
       "rsa": 1.0,
-      "decoding": 0.9444444444444444
+      "odor_id": 1.0
     },
     {
       "jitter_scale": 0.25,
@@ -31,7 +31,7 @@
       "correlation": 0.9958739666406636,
       "mse": 1.1995775143312826,
       "rsa": 0.9907236625353495,
-      "decoding": 0.9388888888888888
+      "odor_id": 0.9944444444444445
     },
     {
       "jitter_scale": 0.5,
@@ -40,7 +40,7 @@
       "correlation": 0.9836199045302939,
       "mse": 4.826943653192746,
       "rsa": 0.9660514570511701,
-      "decoding": 0.9166666666666666
+      "odor_id": 0.9722222222222221
     },
     {
       "jitter_scale": 0.75,
@@ -49,7 +49,7 @@
       "correlation": 0.9637255078924692,
       "mse": 11.162221007073057,
       "rsa": 0.9283411285328615,
-      "decoding": 0.9222222222222223
+      "odor_id": 0.9555555555555555
     },
     {
       "jitter_scale": 1.0,
@@ -58,7 +58,7 @@
       "correlation": 0.9375935898929665,
       "mse": 20.825984138233018,
       "rsa": 0.8839010878958146,
-      "decoding": 0.9
+      "odor_id": 0.9111111111111111
     },
     {
       "jitter_scale": 1.25,
@@ -67,7 +67,7 @@
       "correlation": 0.9081295741176412,
       "mse": 34.64404756802715,
       "rsa": 0.8389603972345492,
-      "decoding": 0.9
+      "odor_id": 0.8777777777777779
     },
     {
       "jitter_scale": 1.5,
@@ -76,7 +76,7 @@
       "correlation": 0.8792580986798948,
       "mse": 53.527538948662844,
       "rsa": 0.7980933227714383,
-      "decoding": 0.861111111111111
+      "odor_id": 0.8666666666666668
     }
   ]
 }

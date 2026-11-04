@@ -1,11 +1,11 @@
 {
   "experiment": "larva_channel_sweep",
   "description": "Drosophila larva transfer quality vs number of connected ORNs",
-  "timestamp": "2026-11-04T06:15:22Z",
-  "git_commit": "8e28098",
+  "timestamp": "2026-11-04T08:41:08Z",
+  "git_commit": "580fdb2",
   "parameters": {
-    "seeds_per_level": 10,
-    "channel_seeds": 10
+    "seeds_per_level": 3,
+    "channel_seeds": 3
   },
   "metrics": [
     "n_channels",
@@ -14,278 +14,278 @@
     "correlation",
     "mse",
     "rsa",
-    "decoding"
+    "odor_id"
   ],
   "results": [
     {
       "n_channels": 1,
       "jitter_scale": 0.0,
-      "valid_trials": 100,
-      "transfer_rate": 0.11666666666666664,
-      "correlation": 0.3413404502078194,
-      "mse": 115.70082370521554,
-      "rsa": 0.10442113984381088,
-      "decoding": 0.75
+      "valid_trials": 9,
+      "transfer_rate": 0.13888888888888887,
+      "correlation": 0.33411973989936467,
+      "mse": 116.55085800150702,
+      "rsa": 0.037328811007512584,
+      "odor_id": 0.08333333333333333
     },
     {
       "n_channels": 1,
       "jitter_scale": 0.5,
-      "valid_trials": 100,
-      "transfer_rate": 0.11916666666666664,
-      "correlation": 0.34297424589413317,
-      "mse": 115.36532056897735,
-      "rsa": 0.10821459413103764,
-      "decoding": 0.75
+      "valid_trials": 9,
+      "transfer_rate": 0.13888888888888887,
+      "correlation": 0.3331176302092327,
+      "mse": 109.22167896127185,
+      "rsa": 0.048182500649842655,
+      "odor_id": 0.1111111111111111
     },
     {
       "n_channels": 1,
       "jitter_scale": 1.0,
-      "valid_trials": 100,
-      "transfer_rate": 0.11999999999999997,
-      "correlation": 0.3344985564041187,
-      "mse": 124.71033986225842,
-      "rsa": 0.1109351271932397,
-      "decoding": 0.75
+      "valid_trials": 9,
+      "transfer_rate": 0.13888888888888887,
+      "correlation": 0.3283767544980174,
+      "mse": 102.95923501798268,
+      "rsa": 0.05764179510254936,
+      "odor_id": 0.10185185185185185
     },
     {
       "n_channels": 2,
       "jitter_scale": 0.0,
-      "valid_trials": 100,
-      "transfer_rate": 0.2833333333333333,
-      "correlation": 0.41684823649032565,
-      "mse": 105.9981426132234,
-      "rsa": 0.22591473009693014,
-      "decoding": 0.7833333333333335
+      "valid_trials": 9,
+      "transfer_rate": 0.25,
+      "correlation": 0.38596895603828263,
+      "mse": 109.91726035379178,
+      "rsa": 0.10748650860320104,
+      "odor_id": 0.16666666666666663
     },
     {
       "n_channels": 2,
       "jitter_scale": 0.5,
-      "valid_trials": 100,
-      "transfer_rate": 0.2775,
-      "correlation": 0.4145564604881389,
-      "mse": 106.07726079695959,
-      "rsa": 0.21133689238173736,
-      "decoding": 0.7791666666666666
+      "valid_trials": 9,
+      "transfer_rate": 0.25,
+      "correlation": 0.3837525226120339,
+      "mse": 103.14918641074092,
+      "rsa": 0.08269843645094507,
+      "odor_id": 0.1851851851851852
     },
     {
       "n_channels": 2,
       "jitter_scale": 1.0,
-      "valid_trials": 100,
-      "transfer_rate": 0.2775,
-      "correlation": 0.3988863343776396,
-      "mse": 115.90176955609735,
-      "rsa": 0.16946155393563347,
-      "decoding": 0.7791666666666667
+      "valid_trials": 9,
+      "transfer_rate": 0.25925925925925924,
+      "correlation": 0.37519763021489605,
+      "mse": 97.69873519818992,
+      "rsa": 0.06058942108900725,
+      "odor_id": 0.16666666666666666
     },
     {
       "n_channels": 3,
       "jitter_scale": 0.0,
-      "valid_trials": 100,
-      "transfer_rate": 0.3916666666666667,
-      "correlation": 0.4630494658937064,
-      "mse": 100.77315801886985,
-      "rsa": 0.24811855652016035,
-      "decoding": 0.7666666666666667
+      "valid_trials": 9,
+      "transfer_rate": 0.2777777777777778,
+      "correlation": 0.45377871135399633,
+      "mse": 102.24667622097927,
+      "rsa": 0.2381242728487929,
+      "odor_id": 0.2222222222222222
     },
     {
       "n_channels": 3,
       "jitter_scale": 0.5,
-      "valid_trials": 100,
-      "transfer_rate": 0.3791666666666667,
-      "correlation": 0.4504330647319235,
-      "mse": 101.93657373366638,
-      "rsa": 0.20869341625419258,
-      "decoding": 0.7608333333333333
+      "valid_trials": 9,
+      "transfer_rate": 0.2685185185185185,
+      "correlation": 0.45586636416993975,
+      "mse": 95.53152105991367,
+      "rsa": 0.18007235770041471,
+      "odor_id": 0.2685185185185185
     },
     {
       "n_channels": 3,
       "jitter_scale": 1.0,
-      "valid_trials": 100,
-      "transfer_rate": 0.36,
-      "correlation": 0.4236662883942276,
-      "mse": 112.99721036629767,
-      "rsa": 0.15099585870985077,
-      "decoding": 0.765
+      "valid_trials": 9,
+      "transfer_rate": 0.2685185185185185,
+      "correlation": 0.45093442799795636,
+      "mse": 90.32975652329483,
+      "rsa": 0.11199368380495178,
+      "odor_id": 0.2222222222222222
     },
     {
       "n_channels": 5,
       "jitter_scale": 0.0,
-      "valid_trials": 100,
-      "transfer_rate": 0.5833333333333333,
-      "correlation": 0.5217998940840647,
-      "mse": 92.56073022147866,
-      "rsa": 0.314627852128869,
-      "decoding": 0.8000000000000002
+      "valid_trials": 9,
+      "transfer_rate": 0.5,
+      "correlation": 0.4883876867942772,
+      "mse": 97.3349461561573,
+      "rsa": 0.5034202778738444,
+      "odor_id": 0.2222222222222222
     },
     {
       "n_channels": 5,
       "jitter_scale": 0.5,
-      "valid_trials": 100,
-      "transfer_rate": 0.5591666666666666,
-      "correlation": 0.5119682955043118,
-      "mse": 93.74340314234833,
-      "rsa": 0.2790914624432257,
-      "decoding": 0.7958333333333336
+      "valid_trials": 9,
+      "transfer_rate": 0.4351851851851852,
+      "correlation": 0.489403797893375,
+      "mse": 90.93269458889431,
+      "rsa": 0.47222681253389737,
+      "odor_id": 0.21296296296296294
     },
     {
       "n_channels": 5,
       "jitter_scale": 1.0,
-      "valid_trials": 100,
-      "transfer_rate": 0.5499999999999998,
-      "correlation": 0.48659140560224906,
-      "mse": 104.59066419066194,
-      "rsa": 0.21277936274783965,
-      "decoding": 0.7933333333333334
+      "valid_trials": 9,
+      "transfer_rate": 0.4444444444444444,
+      "correlation": 0.4807870014643501,
+      "mse": 86.38938300021599,
+      "rsa": 0.37998090015770036,
+      "odor_id": 0.25
     },
     {
       "n_channels": 7,
       "jitter_scale": 0.0,
-      "valid_trials": 100,
-      "transfer_rate": 0.6416666666666667,
-      "correlation": 0.6170777636748511,
-      "mse": 78.23577065925238,
-      "rsa": 0.4449025465247095,
-      "decoding": 0.8166666666666665
+      "valid_trials": 9,
+      "transfer_rate": 0.5833333333333334,
+      "correlation": 0.6079645944513001,
+      "mse": 80.226083319924,
+      "rsa": 0.6121422897000331,
+      "odor_id": 0.4166666666666667
     },
     {
       "n_channels": 7,
       "jitter_scale": 0.5,
-      "valid_trials": 100,
-      "transfer_rate": 0.63,
-      "correlation": 0.6047326567811941,
-      "mse": 80.10501916981383,
-      "rsa": 0.39591274085906897,
-      "decoding": 0.8091666666666667
+      "valid_trials": 9,
+      "transfer_rate": 0.5833333333333334,
+      "correlation": 0.6109757472873059,
+      "mse": 74.57331102191853,
+      "rsa": 0.5075882624089245,
+      "odor_id": 0.48148148148148145
     },
     {
       "n_channels": 7,
       "jitter_scale": 1.0,
-      "valid_trials": 100,
-      "transfer_rate": 0.6191666666666668,
-      "correlation": 0.5729950640619879,
-      "mse": 91.87903549319779,
-      "rsa": 0.30159872470100435,
-      "decoding": 0.8116666666666668
+      "valid_trials": 9,
+      "transfer_rate": 0.5925925925925926,
+      "correlation": 0.606330186619296,
+      "mse": 70.75339222451373,
+      "rsa": 0.4063247451016625,
+      "odor_id": 0.48148148148148157
     },
     {
       "n_channels": 10,
       "jitter_scale": 0.0,
-      "valid_trials": 100,
-      "transfer_rate": 0.7916666666666669,
-      "correlation": 0.7101801918322153,
-      "mse": 61.94893093292691,
-      "rsa": 0.5634321080574616,
-      "decoding": 0.8333333333333333
+      "valid_trials": 9,
+      "transfer_rate": 0.8611111111111112,
+      "correlation": 0.7378882242810721,
+      "mse": 56.6524033034298,
+      "rsa": 0.4826690720397916,
+      "odor_id": 0.6666666666666666
     },
     {
       "n_channels": 10,
       "jitter_scale": 0.5,
-      "valid_trials": 100,
-      "transfer_rate": 0.7699999999999999,
-      "correlation": 0.696963969317233,
-      "mse": 64.42310174163725,
-      "rsa": 0.5059441445243577,
-      "decoding": 0.8349999999999999
+      "valid_trials": 9,
+      "transfer_rate": 0.7962962962962963,
+      "correlation": 0.7341338271264023,
+      "mse": 54.14246101661466,
+      "rsa": 0.4606163251155849,
+      "odor_id": 0.6666666666666666
     },
     {
       "n_channels": 10,
       "jitter_scale": 1.0,
-      "valid_trials": 100,
-      "transfer_rate": 0.7541666666666668,
-      "correlation": 0.6616326408365337,
-      "mse": 76.81141401350548,
-      "rsa": 0.3950711399311728,
-      "decoding": 0.8333333333333333
+      "valid_trials": 9,
+      "transfer_rate": 0.8055555555555556,
+      "correlation": 0.7194509012823203,
+      "mse": 53.90388148521802,
+      "rsa": 0.3917227268254711,
+      "odor_id": 0.6388888888888888
     },
     {
       "n_channels": 14,
       "jitter_scale": 0.0,
-      "valid_trials": 100,
-      "transfer_rate": 0.8916666666666668,
-      "correlation": 0.8080384662852257,
-      "mse": 42.96569560481421,
-      "rsa": 0.5945892913057095,
-      "decoding": 0.8666666666666668
+      "valid_trials": 9,
+      "transfer_rate": 0.8333333333333334,
+      "correlation": 0.7683741335368136,
+      "mse": 51.136222364914765,
+      "rsa": 0.449646870542393,
+      "odor_id": 0.6944444444444444
     },
     {
       "n_channels": 14,
       "jitter_scale": 0.5,
-      "valid_trials": 100,
-      "transfer_rate": 0.8783333333333334,
-      "correlation": 0.7957069726609015,
-      "mse": 45.53866289685893,
-      "rsa": 0.5530466548376998,
-      "decoding": 0.8583333333333333
+      "valid_trials": 9,
+      "transfer_rate": 0.8333333333333335,
+      "correlation": 0.7529665573007063,
+      "mse": 50.85346102315405,
+      "rsa": 0.4089459462593792,
+      "odor_id": 0.675925925925926
     },
     {
       "n_channels": 14,
       "jitter_scale": 1.0,
-      "valid_trials": 100,
-      "transfer_rate": 0.8608333333333335,
-      "correlation": 0.757742802347,
-      "mse": 58.04026132611898,
-      "rsa": 0.4456403298194344,
-      "decoding": 0.8425000000000001
+      "valid_trials": 9,
+      "transfer_rate": 0.8148148148148149,
+      "correlation": 0.7299110203997436,
+      "mse": 52.33221119926544,
+      "rsa": 0.3321921859235293,
+      "odor_id": 0.6481481481481481
     },
     {
       "n_channels": 18,
       "jitter_scale": 0.0,
-      "valid_trials": 100,
-      "transfer_rate": 0.9916666666666666,
-      "correlation": 0.935501374690272,
-      "mse": 15.351413803250498,
-      "rsa": 0.9273437010750443,
-      "decoding": 0.9000000000000001
+      "valid_trials": 9,
+      "transfer_rate": 0.9722222222222222,
+      "correlation": 0.9226841915537055,
+      "mse": 18.260566454902236,
+      "rsa": 0.934036113140591,
+      "odor_id": 0.8888888888888888
     },
     {
       "n_channels": 18,
       "jitter_scale": 0.5,
-      "valid_trials": 100,
-      "transfer_rate": 0.9708333333333333,
-      "correlation": 0.9184273542550561,
-      "mse": 19.484334968289897,
-      "rsa": 0.8231307796680931,
-      "decoding": 0.8891666666666665
+      "valid_trials": 9,
+      "transfer_rate": 0.9351851851851851,
+      "correlation": 0.912837381813154,
+      "mse": 19.493950321992386,
+      "rsa": 0.8404898584003063,
+      "odor_id": 0.9259259259259258
     },
     {
       "n_channels": 18,
       "jitter_scale": 1.0,
-      "valid_trials": 100,
-      "transfer_rate": 0.9491666666666666,
-      "correlation": 0.8729239831765198,
-      "mse": 33.235701822792144,
-      "rsa": 0.6305120551090702,
-      "decoding": 0.8758333333333335
+      "valid_trials": 9,
+      "transfer_rate": 0.9259259259259258,
+      "correlation": 0.8891859247842115,
+      "mse": 23.880772255842015,
+      "rsa": 0.6701527328393001,
+      "odor_id": 0.9259259259259258
     },
     {
       "n_channels": 21,
       "jitter_scale": 0.0,
-      "valid_trials": 100,
+      "valid_trials": 9,
       "transfer_rate": 1.0,
       "correlation": 1.0,
       "mse": 0.0,
       "rsa": 1.0,
-      "decoding": 0.9166666666666667
+      "odor_id": 1.0
     },
     {
       "n_channels": 21,
       "jitter_scale": 0.5,
-      "valid_trials": 100,
+      "valid_trials": 9,
       "transfer_rate": 1.0,
-      "correlation": 0.9822255988112242,
-      "mse": 4.594449250140003,
-      "rsa": 0.8949253731343283,
-      "decoding": 0.9
+      "correlation": 0.9889567594877767,
+      "mse": 2.7596561637115764,
+      "rsa": 0.9130640503774833,
+      "odor_id": 1.0
     },
     {
       "n_channels": 21,
       "jitter_scale": 1.0,
-      "valid_trials": 100,
-      "transfer_rate": 0.9749999999999999,
-      "correlation": 0.9340345781766061,
-      "mse": 18.81625688400374,
-      "rsa": 0.6935351215948231,
-      "decoding": 0.8750000000000001
+      "valid_trials": 9,
+      "transfer_rate": 0.9722222222222222,
+      "correlation": 0.9638995792796804,
+      "mse": 8.843634529523339,
+      "rsa": 0.750367045889434,
+      "odor_id": 1.0
     }
   ]
 }

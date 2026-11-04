@@ -1,0 +1,83 @@
+{
+  "experiment": "zebrafish_hardware_channel_dropout",
+  "description": "Zebrafish: hardware boundary \u2014 channel_dropout",
+  "timestamp": "2026-11-04T08:43:14Z",
+  "git_commit": "580fdb2",
+  "parameters": {
+    "seeds": 5
+  },
+  "metrics": [
+    "dropout_fraction",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "odor_id"
+  ],
+  "results": [
+    {
+      "dropout_fraction": 0.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690856353731825,
+      "mse": 7.334975874855128,
+      "rsa": 0.9614777056914974,
+      "odor_id": 0.9911111111111112
+    },
+    {
+      "dropout_fraction": 0.1,
+      "transfer_rate": 0.9911111111111112,
+      "correlation": 0.9267732275354785,
+      "mse": 16.958979610398483,
+      "rsa": 0.9399393208899174,
+      "odor_id": 0.9377777777777778
+    },
+    {
+      "dropout_fraction": 0.2,
+      "transfer_rate": 0.9622222222222222,
+      "correlation": 0.868278269205577,
+      "mse": 29.594794712951074,
+      "rsa": 0.8940827057818985,
+      "odor_id": 0.828888888888889
+    },
+    {
+      "dropout_fraction": 0.3,
+      "transfer_rate": 0.9622222222222222,
+      "correlation": 0.8298847323746334,
+      "mse": 37.47250951709508,
+      "rsa": 0.8683596880157097,
+      "odor_id": 0.7666666666666666
+    },
+    {
+      "dropout_fraction": 0.4,
+      "transfer_rate": 0.9244444444444444,
+      "correlation": 0.7570364247600707,
+      "mse": 51.399871316329396,
+      "rsa": 0.8223168602542239,
+      "odor_id": 0.6488888888888888
+    },
+    {
+      "dropout_fraction": 0.5,
+      "transfer_rate": 0.8666666666666668,
+      "correlation": 0.69619557783502,
+      "mse": 62.25511945273411,
+      "rsa": 0.7568081449781732,
+      "odor_id": 0.5533333333333333
+    },
+    {
+      "dropout_fraction": 0.6,
+      "transfer_rate": 0.8244444444444445,
+      "correlation": 0.6452428395044162,
+      "mse": 70.69461958429869,
+      "rsa": 0.6630185960609843,
+      "odor_id": 0.47111111111111115
+    },
+    {
+      "dropout_fraction": 0.8,
+      "transfer_rate": 0.5155555555555555,
+      "correlation": 0.4501972605995678,
+      "mse": 96.87047597563131,
+      "rsa": 0.40967812481009214,
+      "odor_id": 0.2511111111111111
+    }
+  ]
+}

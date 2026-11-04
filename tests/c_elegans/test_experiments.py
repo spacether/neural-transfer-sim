@@ -14,7 +14,7 @@ def test_receptor_to_receptor_sweep_returns_expected_shape() -> None:
         assert -1.0 <= row["correlation"] <= 1.0
         assert row["mse"] >= 0.0
         assert -1.0 <= row["rsa"] <= 1.0 or row["rsa"] != row["rsa"]  # allow NaN
-        assert 0.0 <= row["decoding"] <= 1.0
+        assert 0.0 <= row["odor_id"] <= 1.0
 
 
 def test_receptor_to_receptor_perfect_at_zero_jitter() -> None:
@@ -23,7 +23,7 @@ def test_receptor_to_receptor_perfect_at_zero_jitter() -> None:
     assert results[0]["correlation"] > 0.99
     assert results[0]["mse"] < 1e-10
     assert results[0]["rsa"] > 0.99
-    assert results[0]["decoding"] > 0.9
+    assert results[0]["odor_id"] > 0.9
 
 
 def test_calibration_sweep_returns_expected_shape() -> None:
@@ -37,7 +37,7 @@ def test_calibration_sweep_returns_expected_shape() -> None:
             assert f"{prefix}_correlation" in row
             assert f"{prefix}_mse" in row
             assert f"{prefix}_rsa" in row
-            assert f"{prefix}_decoding" in row
+            assert f"{prefix}_odor_id" in row
 
 
 def test_calibration_perfect_at_zero_jitter() -> None:

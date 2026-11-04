@@ -33,7 +33,7 @@ def main() -> None:
     for axis, rows in all_results.items():
         param_key, short = AXIS_LABELS[axis]
         print(f"\n  --- {axis} ---")
-        print(f"  {short:>6}  {'rate':>6}  {'corr':>6}  {'mse':>8}  {'decode':>6}")
+        print(f"  {short:>6}  {'rate':>6}  {'corr':>6}  {'mse':>8}  {'odor_id':>6}")
         print(f"  {'-' * 48}")
         for row in rows:
             val = row[param_key]
@@ -41,7 +41,7 @@ def main() -> None:
             print(
                 f"  {val_str}  {row['transfer_rate']:6.3f}  "
                 f"{row['correlation']:6.3f}  {row['mse']:8.2f}  "
-                f"{row['decoding']:6.3f}"
+                f"{row['odor_id']:6.3f}"
             )
 
     if not args.no_save:

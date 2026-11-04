@@ -50,7 +50,7 @@ def test_hardware_sweep_returns_all_axes() -> None:
         assert len(axis_rows) >= 2
         for row in axis_rows:
             assert 0.0 <= row["correlation"] <= 1.0 or row["correlation"] >= -1.0
-            assert 0.0 <= row["decoding"] <= 1.0
+            assert 0.0 <= row["odor_id"] <= 1.0
 
 
 def test_transmit_delay_adds_drift() -> None:

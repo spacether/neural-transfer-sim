@@ -1,8 +1,8 @@
 {
   "experiment": "hardware_combined_hand_built",
   "description": "Hardware boundary: combined sweep (hand_built)",
-  "timestamp": "2026-11-04T05:46:44Z",
-  "git_commit": "8e28098",
+  "timestamp": "2026-11-04T08:40:55Z",
+  "git_commit": "580fdb2",
   "parameters": {
     "model": "hand_built",
     "axis": "combined",
@@ -20,7 +20,7 @@
     "correlation",
     "mse",
     "rsa",
-    "decoding"
+    "odor_id"
   ],
   "results": [
     {
@@ -34,7 +34,7 @@
       "correlation": 0.9279064528359395,
       "mse": 0.06154385168768618,
       "rsa": 0.9850246407578782,
-      "decoding": 0.9428571428571428
+      "odor_id": 0.9428571428571428
     },
     {
       "model": "hand_built",
@@ -47,7 +47,7 @@
       "correlation": 0.8550813343110022,
       "mse": 0.10296124928971721,
       "rsa": 0.9372333495934703,
-      "decoding": 0.9285714285714286
+      "odor_id": 0.9285714285714286
     },
     {
       "model": "hand_built",
@@ -60,7 +60,7 @@
       "correlation": 0.8223053654581438,
       "mse": 0.1441663715390445,
       "rsa": 0.8660316586095769,
-      "decoding": 0.9
+      "odor_id": 0.9
     },
     {
       "model": "hand_built",
@@ -73,7 +73,7 @@
       "correlation": 0.8441025435391646,
       "mse": 0.13580979021841622,
       "rsa": 0.8549597906996151,
-      "decoding": 0.9142857142857143
+      "odor_id": 0.9142857142857143
     },
     {
       "model": "hand_built",
@@ -86,7 +86,7 @@
       "correlation": 0.7673870248693151,
       "mse": 0.16257311154777054,
       "rsa": 0.7599127969754818,
-      "decoding": 0.8714285714285713
+      "odor_id": 0.8714285714285713
     },
     {
       "model": "hand_built",
@@ -99,7 +99,7 @@
       "correlation": 0.7119099490701097,
       "mse": 0.20789675672383795,
       "rsa": 0.6459338373248547,
-      "decoding": 0.8714285714285713
+      "odor_id": 0.8714285714285713
     },
     {
       "model": "hand_built",
@@ -112,7 +112,7 @@
       "correlation": 0.5515099842880662,
       "mse": 0.34141902542275326,
       "rsa": 0.4929476748623811,
-      "decoding": 0.8714285714285713
+      "odor_id": 0.8714285714285713
     },
     {
       "model": "hand_built",
@@ -125,7 +125,7 @@
       "correlation": 0.47925268317593595,
       "mse": 0.3905305406136562,
       "rsa": 0.31126130115107287,
-      "decoding": 0.7285714285714285
+      "odor_id": 0.7285714285714285
     }
   ]
 }

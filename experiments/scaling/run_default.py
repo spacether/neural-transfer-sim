@@ -22,7 +22,7 @@ def main() -> None:
     parser.add_argument("--no-save", action="store_true")
     args = parser.parse_args()
 
-    print("Running scaling comparison across all three organisms...")
+    print("Running scaling comparison across all organisms...")
     raw_results = run_scaling_comparison(seeds=args.seeds, jitter=args.jitter)
     results = estimate_channel_requirements(raw_results)
 

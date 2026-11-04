@@ -1,8 +1,8 @@
 {
   "experiment": "adult_calibration_sweep",
   "description": "Adult Drosophila calibration vs direct broadcast",
-  "timestamp": "2026-11-04T06:56:33Z",
-  "git_commit": "458f5e6",
+  "timestamp": "2026-11-04T08:41:32Z",
+  "git_commit": "580fdb2",
   "parameters": {
     "seeds_per_level": 5
   },
@@ -12,12 +12,12 @@
     "direct_correlation",
     "direct_mse",
     "direct_rsa",
-    "direct_decoding",
+    "direct_odor_id",
     "calibrated_transfer_rate",
     "calibrated_correlation",
     "calibrated_mse",
     "calibrated_rsa",
-    "calibrated_decoding"
+    "calibrated_odor_id"
   ],
   "results": [
     {
@@ -27,12 +27,12 @@
       "direct_correlation": 1.0,
       "direct_mse": 0.0,
       "direct_rsa": 0.9999999999999998,
-      "direct_decoding": 0.9210526315789472,
+      "direct_odor_id": 1.0,
       "calibrated_transfer_rate": 1.0,
       "calibrated_correlation": 0.9999999999993548,
       "calibrated_mse": 1.889843115222962e-11,
       "calibrated_rsa": 0.9999999999550921,
-      "calibrated_decoding": 0.9210526315789472
+      "calibrated_odor_id": 1.0
     },
     {
       "jitter_scale": 0.25,
@@ -41,12 +41,12 @@
       "direct_correlation": 0.9968790535430407,
       "direct_mse": 0.09202051950269116,
       "direct_rsa": 0.9924477789906654,
-      "direct_decoding": 0.9157894736842106,
+      "direct_odor_id": 0.9947368421052631,
       "calibrated_transfer_rate": 1.0,
       "calibrated_correlation": 0.999999999999347,
       "calibrated_mse": 1.927733657692195e-11,
       "calibrated_rsa": 0.9999999999101844,
-      "calibrated_decoding": 0.9105263157894736
+      "calibrated_odor_id": 1.0
     },
     {
       "jitter_scale": 0.5,
@@ -55,12 +55,12 @@
       "direct_correlation": 0.9875381701917814,
       "direct_mse": 0.3681607936616921,
       "direct_rsa": 0.9715302068786185,
-      "direct_decoding": 0.9157894736842106,
+      "direct_odor_id": 0.9526315789473683,
       "calibrated_transfer_rate": 1.0,
       "calibrated_correlation": 0.999999999999331,
       "calibrated_mse": 1.995686997110255e-11,
       "calibrated_rsa": 0.9999999999550923,
-      "calibrated_decoding": 0.9157894736842106
+      "calibrated_odor_id": 1.0
     },
     {
       "jitter_scale": 0.75,
@@ -69,12 +69,12 @@
       "direct_correlation": 0.9722922895968147,
       "direct_mse": 0.8299547899993422,
       "direct_rsa": 0.9415493528155947,
-      "direct_decoding": 0.9157894736842106,
+      "direct_odor_id": 0.9263157894736842,
       "calibrated_transfer_rate": 1.0,
       "calibrated_correlation": 0.9999999999993111,
       "calibrated_mse": 2.0939254570090645e-11,
       "calibrated_rsa": 0.9999999998922213,
-      "calibrated_decoding": 0.9105263157894736
+      "calibrated_odor_id": 1.0
     },
     {
       "jitter_scale": 1.0,
@@ -83,12 +83,12 @@
       "direct_correlation": 0.9520193534928307,
       "direct_mse": 1.4748610367838044,
       "direct_rsa": 0.9075396088186105,
-      "direct_decoding": 0.9105263157894736,
+      "direct_odor_id": 0.8736842105263157,
       "calibrated_transfer_rate": 1.0,
       "calibrated_correlation": 0.9999999999992945,
       "calibrated_mse": 2.2228300154619012e-11,
       "calibrated_rsa": 0.9999999999012029,
-      "calibrated_decoding": 0.9
+      "calibrated_odor_id": 1.0
     },
     {
       "jitter_scale": 1.25,
@@ -97,12 +97,12 @@
       "direct_correlation": 0.9280324100998293,
       "direct_mse": 2.295264872502469,
       "direct_rsa": 0.8731657154316166,
-      "direct_decoding": 0.9052631578947368,
+      "direct_odor_id": 0.8263157894736842,
       "calibrated_transfer_rate": 1.0,
       "calibrated_correlation": 0.999999999999275,
       "calibrated_mse": 2.3829493756282395e-11,
       "calibrated_rsa": 0.9999999999281476,
-      "calibrated_decoding": 0.9052631578947368
+      "calibrated_odor_id": 1.0
     },
     {
       "jitter_scale": 1.5,
@@ -111,12 +111,12 @@
       "direct_correlation": 0.9021060289146599,
       "direct_mse": 3.2698797111564466,
       "direct_rsa": 0.8406250793615486,
-      "direct_decoding": 0.9052631578947368,
+      "direct_odor_id": 0.7894736842105263,
       "calibrated_transfer_rate": 1.0,
       "calibrated_correlation": 0.9999999999992489,
       "calibrated_mse": 2.575700165084388e-11,
       "calibrated_rsa": 0.9999999998562952,
-      "calibrated_decoding": 0.9
+      "calibrated_odor_id": 1.0
     }
   ]
 }

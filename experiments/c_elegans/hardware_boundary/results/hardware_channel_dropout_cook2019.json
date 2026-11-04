@@ -1,8 +1,8 @@
 {
   "experiment": "hardware_channel_dropout_cook2019",
   "description": "Hardware boundary: channel_dropout sweep (cook2019)",
-  "timestamp": "2026-11-04T05:46:26Z",
-  "git_commit": "8e28098",
+  "timestamp": "2026-11-04T08:41:04Z",
+  "git_commit": "580fdb2",
   "parameters": {
     "model": "cook2019",
     "axis": "channel_dropout",
@@ -16,80 +16,80 @@
     "correlation",
     "mse",
     "rsa",
-    "decoding"
+    "odor_id"
   ],
   "results": [
     {
       "model": "cook2019",
       "dropout_fraction": 0.0,
-      "transfer_rate": 0.7714285714285714,
-      "correlation": 0.9076442120999507,
-      "mse": 0.05102496682710913,
-      "rsa": 0.9602516324255456,
-      "decoding": 0.9571428571428571
+      "transfer_rate": 0.7428571428571429,
+      "correlation": 0.9101358391051708,
+      "mse": 0.05058241459986301,
+      "rsa": 0.9666698518872432,
+      "odor_id": 0.9428571428571428
     },
     {
       "model": "cook2019",
       "dropout_fraction": 0.1,
-      "transfer_rate": 0.7285714285714285,
-      "correlation": 0.842471358828482,
-      "mse": 0.08267288316110329,
-      "rsa": 0.9144672718585763,
-      "decoding": 0.9142857142857143
+      "transfer_rate": 0.7,
+      "correlation": 0.8691491051019457,
+      "mse": 0.0719485787766644,
+      "rsa": 0.9073323777671604,
+      "odor_id": 0.9142857142857143
     },
     {
       "model": "cook2019",
       "dropout_fraction": 0.2,
-      "transfer_rate": 0.7285714285714285,
-      "correlation": 0.7879392187653409,
-      "mse": 0.11112206952558226,
-      "rsa": 0.8856760630673675,
-      "decoding": 0.8857142857142858
+      "transfer_rate": 0.6714285714285715,
+      "correlation": 0.8407471092262154,
+      "mse": 0.08701013493009013,
+      "rsa": 0.8808186016881671,
+      "odor_id": 0.8428571428571429
     },
     {
       "model": "cook2019",
       "dropout_fraction": 0.3,
-      "transfer_rate": 0.6571428571428571,
-      "correlation": 0.7802185662303598,
-      "mse": 0.1153592748075519,
-      "rsa": 0.8218765004554441,
-      "decoding": 0.8571428571428571
+      "transfer_rate": 0.6142857142857143,
+      "correlation": 0.7254926956292381,
+      "mse": 0.14080789748874695,
+      "rsa": 0.8149331131264426,
+      "odor_id": 0.8285714285714285
     },
     {
       "model": "cook2019",
       "dropout_fraction": 0.4,
-      "transfer_rate": 0.6571428571428571,
-      "correlation": 0.7652343794502239,
-      "mse": 0.12784602174579934,
-      "rsa": 0.8056378404204493,
-      "decoding": 0.8285714285714285
+      "transfer_rate": 0.5571428571428572,
+      "correlation": 0.6652076170040566,
+      "mse": 0.16926807116862322,
+      "rsa": 0.7165650596370216,
+      "odor_id": 0.7857142857142857
     },
     {
       "model": "cook2019",
       "dropout_fraction": 0.5,
-      "transfer_rate": 0.5,
-      "correlation": 0.5861314307097071,
-      "mse": 0.2113231381993764,
-      "rsa": 0.5349164612736146,
-      "decoding": 0.7571428571428571
+      "transfer_rate": 0.45714285714285713,
+      "correlation": 0.5347799662201322,
+      "mse": 0.22589512157897235,
+      "rsa": 0.49443522855230215,
+      "odor_id": 0.7
     },
     {
       "model": "cook2019",
       "dropout_fraction": 0.6,
-      "transfer_rate": 0.5,
-      "correlation": 0.6571705761653772,
-      "mse": 0.18355559162535068,
-      "rsa": 0.6361277913796519,
-      "decoding": 0.7714285714285714
+      "transfer_rate": 0.42857142857142855,
+      "correlation": 0.5596610691784243,
+      "mse": 0.2172798794269458,
+      "rsa": 0.5678416065158673,
+      "odor_id": 0.6714285714285714
     },
     {
       "model": "cook2019",
       "dropout_fraction": 0.8,
-      "transfer_rate": 0.3,
-      "correlation": 0.32920724993935474,
-      "mse": 0.30310442206627963,
-      "rsa": 0.04891152263593139,
-      "decoding": 0.5857142857142856
+      "transfer_rate": 0.4,
+      "correlation": 0.5116309407845089,
+      "mse": 0.24805309784435892,
+      "rsa": 0.49783747679380097,
+      "odor_id": 0.6571428571428571
     }
   ]
 }

@@ -25,7 +25,7 @@ def _print_results(all_results: dict, model_name: str) -> None:
     for axis, rows in all_results.items():
         param_key, short = AXIS_LABELS[axis]
         print(f"\n  --- {axis} ---")
-        print(f"  {short:>6}  {'rate':>6}  {'corr':>6}  {'mse':>8}  {'rsa':>6}  {'decode':>6}")
+        print(f"  {short:>6}  {'rate':>6}  {'corr':>6}  {'mse':>8}  {'rsa':>6}  {'odor_id':>6}")
         print(f"  {'-' * 48}")
         for row in rows:
             val = row[param_key]
@@ -36,7 +36,7 @@ def _print_results(all_results: dict, model_name: str) -> None:
                 f"{row['correlation']:6.3f}  "
                 f"{row['mse']:8.4f}  "
                 f"{row['rsa']:6.3f}  "
-                f"{row['decoding']:6.3f}"
+                f"{row['odor_id']:6.3f}"
             )
 
 

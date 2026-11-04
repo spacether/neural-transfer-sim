@@ -1,0 +1,83 @@
+{
+  "experiment": "zebrafish_hardware_read_noise",
+  "description": "Zebrafish: hardware boundary \u2014 read_noise",
+  "timestamp": "2026-11-04T08:43:14Z",
+  "git_commit": "580fdb2",
+  "parameters": {
+    "seeds": 5
+  },
+  "metrics": [
+    "noise_sigma",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "odor_id"
+  ],
+  "results": [
+    {
+      "noise_sigma": 0.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690856353731825,
+      "mse": 7.334975874855128,
+      "rsa": 0.9614777056914974,
+      "odor_id": 0.9911111111111112
+    },
+    {
+      "noise_sigma": 0.05,
+      "transfer_rate": 1.0,
+      "correlation": 0.969086968090212,
+      "mse": 7.334699025904636,
+      "rsa": 0.9614945140573553,
+      "odor_id": 0.9911111111111112
+    },
+    {
+      "noise_sigma": 0.1,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690771199069752,
+      "mse": 7.337089139227922,
+      "rsa": 0.9615041752083382,
+      "odor_id": 0.9911111111111112
+    },
+    {
+      "noise_sigma": 0.2,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690621940234267,
+      "mse": 7.340752681009015,
+      "rsa": 0.9614874513501854,
+      "odor_id": 0.9911111111111112
+    },
+    {
+      "noise_sigma": 0.3,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690625528100008,
+      "mse": 7.340276429865071,
+      "rsa": 0.9614478702125883,
+      "odor_id": 0.9911111111111112
+    },
+    {
+      "noise_sigma": 0.5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9689808526451286,
+      "mse": 7.360022838351239,
+      "rsa": 0.9616550277383746,
+      "odor_id": 0.9911111111111112
+    },
+    {
+      "noise_sigma": 0.75,
+      "transfer_rate": 1.0,
+      "correlation": 0.9687627888797765,
+      "mse": 7.412075552726563,
+      "rsa": 0.9613090363071011,
+      "odor_id": 0.9911111111111112
+    },
+    {
+      "noise_sigma": 1.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.9685533291164677,
+      "mse": 7.464443549012761,
+      "rsa": 0.9613576368676304,
+      "odor_id": 0.9911111111111112
+    }
+  ]
+}

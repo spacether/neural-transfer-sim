@@ -22,7 +22,7 @@ from analysis.metrics import (
     correlation,
     mean_mse,
     representational_similarity,
-    odor_type_decoding,
+    odor_identification,
 )
 
 ODOR_SET: List[Dict[str, object]] = [
@@ -69,6 +69,7 @@ def run_channel_sweep(
                         continue
 
                     odor_types: List[str] = []
+                    odor_names: List[str] = []
                     natural_states: List[Dict[str, float]] = []
                     transferred_states: List[Dict[str, float]] = []
                     successes = 0
@@ -77,6 +78,7 @@ def run_channel_sweep(
                         name = odor["odor_name"]
                         otype = ODOR_VALENCE[name]
                         odor_types.append(otype)
+                        odor_names.append(name)
 
                         sender_orn = sender._orn_rates(name, 1.0)
                         full_signal = {orn: float(sender_orn[i]) for i, orn in enumerate(ORN_TYPES)}
@@ -98,7 +100,7 @@ def run_channel_sweep(
                         "correlation": correlation(transferred_states, natural_states),
                         "mse": mean_mse(transferred_states, natural_states),
                         "rsa": representational_similarity(natural_states, transferred_states),
-                        "decoding": odor_type_decoding(odor_types, natural_states, transferred_states),
+                        "odor_id": odor_identification(odor_names, natural_states, transferred_states),
                     })
 
             if not all_metrics:
@@ -110,7 +112,7 @@ def run_channel_sweep(
                 "valid_trials": len(all_metrics),
                 **{
                     key: float(np.mean([m[key] for m in all_metrics]))
-                    for key in ("transfer_rate", "correlation", "mse", "rsa", "decoding")
+                    for key in ("transfer_rate", "correlation", "mse", "rsa", "odor_id")
                 },
             })
 

@@ -21,13 +21,13 @@ def main() -> None:
     results = run_broadcast_sweep(seeds_per_level=args.seeds)
 
     print("=== Adult Drosophila: Direct Broadcast Baseline ===")
-    print(f"{'jitter':>6}  {'rate':>6}  {'corr':>6}  {'mse':>8}  {'rsa':>6}  {'decode':>6}")
+    print(f"{'jitter':>6}  {'rate':>6}  {'corr':>6}  {'mse':>8}  {'rsa':>6}  {'odor_id':>6}")
     print("-" * 55)
     for r in results:
         print(
             f"{r['jitter_scale']:6.2f}  {r['transfer_rate']:6.3f}  "
             f"{r['correlation']:6.3f}  {r['mse']:8.2f}  "
-            f"{r['rsa']:6.3f}  {r['decoding']:6.3f}"
+            f"{r['rsa']:6.3f}  {r['odor_id']:6.3f}"
         )
 
     if not args.no_save:

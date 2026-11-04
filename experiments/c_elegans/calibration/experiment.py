@@ -2,7 +2,7 @@
 
 For each brain-difference level, fits a linear calibration transform on shared
 odors, then compares calibrated transfer against the receptor-to-receptor
-baseline on held-out odors using correlation, MSE, RSA, and odor-type decoding
+baseline on held-out odors using correlation, MSE, RSA, and odor identification
 plus categorical behavioral match.
 """
 
@@ -21,7 +21,7 @@ from analysis.metrics import (
     correlation,
     mean_mse,
     representational_similarity,
-    odor_type_decoding,
+    odor_identification,
 )
 
 MODEL_CLASSES = {
@@ -42,7 +42,7 @@ HOLDOUT_ODORS: List[Dict[str, object]] = [
     for i in (0.4, 0.9, 1.25, 1.75)
 ]
 
-METRIC_KEYS = ("transfer_rate", "correlation", "mse", "rsa", "decoding")
+METRIC_KEYS = ("transfer_rate", "correlation", "mse", "rsa", "odor_id")
 
 
 def _evaluate_method(
@@ -104,7 +104,7 @@ def _run_one_pair(
         out[f"{prefix}_correlation"] = correlation(states, natural_states)
         out[f"{prefix}_mse"] = mean_mse(states, natural_states)
         out[f"{prefix}_rsa"] = representational_similarity(natural_states, states)
-        out[f"{prefix}_decoding"] = odor_type_decoding(odor_types, natural_states, states)
+        out[f"{prefix}_odor_id"] = odor_identification(odor_types, natural_states, states)
     return out
 
 

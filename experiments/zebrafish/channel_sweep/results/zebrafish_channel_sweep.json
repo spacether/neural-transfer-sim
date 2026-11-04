@@ -1,0 +1,350 @@
+{
+  "experiment": "zebrafish_channel_sweep",
+  "description": "Zebrafish: transfer quality vs number of connected ORN types",
+  "timestamp": "2026-11-04T08:42:59Z",
+  "git_commit": "580fdb2",
+  "parameters": {
+    "seeds": 5
+  },
+  "metrics": [
+    "n_channels",
+    "valid_trials",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "odor_id"
+  ],
+  "results": [
+    {
+      "n_channels": 1,
+      "jitter_scale": 0.0,
+      "valid_trials": 15,
+      "transfer_rate": 0.03333333333333333,
+      "correlation": 0.2035041834165307,
+      "mse": 96.44761261506201,
+      "rsa": 0.11385258204575921,
+      "odor_id": 0.04444444444444444
+    },
+    {
+      "n_channels": 1,
+      "jitter_scale": 0.5,
+      "valid_trials": 15,
+      "transfer_rate": 0.03333333333333333,
+      "correlation": 0.20525067409161651,
+      "mse": 99.28336654844388,
+      "rsa": 0.16145786207211935,
+      "odor_id": 0.04
+    },
+    {
+      "n_channels": 1,
+      "jitter_scale": 1.0,
+      "valid_trials": 15,
+      "transfer_rate": 0.03333333333333333,
+      "correlation": 0.20200804838034145,
+      "mse": 107.5113992118594,
+      "rsa": 0.16744304171252486,
+      "odor_id": 0.042222222222222223
+    },
+    {
+      "n_channels": 3,
+      "jitter_scale": 0.0,
+      "valid_trials": 15,
+      "transfer_rate": 0.07777777777777777,
+      "correlation": 0.21395746529155937,
+      "mse": 95.12184810324237,
+      "rsa": -0.008720264455534725,
+      "odor_id": 0.06666666666666667
+    },
+    {
+      "n_channels": 3,
+      "jitter_scale": 0.5,
+      "valid_trials": 15,
+      "transfer_rate": 0.06888888888888887,
+      "correlation": 0.21515934629956104,
+      "mse": 97.92498216702985,
+      "rsa": 0.02894320355070311,
+      "odor_id": 0.05555555555555555
+    },
+    {
+      "n_channels": 3,
+      "jitter_scale": 1.0,
+      "valid_trials": 15,
+      "transfer_rate": 0.06666666666666667,
+      "correlation": 0.21019229449673185,
+      "mse": 106.15206107154414,
+      "rsa": 0.056863341324892,
+      "odor_id": 0.05999999999999999
+    },
+    {
+      "n_channels": 5,
+      "jitter_scale": 0.0,
+      "valid_trials": 15,
+      "transfer_rate": 0.2222222222222223,
+      "correlation": 0.2868545440603974,
+      "mse": 91.09185580501666,
+      "rsa": 0.1589343709392648,
+      "odor_id": 0.08888888888888888
+    },
+    {
+      "n_channels": 5,
+      "jitter_scale": 0.5,
+      "valid_trials": 15,
+      "transfer_rate": 0.20666666666666664,
+      "correlation": 0.2868864446786892,
+      "mse": 93.84803955729934,
+      "rsa": 0.15652460145714744,
+      "odor_id": 0.10000000000000002
+    },
+    {
+      "n_channels": 5,
+      "jitter_scale": 1.0,
+      "valid_trials": 15,
+      "transfer_rate": 0.20888888888888887,
+      "correlation": 0.2804346816343629,
+      "mse": 101.96458665401124,
+      "rsa": 0.1522228827783793,
+      "odor_id": 0.0977777777777778
+    },
+    {
+      "n_channels": 10,
+      "jitter_scale": 0.0,
+      "valid_trials": 15,
+      "transfer_rate": 0.3555555555555555,
+      "correlation": 0.3693696502496258,
+      "mse": 85.36452337680811,
+      "rsa": 0.2684531411282448,
+      "odor_id": 0.12222222222222225
+    },
+    {
+      "n_channels": 10,
+      "jitter_scale": 0.5,
+      "valid_trials": 15,
+      "transfer_rate": 0.3666666666666666,
+      "correlation": 0.35536933588109304,
+      "mse": 88.89590541159345,
+      "rsa": 0.22476859615772382,
+      "odor_id": 0.13333333333333333
+    },
+    {
+      "n_channels": 10,
+      "jitter_scale": 1.0,
+      "valid_trials": 15,
+      "transfer_rate": 0.3644444444444444,
+      "correlation": 0.33427424059625194,
+      "mse": 97.75592587763036,
+      "rsa": 0.1862104933101153,
+      "odor_id": 0.13555555555555557
+    },
+    {
+      "n_channels": 15,
+      "jitter_scale": 0.0,
+      "valid_trials": 15,
+      "transfer_rate": 0.6222222222222221,
+      "correlation": 0.4826565235138741,
+      "mse": 75.82804841137936,
+      "rsa": 0.3505953750450291,
+      "odor_id": 0.31111111111111106
+    },
+    {
+      "n_channels": 15,
+      "jitter_scale": 0.5,
+      "valid_trials": 15,
+      "transfer_rate": 0.6066666666666667,
+      "correlation": 0.4715001519215222,
+      "mse": 79.10663313996595,
+      "rsa": 0.2941044801269483,
+      "odor_id": 0.26222222222222225
+    },
+    {
+      "n_channels": 15,
+      "jitter_scale": 1.0,
+      "valid_trials": 15,
+      "transfer_rate": 0.5955555555555556,
+      "correlation": 0.4501635558018185,
+      "mse": 87.68748357316741,
+      "rsa": 0.23754506143199064,
+      "odor_id": 0.2644444444444444
+    },
+    {
+      "n_channels": 20,
+      "jitter_scale": 0.0,
+      "valid_trials": 15,
+      "transfer_rate": 0.611111111111111,
+      "correlation": 0.4840205597990195,
+      "mse": 75.53417625852946,
+      "rsa": 0.3836136015504307,
+      "odor_id": 0.2555555555555555
+    },
+    {
+      "n_channels": 20,
+      "jitter_scale": 0.5,
+      "valid_trials": 15,
+      "transfer_rate": 0.5844444444444445,
+      "correlation": 0.4785293344401312,
+      "mse": 78.30189134187572,
+      "rsa": 0.3333914723230625,
+      "odor_id": 0.26222222222222225
+    },
+    {
+      "n_channels": 20,
+      "jitter_scale": 1.0,
+      "valid_trials": 15,
+      "transfer_rate": 0.5888888888888889,
+      "correlation": 0.4627981200480916,
+      "mse": 86.3433311612967,
+      "rsa": 0.2803395546444377,
+      "odor_id": 0.2622222222222222
+    },
+    {
+      "n_channels": 30,
+      "jitter_scale": 0.0,
+      "valid_trials": 15,
+      "transfer_rate": 0.7111111111111109,
+      "correlation": 0.5548772424260471,
+      "mse": 68.17054167588377,
+      "rsa": 0.38915915752776026,
+      "odor_id": 0.37777777777777766
+    },
+    {
+      "n_channels": 30,
+      "jitter_scale": 0.5,
+      "valid_trials": 15,
+      "transfer_rate": 0.7288888888888888,
+      "correlation": 0.5530388176041953,
+      "mse": 70.44659547253673,
+      "rsa": 0.3768417735091434,
+      "odor_id": 0.3444444444444444
+    },
+    {
+      "n_channels": 30,
+      "jitter_scale": 1.0,
+      "valid_trials": 15,
+      "transfer_rate": 0.7355555555555555,
+      "correlation": 0.53618238617568,
+      "mse": 78.27634213663129,
+      "rsa": 0.32584977978683816,
+      "odor_id": 0.34666666666666657
+    },
+    {
+      "n_channels": 40,
+      "jitter_scale": 0.0,
+      "valid_trials": 15,
+      "transfer_rate": 0.9000000000000002,
+      "correlation": 0.6692933006228574,
+      "mse": 54.07430335082881,
+      "rsa": 0.5669183418691026,
+      "odor_id": 0.4444444444444444
+    },
+    {
+      "n_channels": 40,
+      "jitter_scale": 0.5,
+      "valid_trials": 15,
+      "transfer_rate": 0.9000000000000001,
+      "correlation": 0.6623288889662379,
+      "mse": 56.68106752421216,
+      "rsa": 0.5142560128213912,
+      "odor_id": 0.4933333333333333
+    },
+    {
+      "n_channels": 40,
+      "jitter_scale": 1.0,
+      "valid_trials": 15,
+      "transfer_rate": 0.8844444444444446,
+      "correlation": 0.6394247925038522,
+      "mse": 64.68632266607388,
+      "rsa": 0.4243933189199591,
+      "odor_id": 0.4777777777777778
+    },
+    {
+      "n_channels": 50,
+      "jitter_scale": 0.0,
+      "valid_trials": 15,
+      "transfer_rate": 0.9333333333333335,
+      "correlation": 0.7136943261909442,
+      "mse": 47.99483293781171,
+      "rsa": 0.4467625110447659,
+      "odor_id": 0.5888888888888889
+    },
+    {
+      "n_channels": 50,
+      "jitter_scale": 0.5,
+      "valid_trials": 15,
+      "transfer_rate": 0.9133333333333336,
+      "correlation": 0.7024841165875622,
+      "mse": 51.00723148920445,
+      "rsa": 0.4187952064180489,
+      "odor_id": 0.5622222222222221
+    },
+    {
+      "n_channels": 50,
+      "jitter_scale": 1.0,
+      "valid_trials": 15,
+      "transfer_rate": 0.8955555555555557,
+      "correlation": 0.6737062273078546,
+      "mse": 59.51954393537192,
+      "rsa": 0.35890277675462484,
+      "odor_id": 0.551111111111111
+    },
+    {
+      "n_channels": 70,
+      "jitter_scale": 0.0,
+      "valid_trials": 15,
+      "transfer_rate": 0.9666666666666667,
+      "correlation": 0.8241284913904512,
+      "mse": 31.24212962714834,
+      "rsa": 0.6066050876384568,
+      "odor_id": 0.7555555555555559
+    },
+    {
+      "n_channels": 70,
+      "jitter_scale": 0.5,
+      "valid_trials": 15,
+      "transfer_rate": 0.9666666666666667,
+      "correlation": 0.81042584874536,
+      "mse": 34.42054036126551,
+      "rsa": 0.5540355860796331,
+      "odor_id": 0.7400000000000001
+    },
+    {
+      "n_channels": 70,
+      "jitter_scale": 1.0,
+      "valid_trials": 15,
+      "transfer_rate": 0.9666666666666667,
+      "correlation": 0.7774846375415533,
+      "mse": 42.972290867374674,
+      "rsa": 0.46928453376047424,
+      "odor_id": 0.7377777777777779
+    },
+    {
+      "n_channels": 100,
+      "jitter_scale": 0.0,
+      "valid_trials": 15,
+      "transfer_rate": 1.0,
+      "correlation": 1.0,
+      "mse": 0.0,
+      "rsa": 1.0,
+      "odor_id": 1.0
+    },
+    {
+      "n_channels": 100,
+      "jitter_scale": 0.5,
+      "valid_trials": 15,
+      "transfer_rate": 1.0,
+      "correlation": 0.985883560178429,
+      "mse": 2.8036705374700883,
+      "rsa": 0.903571085974368,
+      "odor_id": 1.0
+    },
+    {
+      "n_channels": 100,
+      "jitter_scale": 1.0,
+      "valid_trials": 15,
+      "transfer_rate": 1.0,
+      "correlation": 0.9474533042797328,
+      "mse": 11.164511557651666,
+      "rsa": 0.7302956977098479,
+      "odor_id": 0.9866666666666667
+    }
+  ]
+}

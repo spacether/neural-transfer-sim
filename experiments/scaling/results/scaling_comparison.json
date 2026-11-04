@@ -1,8 +1,8 @@
 {
   "experiment": "scaling_comparison",
   "description": "Cross-organism scaling: transfer requirements vs complexity",
-  "timestamp": "2026-11-04T07:30:47Z",
-  "git_commit": "605a38c",
+  "timestamp": "2026-11-04T08:45:53Z",
+  "git_commit": "580fdb2",
   "parameters": {
     "seeds": 5,
     "jitter": 0.75
@@ -28,7 +28,7 @@
       "kc_equivalent": 0,
       "bottleneck": "none",
       "signal_mode": "graded",
-      "broadcast_behavioral_match": 1.0,
+      "broadcast_behavioral_match": 0.6714285714285714,
       "min_channels_90": 6,
       "calibration_samples": 24
     },
@@ -55,6 +55,18 @@
       "broadcast_behavioral_match": 0.9894736842105264,
       "min_channels_90": 35,
       "calibration_samples": 150
+    },
+    {
+      "organism": "Zebrafish",
+      "receptor_types": 100,
+      "total_receptors": 300,
+      "glomeruli": 100,
+      "kc_equivalent": 500,
+      "bottleneck": "glomerular (3:1)",
+      "signal_mode": "spiking",
+      "broadcast_behavioral_match": 1.0,
+      "min_channels_90": 70,
+      "calibration_samples": 300
     }
   ]
 }

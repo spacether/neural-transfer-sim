@@ -1,0 +1,83 @@
+{
+  "experiment": "zebrafish_hardware_transmit_delay",
+  "description": "Zebrafish: hardware boundary \u2014 transmit_delay",
+  "timestamp": "2026-11-04T08:43:14Z",
+  "git_commit": "580fdb2",
+  "parameters": {
+    "seeds": 5
+  },
+  "metrics": [
+    "delay_ms",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "odor_id"
+  ],
+  "results": [
+    {
+      "delay_ms": 0.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690856353731825,
+      "mse": 7.334975874855128,
+      "rsa": 0.9614777056914974,
+      "odor_id": 0.9911111111111112
+    },
+    {
+      "delay_ms": 0.1,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690854496887269,
+      "mse": 7.335023870524855,
+      "rsa": 0.9614802048705127,
+      "odor_id": 0.9911111111111112
+    },
+    {
+      "delay_ms": 1.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690855232898505,
+      "mse": 7.335017142382517,
+      "rsa": 0.9614790340166323,
+      "odor_id": 0.9911111111111112
+    },
+    {
+      "delay_ms": 5.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690877525353825,
+      "mse": 7.334464965816016,
+      "rsa": 0.9614651265963063,
+      "odor_id": 0.9911111111111112
+    },
+    {
+      "delay_ms": 20.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690826186472762,
+      "mse": 7.335900182459372,
+      "rsa": 0.961448582027489,
+      "odor_id": 0.9911111111111112
+    },
+    {
+      "delay_ms": 100.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690894886735844,
+      "mse": 7.334355334292371,
+      "rsa": 0.9615021176960292,
+      "odor_id": 0.9911111111111112
+    },
+    {
+      "delay_ms": 500.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.9690429369659854,
+      "mse": 7.345416461534893,
+      "rsa": 0.9615568455134949,
+      "odor_id": 0.9911111111111112
+    },
+    {
+      "delay_ms": 2000.0,
+      "transfer_rate": 1.0,
+      "correlation": 0.9688015338717204,
+      "mse": 7.402550840682099,
+      "rsa": 0.9613571008302507,
+      "odor_id": 0.9911111111111112
+    }
+  ]
+}
