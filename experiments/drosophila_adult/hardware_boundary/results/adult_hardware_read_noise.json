@@ -1,0 +1,85 @@
+{
+  "experiment": "adult_hardware_read_noise",
+  "description": "Adult Drosophila hardware boundary: read_noise sweep",
+  "timestamp": "2026-11-04T06:57:34Z",
+  "git_commit": "458f5e6",
+  "parameters": {
+    "axis": "read_noise",
+    "jitter": 0.75,
+    "seeds": 5
+  },
+  "metrics": [
+    "noise_sigma",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "decoding"
+  ],
+  "results": [
+    {
+      "noise_sigma": 0.0,
+      "transfer_rate": 0.9894736842105264,
+      "correlation": 0.9711730106050867,
+      "mse": 1.1448877149670404,
+      "rsa": 0.9447461623279864,
+      "decoding": 0.9157894736842106
+    },
+    {
+      "noise_sigma": 0.05,
+      "transfer_rate": 0.9894736842105264,
+      "correlation": 0.9711662841863632,
+      "mse": 1.1452429579242147,
+      "rsa": 0.9447293904246319,
+      "decoding": 0.9157894736842106
+    },
+    {
+      "noise_sigma": 0.1,
+      "transfer_rate": 0.987719298245614,
+      "correlation": 0.9711736187667395,
+      "mse": 1.1450039447201725,
+      "rsa": 0.9447498977761745,
+      "decoding": 0.9157894736842106
+    },
+    {
+      "noise_sigma": 0.2,
+      "transfer_rate": 0.9894736842105264,
+      "correlation": 0.9711435809141745,
+      "mse": 1.146376760544125,
+      "rsa": 0.9446987778084717,
+      "decoding": 0.9157894736842106
+    },
+    {
+      "noise_sigma": 0.3,
+      "transfer_rate": 0.987719298245614,
+      "correlation": 0.9710970039222362,
+      "mse": 1.1484026489617802,
+      "rsa": 0.944851051379483,
+      "decoding": 0.9157894736842106
+    },
+    {
+      "noise_sigma": 0.5,
+      "transfer_rate": 0.9894736842105264,
+      "correlation": 0.9710221440046439,
+      "mse": 1.1516584074364524,
+      "rsa": 0.9445905252049656,
+      "decoding": 0.9140350877192983
+    },
+    {
+      "noise_sigma": 0.75,
+      "transfer_rate": 0.9859649122807017,
+      "correlation": 0.9708460548594351,
+      "mse": 1.1590726364052872,
+      "rsa": 0.9444611110921179,
+      "decoding": 0.9122807017543859
+    },
+    {
+      "noise_sigma": 1.0,
+      "transfer_rate": 0.9859649122807017,
+      "correlation": 0.9704841416076777,
+      "mse": 1.1737028125720879,
+      "rsa": 0.944748149988748,
+      "decoding": 0.9105263157894736
+    }
+  ]
+}

@@ -252,57 +252,6 @@ def plot_channel_sweep(results: List[Dict], output_path: Path) -> Path:
     return output_path
 
 
-def plot_read_write_site(results: List[Dict], output_path: Path) -> Path:
-    """Heatmap of transfer quality for each read-write site pairing."""
-    jitter_levels = sorted(set(r["jitter_scale"] for r in results))
-    read_sites = sorted(set(r["read_site"] for r in results),
-                        key=lambda s: ["orn", "pn", "kc"].index(s))
-    write_sites = sorted(set(r["write_site"] for r in results),
-                         key=lambda s: ["orn", "pn"].index(s))
-
-    n_j = len(jitter_levels)
-    fig, axes = plt.subplots(1, n_j + 1, figsize=(5 * n_j + 1.2, 4),
-                             gridspec_kw={"width_ratios": [*([1] * n_j), 0.06]})
-    if n_j == 1:
-        axes = [axes[0], axes[1]]
-    fig.suptitle("Read Site vs Write Site: KC Correlation (odor identity)")
-
-    heatmap_axes = axes[:n_j] if n_j > 1 else [axes[0]]
-    for ax, jitter in zip(heatmap_axes, jitter_levels):
-        matrix = np.zeros((len(read_sites), len(write_sites)))
-        for r in results:
-            if r["jitter_scale"] != jitter:
-                continue
-            ri = read_sites.index(r["read_site"])
-            wi = write_sites.index(r["write_site"])
-            matrix[ri, wi] = r["correlation"]
-
-        im = ax.imshow(matrix, cmap="RdYlGn", vmin=0, vmax=1, aspect="auto")
-        ax.set_xticks(range(len(write_sites)))
-        ax.set_xticklabels([f"write:{s}" for s in write_sites])
-        ax.set_yticks(range(len(read_sites)))
-        ax.set_yticklabels([f"read:{s}" for s in read_sites])
-        ax.set_title(f"jitter={jitter:.1f}")
-
-        for ri in range(len(read_sites)):
-            for wi in range(len(write_sites)):
-                ax.text(wi, ri, f"{matrix[ri, wi]:.2f}",
-                        ha="center", va="center", fontsize=10, fontweight="bold")
-
-    cbar_ax = axes[-1] if n_j > 1 else axes[1]
-    fig.colorbar(im, cax=cbar_ax, label="Pearson r")
-    fig.text(0.01, 0.02,
-             "ORN = olfactory receptor neuron\n"
-             "PN = projection neuron\n"
-             "KC = Kenyon cell (mushroom body)",
-             fontsize=7, va="bottom", ha="left",
-             bbox=dict(boxstyle="round,pad=0.4", facecolor="white",
-                       edgecolor="#ccc", alpha=0.9))
-    fig.subplots_adjust(top=0.88)
-    fig.savefig(output_path, dpi=150, bbox_inches="tight")
-    plt.close(fig)
-    return output_path
-
 
 def plot_pn_channel_sweep(results: List[Dict], output_path: Path) -> Path:
     """2D heatmaps of transfer metrics vs read/write PN counts."""
@@ -335,8 +284,9 @@ def plot_pn_channel_sweep(results: List[Dict], output_path: Path) -> Path:
         ax.set_xticklabels(write_counts)
         ax.set_yticks(range(len(read_counts)))
         ax.set_yticklabels(read_counts)
-        ax.set_xlabel("Write PNs (of 21)")
-        ax.set_ylabel("Read PNs (of 21)")
+        n_total = max(write_counts)
+        ax.set_xlabel(f"Write PNs (of {n_total})")
+        ax.set_ylabel(f"Read PNs (of {n_total})")
         ax.set_title(title)
 
         for ri in range(len(read_counts)):
@@ -348,6 +298,150 @@ def plot_pn_channel_sweep(results: List[Dict], output_path: Path) -> Path:
                             fontweight="bold")
 
     fig.colorbar(im, cax=axes[n_m], label="Score")
+    fig.savefig(output_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return output_path
+
+
+def plot_learning_vs_trials(results: List[Dict], output_path: Path) -> Path:
+    """Plot transfer quality vs number of receiver learning trials."""
+    n_learn = [r["n_learning_odors"] for r in results]
+
+    fig, axes = plt.subplots(1, 3, figsize=(14, 4.5))
+    fig.suptitle("Receiver Learning: Transfer Quality vs Adaptation Trials")
+
+    metrics = [
+        ("kc_correlation", "KC correlation (Pearson r)", "#2563eb"),
+        ("transfer_rate", "Behavioral match rate", "#059669"),
+        ("decoding", "Odor-type decoding", "#d97706"),
+    ]
+
+    for ax, (key, ylabel, color) in zip(axes, metrics):
+        ax.plot(n_learn, [r[key] for r in results], "o-", color=color, markersize=6)
+        ax.set_xlabel("Number of learning odors")
+        ax.set_ylabel(ylabel)
+        ax.set_ylim(-0.05, 1.1)
+        ax.axhline(0.5, color="#999", linewidth=0.5, linestyle="--", alpha=0.5)
+        if results:
+            ax.axhline(results[0][key], color=color, linewidth=1, linestyle=":",
+                       alpha=0.4, label="No learning")
+            ax.legend(fontsize=8)
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return output_path
+
+
+def plot_learning_vs_precision(results: List[Dict], output_path: Path) -> Path:
+    """Plot transfer quality vs hardware noise, with and without learning."""
+    fig, axes = plt.subplots(1, 3, figsize=(14, 4.5))
+    fig.suptitle("Receiver Learning vs Hardware Precision")
+
+    metrics = [
+        ("kc_correlation", "KC correlation (Pearson r)"),
+        ("transfer_rate", "Behavioral match rate"),
+        ("decoding", "Odor-type decoding"),
+    ]
+
+    for ax, (key, ylabel) in zip(axes, metrics):
+        for learning, label, color, style in [
+            (False, "No learning", "#2563eb", "o-"),
+            (True, "With learning", "#dc2626", "s--"),
+        ]:
+            rows = [r for r in results if r["learning"] == learning]
+            x = [r["noise_sigma"] for r in rows]
+            y = [r[key] for r in rows]
+            ax.plot(x, y, style, color=color, label=label, markersize=5)
+
+        ax.set_xlabel("Read noise (σ)")
+        ax.set_ylabel(ylabel)
+        ax.set_ylim(-0.05, 1.1)
+        ax.axhline(0.5, color="#999", linewidth=0.5, linestyle="--", alpha=0.5)
+        ax.legend(fontsize=8)
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return output_path
+
+
+def plot_learning_vs_jitter(results: List[Dict], output_path: Path) -> Path:
+    """Plot transfer quality vs brain difference, with and without learning."""
+    fig, axes = plt.subplots(1, 3, figsize=(14, 4.5))
+    fig.suptitle("Receiver Learning vs Brain Difference")
+
+    metrics = [
+        ("kc_correlation", "KC correlation (Pearson r)"),
+        ("transfer_rate", "Behavioral match rate"),
+        ("decoding", "Odor-type decoding"),
+    ]
+
+    for ax, (key, ylabel) in zip(axes, metrics):
+        for learning, label, color, style in [
+            (False, "No learning", "#2563eb", "o-"),
+            (True, "With learning", "#dc2626", "s--"),
+        ]:
+            rows = [r for r in results if r["learning"] == learning]
+            x = [r["jitter_scale"] for r in rows]
+            y = [r[key] for r in rows]
+            ax.plot(x, y, style, color=color, label=label, markersize=5)
+
+        ax.set_xlabel("Brain difference (× biological CV)")
+        ax.set_ylabel(ylabel)
+        ax.set_ylim(-0.05, 1.1)
+        ax.axhline(0.5, color="#999", linewidth=0.5, linestyle="--", alpha=0.5)
+        ax.legend(fontsize=8)
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return output_path
+
+
+def plot_scaling_comparison(results: List[Dict], output_path: Path) -> Path:
+    """Plot cross-organism scaling: requirements vs organism complexity."""
+    organisms = [r["organism"] for r in results]
+    x_pos = list(range(len(organisms)))
+
+    fig, axes = plt.subplots(2, 2, figsize=(11, 9))
+    fig.suptitle("Cross-Organism Scaling: Transfer Requirements", fontsize=14)
+
+    ax = axes[0, 0]
+    ax.bar(x_pos, [r["receptor_types"] for r in results], color="#2563eb", alpha=0.8)
+    ax.set_xticks(x_pos)
+    ax.set_xticklabels(organisms)
+    ax.set_ylabel("Receptor types / channels")
+    ax.set_title("Receptor repertoire size")
+    ax.set_yscale("log")
+
+    ax = axes[0, 1]
+    if all("min_channels_90" in r for r in results):
+        ax.bar(x_pos, [r["min_channels_90"] for r in results], color="#059669", alpha=0.8)
+        ax.set_xticks(x_pos)
+        ax.set_xticklabels(organisms)
+        ax.set_ylabel("Min channels for 90% behavioral match")
+        ax.set_title("Channel requirement")
+
+    ax = axes[1, 0]
+    if all("calibration_samples" in r for r in results):
+        ax.bar(x_pos, [r["calibration_samples"] for r in results], color="#d97706", alpha=0.8)
+        ax.set_xticks(x_pos)
+        ax.set_xticklabels(organisms)
+        ax.set_ylabel("Calibration samples needed")
+        ax.set_title("Calibration cost")
+
+    ax = axes[1, 1]
+    if all("broadcast_behavioral_match" in r for r in results):
+        ax.bar(x_pos, [r["broadcast_behavioral_match"] for r in results],
+               color="#7c3aed", alpha=0.8)
+        ax.set_xticks(x_pos)
+        ax.set_xticklabels(organisms)
+        ax.set_ylabel("Behavioral match (broadcast)")
+        ax.set_ylim(0, 1.1)
+        ax.set_title("Broadcast transfer quality")
+
+    fig.tight_layout()
     fig.savefig(output_path, dpi=150, bbox_inches="tight")
     plt.close(fig)
     return output_path

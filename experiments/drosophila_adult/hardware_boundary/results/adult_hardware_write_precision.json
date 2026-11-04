@@ -1,0 +1,85 @@
+{
+  "experiment": "adult_hardware_write_precision",
+  "description": "Adult Drosophila hardware boundary: write_precision sweep",
+  "timestamp": "2026-11-04T06:57:34Z",
+  "git_commit": "458f5e6",
+  "parameters": {
+    "axis": "write_precision",
+    "jitter": 0.75,
+    "seeds": 5
+  },
+  "metrics": [
+    "precision_bits",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "decoding"
+  ],
+  "results": [
+    {
+      "precision_bits": Infinity,
+      "transfer_rate": 0.9894736842105264,
+      "correlation": 0.9711730106050867,
+      "mse": 1.1448877149670404,
+      "rsa": 0.9447461623279864,
+      "decoding": 0.9157894736842106
+    },
+    {
+      "precision_bits": 8,
+      "transfer_rate": 0.9894736842105264,
+      "correlation": 0.9699002204691268,
+      "mse": 1.1916415334022918,
+      "rsa": 0.9442166139643893,
+      "decoding": 0.9157894736842106
+    },
+    {
+      "precision_bits": 6,
+      "transfer_rate": 0.987719298245614,
+      "correlation": 0.969728516006068,
+      "mse": 1.1983956735201797,
+      "rsa": 0.9440900234850955,
+      "decoding": 0.9122807017543859
+    },
+    {
+      "precision_bits": 5,
+      "transfer_rate": 0.9842105263157895,
+      "correlation": 0.9694481876539651,
+      "mse": 1.2091868181260939,
+      "rsa": 0.943881314305053,
+      "decoding": 0.9105263157894736
+    },
+    {
+      "precision_bits": 4,
+      "transfer_rate": 0.9842105263157895,
+      "correlation": 0.9683130986738242,
+      "mse": 1.2540662928314326,
+      "rsa": 0.9421503769173656,
+      "decoding": 0.9140350877192983
+    },
+    {
+      "precision_bits": 3,
+      "transfer_rate": 0.9859649122807017,
+      "correlation": 0.96242935422803,
+      "mse": 1.4899810968852132,
+      "rsa": 0.9380827509350104,
+      "decoding": 0.9105263157894736
+    },
+    {
+      "precision_bits": 2,
+      "transfer_rate": 0.9473684210526315,
+      "correlation": 0.9359770233679973,
+      "mse": 2.6395299760863318,
+      "rsa": 0.9184445842916015,
+      "decoding": 0.9017543859649123
+    },
+    {
+      "precision_bits": 1,
+      "transfer_rate": 0.6771929824561403,
+      "correlation": 0.8468124630472843,
+      "mse": 6.208948634003266,
+      "rsa": 0.8450460641304547,
+      "decoding": 0.7982456140350876
+    }
+  ]
+}

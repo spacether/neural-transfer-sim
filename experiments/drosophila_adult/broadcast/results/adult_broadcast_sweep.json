@@ -1,0 +1,82 @@
+{
+  "experiment": "adult_broadcast_sweep",
+  "description": "Adult Drosophila direct broadcast baseline: transfer quality vs brain difference",
+  "timestamp": "2026-11-04T06:56:16Z",
+  "git_commit": "458f5e6",
+  "parameters": {
+    "seeds_per_level": 5
+  },
+  "metrics": [
+    "valid_seeds",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "decoding"
+  ],
+  "results": [
+    {
+      "jitter_scale": 0.0,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 1.0,
+      "mse": 0.0,
+      "rsa": 0.9999999999999998,
+      "decoding": 0.9210526315789472
+    },
+    {
+      "jitter_scale": 0.25,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9967588589292349,
+      "mse": 0.1265970995908378,
+      "rsa": 0.9929688900084012,
+      "decoding": 0.9157894736842106
+    },
+    {
+      "jitter_scale": 0.5,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9870346815731565,
+      "mse": 0.5075060354680861,
+      "rsa": 0.973220761874115,
+      "decoding": 0.9157894736842106
+    },
+    {
+      "jitter_scale": 0.75,
+      "valid_seeds": 5,
+      "transfer_rate": 0.9894736842105264,
+      "correlation": 0.9711730106050867,
+      "mse": 1.1448877149670404,
+      "rsa": 0.9447461623279864,
+      "decoding": 0.9157894736842106
+    },
+    {
+      "jitter_scale": 1.0,
+      "valid_seeds": 5,
+      "transfer_rate": 0.9736842105263157,
+      "correlation": 0.9501215876388397,
+      "mse": 2.0352745119860414,
+      "rsa": 0.9120938661533036,
+      "decoding": 0.9105263157894736
+    },
+    {
+      "jitter_scale": 1.25,
+      "valid_seeds": 5,
+      "transfer_rate": 0.9684210526315791,
+      "correlation": 0.9252835308834662,
+      "mse": 3.1681743595032708,
+      "rsa": 0.8780930221629237,
+      "decoding": 0.9052631578947368
+    },
+    {
+      "jitter_scale": 1.5,
+      "valid_seeds": 5,
+      "transfer_rate": 0.9578947368421051,
+      "correlation": 0.8985281077673533,
+      "mse": 4.514242034524925,
+      "rsa": 0.8451204371328982,
+      "decoding": 0.9052631578947368
+    }
+  ]
+}

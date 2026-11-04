@@ -66,7 +66,7 @@ class WormVariantGenerator:
 
         attractive = model.simulate(1.0, "attractive")
         repellent = model.simulate(1.0, "repellent")
-        return attractive["behavior"] in {"forward", "pause"} and repellent["behavior"] in {"reverse", "pause"}
+        return attractive["behavior"] == "forward" and repellent["behavior"] == "reverse"
 
     def generate_model_variant(
         self,
