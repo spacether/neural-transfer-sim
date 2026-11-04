@@ -237,7 +237,7 @@ def build_null_for_organism(
     """Build a null model matching an organism's dimensions but with a different architecture."""
 
     if organism == "larva":
-        from models.drosophila_larva import (
+        from neural_transfer.models.drosophila_larva import (
             ORN_TYPES, N_KC, ODOR_PROFILES, ODOR_VALENCE,
         )
         return NullModel(
@@ -254,7 +254,7 @@ def build_null_for_organism(
         )
 
     if organism == "adult":
-        from models.drosophila_adult import (
+        from neural_transfer.models.drosophila_adult import (
             ORN_TYPES, N_KC, ODOR_PROFILES, ODOR_VALENCE,
         )
         return NullModel(
@@ -271,7 +271,7 @@ def build_null_for_organism(
         )
 
     if organism == "zebrafish":
-        from models.zebrafish import (
+        from neural_transfer.models.zebrafish import (
             OR_TYPES, N_MITRAL, N_DP, ODOR_PROFILES, ODOR_VALENCE,
         )
         return NullModel(
@@ -304,8 +304,8 @@ def build_shuffled_connectome(
     rng = np.random.default_rng(seed)
 
     if organism == "larva":
-        from models.larva_connectome import ConnectomeLarvaModel
-        from models.drosophila_larva import ODOR_PROFILES, ODOR_VALENCE, ORN_TYPES
+        from neural_transfer.models.drosophila_larva import ConnectomeLarvaModel
+        from neural_transfer.models.drosophila_larva import ODOR_PROFILES, ODOR_VALENCE, ORN_TYPES
 
         base = ConnectomeLarvaModel()
         w_bn = base._w_orn_pn.copy()  # keep real ORN→PN
@@ -334,8 +334,8 @@ def build_shuffled_connectome(
         return m
 
     if organism == "adult":
-        from models.adult_connectome import ConnectomeAdultModel
-        from models.drosophila_adult import ODOR_PROFILES, ODOR_VALENCE
+        from neural_transfer.models.drosophila_adult import ConnectomeAdultModel
+        from neural_transfer.models.drosophila_adult import ODOR_PROFILES, ODOR_VALENCE
 
         base = ConnectomeAdultModel()
         w_bn = base._w_orn_pn.copy()  # keep real ORN→PN (glomerular identity)
@@ -364,7 +364,7 @@ def build_shuffled_connectome(
         return m
 
     if organism == "zebrafish":
-        from models.zebrafish import OR_TYPES, ODOR_PROFILES, ODOR_VALENCE, N_MITRAL, N_DP
+        from neural_transfer.models.zebrafish import OR_TYPES, ODOR_PROFILES, ODOR_VALENCE, N_MITRAL, N_DP
 
         # Zebrafish doesn't have a connectome model yet, fall back to sparse_random
         return build_null_for_organism("zebrafish", architecture="sparse_random", seed=seed)

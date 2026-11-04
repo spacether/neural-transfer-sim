@@ -16,11 +16,14 @@ from typing import Dict, Iterable, MutableMapping, TYPE_CHECKING
 import numpy as np
 
 if TYPE_CHECKING:
-    from models.worm_connectome import HandBuiltWormModel
-    from models.cook2019_connectome import Cook2019WormModel
+    from neural_transfer.models.c_elegans.hand_built import HandBuiltWormModel
+    from neural_transfer.models.c_elegans.cook2019 import Cook2019WormModel
 
-BIOLOGICAL_MEDIAN_CV = 0.55
-BIOLOGICAL_DROPOUT_RATE = 0.30
+# Derived from 8 individually mapped worms — see connectome_variability.py
+from neural_transfer.models.c_elegans.connectome_variability import (
+    BIOLOGICAL_MEDIAN_CV,
+    BIOLOGICAL_DROPOUT_RATE,
+)
 
 
 @dataclass
@@ -83,7 +86,7 @@ class WormVariantGenerator:
         Connection dropout reflects the observation that ~60% of olfactory
         connections are present in some animals but not others.
         """
-        from models.cook2019_connectome import Cook2019WormModel
+        from neural_transfer.models.c_elegans.cook2019 import Cook2019WormModel
 
         if isinstance(base_model, Cook2019WormModel):
             return self._generate_cook2019_variant(base_model, seed=seed, vary_weights=vary_weights)
@@ -96,7 +99,7 @@ class WormVariantGenerator:
         seed: int | None = None,
         vary_weights: bool = True,
     ) -> "HandBuiltWormModel":
-        from models.worm_connectome import HandBuiltWormModel
+        from neural_transfer.models.c_elegans.hand_built import HandBuiltWormModel
 
         rng = np.random.default_rng(seed)
         target_cv = BIOLOGICAL_MEDIAN_CV * self.jitter_scale

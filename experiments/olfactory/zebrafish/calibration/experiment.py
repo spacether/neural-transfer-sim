@@ -6,13 +6,13 @@ from typing import Dict, List
 
 import numpy as np
 
-from models.zebrafish import (
+from neural_transfer.models.zebrafish import (
     ZebrafishModel, ODOR_PROFILES, ODOR_VALENCE, OR_TYPES,
 )
-from models.zebrafish_variants import ZebrafishVariantGenerator
-from link.calibration import CalibrationTransform
-from link.receptor_to_receptor import ReceptorToReceptorBaseline
-from analysis.metrics import (
+from neural_transfer.models.zebrafish.variants import ZebrafishVariantGenerator
+from neural_transfer.link.calibration import CalibrationTransform
+from neural_transfer.link.receptor_to_receptor import ReceptorToReceptorBaseline
+from neural_transfer.analysis.metrics import (
     correlation, mean_mse, representational_similarity,
     odor_identification,
 )

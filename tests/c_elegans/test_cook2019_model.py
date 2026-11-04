@@ -2,8 +2,8 @@
 
 import pytest
 
-from models.cook2019_connectome import Cook2019WormModel
-from models.worm_variants import WormVariantGenerator
+from neural_transfer.models.c_elegans.cook2019 import Cook2019WormModel
+from neural_transfer.models.c_elegans.variants import WormVariantGenerator
 
 
 def test_model_loads_full_connectome() -> None:

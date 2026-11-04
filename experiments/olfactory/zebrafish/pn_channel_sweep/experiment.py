@@ -11,12 +11,12 @@ from typing import Dict, List, Set
 
 import numpy as np
 
-from models.zebrafish import (
+from neural_transfer.models.zebrafish import (
     ZebrafishModel, ODOR_PROFILES, ODOR_VALENCE, OR_TYPES, MITRAL_NAMES, N_MITRAL,
 )
-from models.zebrafish_variants import ZebrafishVariantGenerator
-from link.calibration import CalibrationTransform
-from analysis.metrics import correlation, mean_mse, odor_identification
+from neural_transfer.models.zebrafish.variants import ZebrafishVariantGenerator
+from neural_transfer.link.calibration import CalibrationTransform
+from neural_transfer.analysis.metrics import correlation, mean_mse, odor_identification
 
 ALL_ODOR_NAMES = list(ODOR_PROFILES.keys())
 CAL_INTENSITIES = [0.3, 0.5, 0.75, 1.0, 1.5]

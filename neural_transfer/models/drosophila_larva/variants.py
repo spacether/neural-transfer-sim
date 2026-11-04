@@ -1,15 +1,12 @@
-"""Individual-variation generator for adult Drosophila models.
+"""Individual-variation generator for Drosophila larva models.
 
-Key biological fact: PN wiring (glomerular identity) is conserved across
-individuals, but KC wiring (the random projection from PNs to mushroom
-body Kenyon cells) is structurally variable.  This means:
-  - Reading/writing at the PN level targets a conserved bottleneck.
-  - Reading/writing at the KC level hits the most variable part of the
-    circuit, so calibration must bridge a larger gap.
+Generates model variants along a single tunable axis of divergence,
+matching the pattern used for worm variants but adapted to the larval
+olfactory circuit.
 
 Perturbation axes, in order of increasing severity:
-1. ORN gain jitter (receptor sensitivity variation across individuals)
-2. KC connectivity rewiring (different random PN→KC projection)
+1. ORN gain jitter (receptor sensitivity variation)
+2. KC connectivity rewiring (different random projection from PNs)
 3. MBON weight noise (learning-dependent variation)
 """
 
@@ -21,18 +18,18 @@ from typing import Dict, TYPE_CHECKING
 import numpy as np
 
 if TYPE_CHECKING:
-    from models.drosophila_adult import DrosophilaAdultModel
+    from neural_transfer.models.drosophila_larva import DrosophilaLarvaModel
 
 
-BIOLOGICAL_MEDIAN_CV = 0.35
+BIOLOGICAL_MEDIAN_CV = 0.40
 
 
 @dataclass
-class AdultVariantGenerator:
-    """Generate biologically grounded adult fly model variants.
+class LarvaVariantGenerator:
+    """Generate biologically grounded larva model variants.
 
     jitter_scale=1.0 produces variability matching typical ORN response
-    variability across individual adult flies.
+    variability across individual larvae.
     """
 
     jitter_scale: float = 1.0
@@ -47,13 +44,13 @@ class AdultVariantGenerator:
 
     def generate_variant(
         self,
-        base_model: "DrosophilaAdultModel",
+        base_model: "DrosophilaLarvaModel",
         *,
         seed: int = 0,
         vary_kc: bool = True,
         vary_mbon: bool = True,
-    ) -> "DrosophilaAdultModel":
-        from models.drosophila_adult import DrosophilaAdultModel
+    ) -> "DrosophilaLarvaModel":
+        from neural_transfer.models.drosophila_larva import DrosophilaLarvaModel, N_KC
 
         rng = np.random.default_rng(seed)
         target_cv = BIOLOGICAL_MEDIAN_CV * self.jitter_scale
@@ -80,6 +77,7 @@ class AdultVariantGenerator:
 
         return clone
 
-    def sanity_check(self, model: "DrosophilaAdultModel") -> bool:
+    def sanity_check(self, model: "DrosophilaLarvaModel") -> bool:
+        """Verify the variant still produces correct basic behaviors."""
         checks = model.validate_odor_responses()
         return checks["attractive_approach"] and checks["repellent_avoid"]

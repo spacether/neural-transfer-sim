@@ -6,8 +6,8 @@ import argparse
 from pathlib import Path
 
 from experiments.olfactory.drosophila_adult.channel_sweep.experiment import run_channel_sweep
-from analysis.results_writer import write_results
-from analysis.plotting import plot_channel_sweep
+from neural_transfer.analysis.results_writer import write_results
+from neural_transfer.analysis.plotting import plot_channel_sweep
 
 RESULTS_DIR = Path(__file__).parent / "results"
 

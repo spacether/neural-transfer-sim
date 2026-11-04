@@ -17,11 +17,11 @@ from typing import Dict, List
 
 import numpy as np
 
-from models.larva_connectome import ConnectomeLarvaModel
-from models.larva_connectome_variants import ConnectomeLarvaVariantGenerator
-from models.drosophila_larva import ODOR_PROFILES, ODOR_VALENCE
-from link.calibration import CalibrationTransform
-from analysis.metrics import (
+from neural_transfer.models.drosophila_larva import ConnectomeLarvaModel
+from neural_transfer.models.drosophila_larva import ConnectomeLarvaVariantGenerator
+from neural_transfer.models.drosophila_larva import ODOR_PROFILES, ODOR_VALENCE
+from neural_transfer.link.calibration import CalibrationTransform
+from neural_transfer.analysis.metrics import (
     correlation,
     odor_identification,
     bootstrap_ci,

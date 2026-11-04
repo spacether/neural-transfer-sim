@@ -12,7 +12,7 @@ from __future__ import annotations
 from typing import Dict, List
 import numpy as np
 
-from analysis.metrics import (
+from neural_transfer.analysis.metrics import (
     correlation,
     mean_mse,
     representational_similarity,
@@ -155,9 +155,9 @@ def _agg_with_ci(seed_metrics):
 
 def _get_config(organism):
     if organism == "larva":
-        from models.larva_connectome import ConnectomeLarvaModel
-        from models.larva_connectome_variants import ConnectomeLarvaVariantGenerator
-        from models.drosophila_larva import ODOR_PROFILES, ODOR_VALENCE, ORN_TYPES
+        from neural_transfer.models.drosophila_larva import ConnectomeLarvaModel
+        from neural_transfer.models.drosophila_larva import ConnectomeLarvaVariantGenerator
+        from neural_transfer.models.drosophila_larva import ODOR_PROFILES, ODOR_VALENCE, ORN_TYPES
         sender = ConnectomeLarvaModel()
         return {
             "sender": sender,
@@ -168,9 +168,9 @@ def _get_config(organism):
             "channel_counts": [1, 2, 3, 5, 7, 10, 14, 18, 21],
         }
     elif organism == "adult":
-        from models.adult_connectome import ConnectomeAdultModel
-        from models.adult_connectome_variants import ConnectomeAdultVariantGenerator
-        from models.drosophila_adult import ODOR_PROFILES, ODOR_VALENCE
+        from neural_transfer.models.drosophila_adult import ConnectomeAdultModel
+        from neural_transfer.models.drosophila_adult import ConnectomeAdultVariantGenerator
+        from neural_transfer.models.drosophila_adult import ODOR_PROFILES, ODOR_VALENCE
         sender = ConnectomeAdultModel()
         return {
             "sender": sender,
@@ -256,7 +256,7 @@ def run_channel_sweep(organism, jitter_levels=None, n_seeds=5, channel_seeds=3):
 # ------------------------------------------------------------------ #
 
 def run_hardware_boundary(organism, jitter=0.75, n_seeds=10):
-    from hardware.noise import ReadNoise, WritePrecision, ChannelDropout, TransmitDelay, HardwareChain
+    from neural_transfer.hardware.noise import ReadNoise, WritePrecision, ChannelDropout, TransmitDelay, HardwareChain
     cfg = _get_config(organism)
     gen = cfg["gen_cls"](jitter_scale=jitter)
     results = {}

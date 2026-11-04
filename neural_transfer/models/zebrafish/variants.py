@@ -18,7 +18,7 @@ from typing import Dict, TYPE_CHECKING
 import numpy as np
 
 if TYPE_CHECKING:
-    from models.zebrafish import ZebrafishModel
+    from neural_transfer.models.zebrafish import ZebrafishModel
 
 
 BIOLOGICAL_MEDIAN_CV = 0.35
@@ -44,7 +44,7 @@ class ZebrafishVariantGenerator:
         vary_dp: bool = True,
         vary_output: bool = True,
     ) -> "ZebrafishModel":
-        from models.zebrafish import ZebrafishModel
+        from neural_transfer.models.zebrafish import ZebrafishModel
 
         rng = np.random.default_rng(seed)
         target_cv = BIOLOGICAL_MEDIAN_CV * self.jitter_scale

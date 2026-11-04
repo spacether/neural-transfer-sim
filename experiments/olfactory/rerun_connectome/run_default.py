@@ -15,7 +15,7 @@ from experiments.olfactory.rerun_connectome.experiment import (
     run_hardware_boundary,
     METRIC_KEYS,
 )
-from analysis.results_writer import write_results
+from neural_transfer.analysis.results_writer import write_results
 
 RESULTS_DIR = Path(__file__).parent / "results"
 

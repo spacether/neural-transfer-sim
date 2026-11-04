@@ -6,8 +6,8 @@ import argparse
 from pathlib import Path
 
 from experiments.olfactory.scaling.calibration_efficiency import run_calibration_efficiency
-from analysis.results_writer import write_results
-from analysis.plotting import plot_calibration_efficiency
+from neural_transfer.analysis.results_writer import write_results
+from neural_transfer.analysis.plotting import plot_calibration_efficiency
 
 RESULTS_DIR = Path(__file__).parent / "results"
 

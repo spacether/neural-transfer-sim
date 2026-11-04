@@ -9,8 +9,8 @@ from experiments.olfactory.c_elegans.calibration.experiment import (
     MODEL_CLASSES,
     run_calibration_sweep,
 )
-from analysis.results_writer import write_results
-from analysis.plotting import plot_calibration_comparison
+from neural_transfer.analysis.results_writer import write_results
+from neural_transfer.analysis.plotting import plot_calibration_comparison
 
 RESULTS_DIR = Path(__file__).parent / "results"
 

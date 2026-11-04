@@ -9,8 +9,8 @@ from experiments.olfactory.c_elegans.receptor_to_receptor_broadcast.experiment i
     MODEL_CLASSES,
     run_receptor_to_receptor_sweep,
 )
-from analysis.results_writer import write_results
-from analysis.plotting import plot_receptor_to_receptor_sweep
+from neural_transfer.analysis.results_writer import write_results
+from neural_transfer.analysis.plotting import plot_receptor_to_receptor_sweep
 
 RESULTS_DIR = Path(__file__).parent / "results"
 

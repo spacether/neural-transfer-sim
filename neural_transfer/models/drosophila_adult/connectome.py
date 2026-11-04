@@ -23,7 +23,7 @@ from typing import Dict, List, Optional
 
 import numpy as np
 
-from models.drosophila_adult import (
+from neural_transfer.models.drosophila_adult.model import (
     ODOR_PROFILES,
     ODOR_VALENCE,
     ATTRACTIVE_ODORS,
@@ -31,7 +31,7 @@ from models.drosophila_adult import (
     _pick_odor,
 )
 
-DATA_PATH = Path(__file__).resolve().parent.parent / "data" / "adult_fly_connectome.npz"
+DATA_PATH = Path(__file__).resolve().parent / "adult_fly_connectome.npz"
 
 GLOM_TO_RECEPTOR = {
     'D': 'Or69a', 'DA1': 'Or67d', 'DA2': 'Or56a', 'DA3': 'Or23a',

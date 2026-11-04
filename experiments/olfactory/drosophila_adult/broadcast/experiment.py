@@ -12,10 +12,10 @@ from typing import Dict, List
 
 import numpy as np
 
-from models.adult_connectome import ConnectomeAdultModel
-from models.adult_connectome_variants import ConnectomeAdultVariantGenerator
-from models.drosophila_adult import ODOR_PROFILES, ODOR_VALENCE
-from analysis.metrics import (
+from neural_transfer.models.drosophila_adult import ConnectomeAdultModel
+from neural_transfer.models.drosophila_adult import ConnectomeAdultVariantGenerator
+from neural_transfer.models.drosophila_adult import ODOR_PROFILES, ODOR_VALENCE
+from neural_transfer.analysis.metrics import (
     correlation,
     mean_mse,
     representational_similarity,

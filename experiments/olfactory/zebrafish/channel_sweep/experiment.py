@@ -10,11 +10,11 @@ from typing import Dict, List
 
 import numpy as np
 
-from models.zebrafish import (
+from neural_transfer.models.zebrafish import (
     ZebrafishModel, ODOR_PROFILES, ODOR_VALENCE, OR_TYPES, N_OR_TYPES,
 )
-from models.zebrafish_variants import ZebrafishVariantGenerator
-from analysis.metrics import (
+from neural_transfer.models.zebrafish.variants import ZebrafishVariantGenerator
+from neural_transfer.analysis.metrics import (
     correlation, mean_mse, representational_similarity,
     odor_identification,
 )

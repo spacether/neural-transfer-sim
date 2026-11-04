@@ -9,8 +9,8 @@ from experiments.olfactory.scaling.experiment import (
     run_scaling_comparison,
     estimate_channel_requirements,
 )
-from analysis.results_writer import write_results
-from analysis.plotting import plot_scaling_comparison
+from neural_transfer.analysis.results_writer import write_results
+from neural_transfer.analysis.plotting import plot_scaling_comparison
 
 RESULTS_DIR = Path(__file__).parent / "results"
 

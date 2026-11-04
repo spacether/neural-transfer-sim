@@ -13,13 +13,13 @@ from typing import Dict, List
 
 import numpy as np
 
-from link.calibration import CalibrationTransform
-from analysis.metrics import odor_identification
+from neural_transfer.link.calibration import CalibrationTransform
+from neural_transfer.analysis.metrics import odor_identification
 
 
 def _worm_efficiency(sample_counts: List[int], seeds: int, jitter: float) -> List[Dict]:
-    from models.cook2019_connectome import Cook2019WormModel
-    from models.worm_variants import WormVariantGenerator
+    from neural_transfer.models.c_elegans.cook2019 import Cook2019WormModel
+    from neural_transfer.models.c_elegans.variants import WormVariantGenerator
 
     sender = Cook2019WormModel()
     gen = WormVariantGenerator(jitter_scale=jitter)
@@ -67,9 +67,9 @@ def _worm_efficiency(sample_counts: List[int], seeds: int, jitter: float) -> Lis
 
 
 def _larva_efficiency(sample_counts: List[int], seeds: int, jitter: float) -> List[Dict]:
-    from models.larva_connectome import ConnectomeLarvaModel
-    from models.larva_connectome_variants import ConnectomeLarvaVariantGenerator
-    from models.drosophila_larva import ODOR_PROFILES
+    from neural_transfer.models.drosophila_larva import ConnectomeLarvaModel
+    from neural_transfer.models.drosophila_larva import ConnectomeLarvaVariantGenerator
+    from neural_transfer.models.drosophila_larva import ODOR_PROFILES
 
     sender = ConnectomeLarvaModel()
     gen = ConnectomeLarvaVariantGenerator(jitter_scale=jitter)
@@ -123,9 +123,9 @@ def _larva_efficiency(sample_counts: List[int], seeds: int, jitter: float) -> Li
 
 
 def _adult_efficiency(sample_counts: List[int], seeds: int, jitter: float) -> List[Dict]:
-    from models.adult_connectome import ConnectomeAdultModel
-    from models.adult_connectome_variants import ConnectomeAdultVariantGenerator
-    from models.drosophila_adult import ODOR_PROFILES
+    from neural_transfer.models.drosophila_adult import ConnectomeAdultModel
+    from neural_transfer.models.drosophila_adult import ConnectomeAdultVariantGenerator
+    from neural_transfer.models.drosophila_adult import ODOR_PROFILES
 
     sender = ConnectomeAdultModel()
     gen = ConnectomeAdultVariantGenerator(jitter_scale=jitter)
@@ -182,8 +182,8 @@ def _adult_efficiency(sample_counts: List[int], seeds: int, jitter: float) -> Li
 
 
 def _zebrafish_efficiency(sample_counts: List[int], seeds: int, jitter: float) -> List[Dict]:
-    from models.zebrafish import ZebrafishModel, ODOR_PROFILES, OR_TYPES
-    from models.zebrafish_variants import ZebrafishVariantGenerator
+    from neural_transfer.models.zebrafish import ZebrafishModel, ODOR_PROFILES, OR_TYPES
+    from neural_transfer.models.zebrafish.variants import ZebrafishVariantGenerator
 
     sender = ZebrafishModel()
     gen = ZebrafishVariantGenerator(jitter_scale=jitter)

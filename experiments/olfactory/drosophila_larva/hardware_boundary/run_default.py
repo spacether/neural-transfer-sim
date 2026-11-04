@@ -6,8 +6,8 @@ import argparse
 from pathlib import Path
 
 from experiments.olfactory.drosophila_larva.hardware_boundary.experiment import run_hardware_sweep
-from analysis.results_writer import write_results
-from analysis.plotting import plot_hardware_boundary
+from neural_transfer.analysis.results_writer import write_results
+from neural_transfer.analysis.plotting import plot_hardware_boundary
 
 RESULTS_DIR = Path(__file__).parent / "results"
 

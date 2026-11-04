@@ -8,7 +8,7 @@ from typing import Dict, TYPE_CHECKING
 import numpy as np
 
 if TYPE_CHECKING:
-    from models.adult_connectome import ConnectomeAdultModel
+    from neural_transfer.models.drosophila_adult.connectome import ConnectomeAdultModel
 
 
 BIOLOGICAL_MEDIAN_CV = 0.40

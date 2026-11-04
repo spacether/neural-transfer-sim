@@ -67,8 +67,8 @@ def test_calibration_sweep_cook2019() -> None:
 
 
 def test_generate_model_variant_sanity() -> None:
-    from models.worm_connectome import HandBuiltWormModel
-    from models.worm_variants import WormVariantGenerator
+    from neural_transfer.models.c_elegans.hand_built import HandBuiltWormModel
+    from neural_transfer.models.c_elegans.variants import WormVariantGenerator
 
     sender = HandBuiltWormModel()
     generator = WormVariantGenerator(jitter_scale=0.3)

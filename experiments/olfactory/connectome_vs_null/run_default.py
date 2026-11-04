@@ -6,7 +6,7 @@ import argparse
 from pathlib import Path
 
 from experiments.olfactory.connectome_vs_null.experiment import run_comparison
-from analysis.results_writer import write_results
+from neural_transfer.analysis.results_writer import write_results
 
 RESULTS_DIR = Path(__file__).parent / "results"
 

@@ -150,7 +150,7 @@ def plot_hardware_boundary(all_results: Dict[str, list], output_path: Path) -> P
     The first three panels are annotated with approximate operating points
     of real recording and stimulation technologies.
     """
-    from hardware.technologies import (
+    from neural_transfer.hardware.technologies import (
         READ_NOISE_TECHS,
         WRITE_PRECISION_TECHS,
         CHANNEL_DROPOUT_TECHS,

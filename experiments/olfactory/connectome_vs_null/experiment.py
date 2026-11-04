@@ -12,7 +12,7 @@ from typing import Dict, List
 
 import numpy as np
 
-from analysis.metrics import (
+from neural_transfer.analysis.metrics import (
     correlation,
     mean_mse,
     representational_similarity,
@@ -122,14 +122,14 @@ def run_comparison(
     if jitter_levels is None:
         jitter_levels = [0.0, 0.25, 0.50, 0.75, 1.0, 1.25, 1.5]
 
-    from models.null_model import build_shuffled_connectome, build_null_variant
+    from neural_transfer.models.null_model import build_shuffled_connectome, build_null_variant
 
     results = []
 
     if organism == "larva":
-        from models.larva_connectome import ConnectomeLarvaModel
-        from models.larva_connectome_variants import ConnectomeLarvaVariantGenerator
-        from models.drosophila_larva import ODOR_PROFILES, ODOR_VALENCE, ORN_TYPES
+        from neural_transfer.models.drosophila_larva import ConnectomeLarvaModel
+        from neural_transfer.models.drosophila_larva import ConnectomeLarvaVariantGenerator
+        from neural_transfer.models.drosophila_larva import ODOR_PROFILES, ODOR_VALENCE, ORN_TYPES
 
         sender_conn = ConnectomeLarvaModel()
         sender_null = build_shuffled_connectome("larva")
@@ -178,9 +178,9 @@ def run_comparison(
                 })
 
     elif organism == "adult":
-        from models.adult_connectome import ConnectomeAdultModel
-        from models.adult_connectome_variants import ConnectomeAdultVariantGenerator
-        from models.drosophila_adult import ODOR_PROFILES, ODOR_VALENCE
+        from neural_transfer.models.drosophila_adult import ConnectomeAdultModel
+        from neural_transfer.models.drosophila_adult import ConnectomeAdultVariantGenerator
+        from neural_transfer.models.drosophila_adult import ODOR_PROFILES, ODOR_VALENCE
 
         sender_conn = ConnectomeAdultModel()
         sender_null = build_shuffled_connectome("adult")

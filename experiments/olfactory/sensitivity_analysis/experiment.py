@@ -11,7 +11,7 @@ from typing import Dict, List
 
 import numpy as np
 
-from analysis.metrics import (
+from neural_transfer.analysis.metrics import (
     correlation,
     representational_similarity,
     odor_identification,
@@ -83,9 +83,9 @@ def run_sensitivity(
     results = []
 
     if organism == "larva":
-        from models.larva_connectome import ConnectomeLarvaModel
-        from models.larva_connectome_variants import ConnectomeLarvaVariantGenerator
-        from models.drosophila_larva import ODOR_PROFILES, ODOR_VALENCE, ORN_TYPES
+        from neural_transfer.models.drosophila_larva import ConnectomeLarvaModel
+        from neural_transfer.models.drosophila_larva import ConnectomeLarvaVariantGenerator
+        from neural_transfer.models.drosophila_larva import ODOR_PROFILES, ODOR_VALENCE, ORN_TYPES
         receptor_names = list(ORN_TYPES)
 
         for param_name, values in param_ranges.items():
@@ -118,9 +118,9 @@ def run_sensitivity(
                     })
 
     elif organism == "adult":
-        from models.adult_connectome import ConnectomeAdultModel
-        from models.adult_connectome_variants import ConnectomeAdultVariantGenerator
-        from models.drosophila_adult import ODOR_PROFILES, ODOR_VALENCE
+        from neural_transfer.models.drosophila_adult import ConnectomeAdultModel
+        from neural_transfer.models.drosophila_adult import ConnectomeAdultVariantGenerator
+        from neural_transfer.models.drosophila_adult import ODOR_PROFILES, ODOR_VALENCE
 
         for param_name, values in param_ranges.items():
             for val in values:

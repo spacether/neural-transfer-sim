@@ -15,8 +15,8 @@ from typing import Dict, List
 
 import numpy as np
 
-from link.calibration import CalibrationTransform, DiagonalCalibration
-from analysis.metrics import (
+from neural_transfer.link.calibration import CalibrationTransform, DiagonalCalibration
+from neural_transfer.analysis.metrics import (
     correlation,
     mean_mse,
     representational_similarity,
@@ -85,31 +85,31 @@ def run_calibration_comparison(
     results = []
 
     if organism == "larva":
-        from models.drosophila_larva import ODOR_PROFILES, ODOR_VALENCE, ORN_TYPES
+        from neural_transfer.models.drosophila_larva import ODOR_PROFILES, ODOR_VALENCE, ORN_TYPES
         receptor_names = list(ORN_TYPES)
 
         if model_type == "connectome":
-            from models.larva_connectome import ConnectomeLarvaModel
-            from models.larva_connectome_variants import ConnectomeLarvaVariantGenerator
+            from neural_transfer.models.drosophila_larva import ConnectomeLarvaModel
+            from neural_transfer.models.drosophila_larva import ConnectomeLarvaVariantGenerator
             sender = ConnectomeLarvaModel()
             gen_cls = ConnectomeLarvaVariantGenerator
         else:
-            from models.drosophila_larva import DrosophilaLarvaModel
-            from models.larva_variants import LarvaVariantGenerator
+            from neural_transfer.models.drosophila_larva import DrosophilaLarvaModel
+            from neural_transfer.models.drosophila_larva.variants import LarvaVariantGenerator
             sender = DrosophilaLarvaModel()
             gen_cls = LarvaVariantGenerator
 
     elif organism == "adult":
-        from models.drosophila_adult import ODOR_PROFILES, ODOR_VALENCE
+        from neural_transfer.models.drosophila_adult import ODOR_PROFILES, ODOR_VALENCE
         if model_type == "connectome":
-            from models.adult_connectome import ConnectomeAdultModel
-            from models.adult_connectome_variants import ConnectomeAdultVariantGenerator
+            from neural_transfer.models.drosophila_adult import ConnectomeAdultModel
+            from neural_transfer.models.drosophila_adult import ConnectomeAdultVariantGenerator
             sender = ConnectomeAdultModel()
             receptor_names = list(sender._receptor_names)
             gen_cls = ConnectomeAdultVariantGenerator
         else:
-            from models.drosophila_adult import DrosophilaAdultModel
-            from models.adult_variants import AdultVariantGenerator
+            from neural_transfer.models.drosophila_adult import DrosophilaAdultModel
+            from neural_transfer.models.drosophila_adult.variants import AdultVariantGenerator
             sender = DrosophilaAdultModel()
             receptor_names = list(sender._receptor_names) if hasattr(sender, '_receptor_names') else list(ODOR_PROFILES.keys())[:49]
             gen_cls = AdultVariantGenerator

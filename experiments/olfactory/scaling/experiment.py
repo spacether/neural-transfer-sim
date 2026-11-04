@@ -9,7 +9,7 @@ import numpy as np
 
 def _worm_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
     """Run worm transfer metrics using the Cook2019 model."""
-    from models.cook2019_connectome import OLFACTORY_RECEPTORS
+    from neural_transfer.models.c_elegans.cook2019 import OLFACTORY_RECEPTORS
     from experiments.olfactory.c_elegans.receptor_to_receptor_broadcast.experiment import (
         run_receptor_to_receptor_sweep,
     )
@@ -39,7 +39,7 @@ def _worm_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
 
 def _larva_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
     """Run larva transfer metrics using the connectome model."""
-    from models.larva_connectome import ConnectomeLarvaModel
+    from neural_transfer.models.drosophila_larva import ConnectomeLarvaModel
     from experiments.olfactory.drosophila_larva.broadcast.experiment import run_broadcast_sweep
 
     model = ConnectomeLarvaModel()
@@ -63,7 +63,7 @@ def _larva_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
 
 def _adult_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
     """Run adult fly transfer metrics using the connectome model."""
-    from models.adult_connectome import ConnectomeAdultModel
+    from neural_transfer.models.drosophila_adult import ConnectomeAdultModel
     from experiments.olfactory.drosophila_adult.broadcast.experiment import run_broadcast_sweep
 
     model = ConnectomeAdultModel()
@@ -87,7 +87,7 @@ def _adult_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
 
 def _zebrafish_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
     """Run zebrafish transfer metrics."""
-    from models.zebrafish import (
+    from neural_transfer.models.zebrafish import (
         ZebrafishModel, N_OR_TYPES, N_TOTAL_ORNS, N_GLOMERULI, N_DP,
     )
     from experiments.olfactory.zebrafish.broadcast.experiment import run_broadcast_sweep

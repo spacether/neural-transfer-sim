@@ -15,11 +15,11 @@ from typing import Dict, List
 
 import numpy as np
 
-from models.worm_connectome import HandBuiltWormModel
-from models.cook2019_connectome import Cook2019WormModel
-from models.worm_variants import WormVariantGenerator
-from link.receptor_to_receptor import ReceptorToReceptorBaseline
-from analysis.metrics import (
+from neural_transfer.models.c_elegans.hand_built import HandBuiltWormModel
+from neural_transfer.models.c_elegans.cook2019 import Cook2019WormModel
+from neural_transfer.models.c_elegans.variants import WormVariantGenerator
+from neural_transfer.link.receptor_to_receptor import ReceptorToReceptorBaseline
+from neural_transfer.analysis.metrics import (
     correlation,
     mean_mse,
     representational_similarity,
