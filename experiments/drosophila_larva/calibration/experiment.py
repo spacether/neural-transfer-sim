@@ -24,6 +24,7 @@ from analysis.metrics import (
     mean_mse,
     representational_similarity,
     odor_type_decoding,
+    odor_identification,
 )
 
 ALL_ODOR_NAMES = list(ODOR_PROFILES.keys())
@@ -33,7 +34,7 @@ HOLDOUT_INTENSITIES = [0.4, 0.9, 1.25]
 CAL_SET = [(name, i) for name in ALL_ODOR_NAMES for i in CAL_INTENSITIES]
 HOLDOUT_SET = [(name, i) for name in ALL_ODOR_NAMES for i in HOLDOUT_INTENSITIES]
 
-METRIC_KEYS = ("transfer_rate", "correlation", "mse", "rsa", "decoding")
+METRIC_KEYS = ("transfer_rate", "correlation", "mse", "rsa", "decoding", "odor_id")
 
 
 def _get_orn_signal(model: DrosophilaLarvaModel, odor_name: str, intensity: float) -> Dict[str, float]:
@@ -57,6 +58,7 @@ def _run_one_pair(
     )
 
     odor_types: List[str] = []
+    odor_names: List[str] = []
     natural_states: List[Dict[str, float]] = []
     direct_states: List[Dict[str, float]] = []
     cal_states: List[Dict[str, float]] = []
@@ -65,6 +67,7 @@ def _run_one_pair(
     for name, intensity in HOLDOUT_SET:
         otype = ODOR_VALENCE[name]
         odor_types.append(otype)
+        odor_names.append(name)
 
         sender_sig = _get_orn_signal(sender, name, intensity)
         sender_layers = sender._forward(name, intensity)
@@ -91,6 +94,7 @@ def _run_one_pair(
         out[f"{prefix}_mse"] = mean_mse(states, natural_states)
         out[f"{prefix}_rsa"] = representational_similarity(natural_states, states)
         out[f"{prefix}_decoding"] = odor_type_decoding(odor_types, natural_states, states)
+        out[f"{prefix}_odor_id"] = odor_identification(odor_names, natural_states, states)
     return out
 
 

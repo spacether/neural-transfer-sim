@@ -1,8 +1,8 @@
 {
   "experiment": "zebrafish_mitral_channel_sweep",
   "description": "Zebrafish: 2D sweep of read/write mitral cell counts",
-  "timestamp": "2026-11-04T07:49:03Z",
-  "git_commit": "1257c28",
+  "timestamp": "2026-11-04T08:23:04Z",
+  "git_commit": "3cc718a",
   "parameters": {
     "seeds": 3
   },

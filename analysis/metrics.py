@@ -124,3 +124,36 @@ def odor_type_decoding(
             correct += 1
 
     return correct / max(1, len(transferred_states))
+
+
+def odor_identification(
+    odor_labels: List[str],
+    natural_states: List[Dict[str, float]],
+    transferred_states: List[Dict[str, float]],
+) -> float:
+    """Identify which specific odor the sender detected (N-way classification).
+
+    Computes the centroid of natural-response vectors for each distinct odor
+    label, then assigns each transferred state to the nearest centroid.
+    Returns fraction correctly identified. Unlike odor_type_decoding (2-way),
+    this tests whether the transfer preserves enough structure to distinguish
+    similar odors within the same valence category.
+    """
+    keys = _shared_keys(natural_states, transferred_states)
+    nat_vecs = np.array([state_to_vec(s, keys) for s in natural_states])
+    trans_vecs = np.array([state_to_vec(s, keys) for s in transferred_states])
+
+    labels = sorted(set(odor_labels))
+    centroids = {}
+    for label in labels:
+        mask = [i for i, l in enumerate(odor_labels) if l == label]
+        centroids[label] = nat_vecs[mask].mean(axis=0)
+
+    correct = 0
+    for i, tv in enumerate(trans_vecs):
+        dists = {label: np.linalg.norm(tv - c) for label, c in centroids.items()}
+        predicted = min(dists, key=dists.get)
+        if predicted == odor_labels[i]:
+            correct += 1
+
+    return correct / max(1, len(transferred_states))

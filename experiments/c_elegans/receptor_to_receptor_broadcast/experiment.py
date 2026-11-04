@@ -24,6 +24,7 @@ from analysis.metrics import (
     mean_mse,
     representational_similarity,
     odor_type_decoding,
+    odor_identification,
 )
 
 MODEL_CLASSES = {
@@ -91,6 +92,7 @@ def run_receptor_to_receptor_sweep(
                 "mse": mean_mse(transferred_states, natural_states),
                 "rsa": representational_similarity(natural_states, transferred_states),
                 "decoding": odor_type_decoding(odor_types, natural_states, transferred_states),
+                "odor_id": odor_identification(odor_types, natural_states, transferred_states),
             })
 
         results.append({
@@ -98,7 +100,7 @@ def run_receptor_to_receptor_sweep(
             "jitter_scale": jitter,
             **{
                 key: float(np.mean([m[key] for m in seed_metrics]))
-                for key in ("transfer_rate", "correlation", "mse", "rsa", "decoding")
+                for key in ("transfer_rate", "correlation", "mse", "rsa", "decoding", "odor_id")
             },
             "seeds": seeds_per_level,
         })

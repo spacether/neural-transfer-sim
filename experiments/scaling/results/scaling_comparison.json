@@ -1,8 +1,8 @@
 {
   "experiment": "scaling_comparison",
   "description": "Cross-organism scaling: transfer requirements vs complexity",
-  "timestamp": "2026-11-04T07:50:32Z",
-  "git_commit": "1257c28",
+  "timestamp": "2026-11-04T08:23:16Z",
+  "git_commit": "3cc718a",
   "parameters": {
     "seeds": 5,
     "jitter": 0.75
@@ -28,7 +28,7 @@
       "kc_equivalent": 0,
       "bottleneck": "none",
       "signal_mode": "graded",
-      "broadcast_behavioral_match": 0.7571428571428571,
+      "broadcast_behavioral_match": 0.7714285714285715,
       "min_channels_90": 6,
       "calibration_samples": 24
     },

@@ -303,6 +303,32 @@ def plot_pn_channel_sweep(results: List[Dict], output_path: Path) -> Path:
     return output_path
 
 
+def plot_calibration_efficiency(results: Dict[str, List[Dict]], output_path: Path) -> Path:
+    """Plot calibration sample efficiency across organisms."""
+    fig, ax = plt.subplots(1, 1, figsize=(8, 5))
+    fig.suptitle("Calibration Sample Efficiency: Odor Identification vs Training Samples")
+
+    colors = {"C. elegans": "#7c3aed", "D. larva": "#2563eb",
+              "D. adult": "#059669", "Zebrafish": "#d97706"}
+    for organism, rows in results.items():
+        x = [r["n_samples"] for r in rows]
+        y = [r["odor_id"] for r in rows]
+        yerr = [r.get("odor_id_std", 0) for r in rows]
+        color = colors.get(organism, "#666")
+        ax.errorbar(x, y, yerr=yerr, fmt="o-", color=color, label=organism,
+                    markersize=5, capsize=3)
+
+    ax.set_xlabel("Number of calibration samples")
+    ax.set_ylabel("Odor identification accuracy")
+    ax.set_ylim(-0.05, 1.1)
+    ax.axhline(0.5, color="#999", linewidth=0.5, linestyle="--", alpha=0.5)
+    ax.legend()
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return output_path
+
+
 def plot_scaling_comparison(results: List[Dict], output_path: Path) -> Path:
     """Plot cross-organism scaling: requirements vs organism complexity."""
     organisms = [r["organism"] for r in results]

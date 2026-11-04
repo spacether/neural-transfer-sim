@@ -24,6 +24,7 @@ from analysis.metrics import (
     mean_mse,
     representational_similarity,
     odor_type_decoding,
+    odor_identification,
 )
 
 ODOR_SET: List[Dict[str, object]] = [
@@ -43,6 +44,7 @@ def _run_one_setting(
     rng: np.random.Generator,
 ) -> Dict[str, float]:
     odor_types: List[str] = []
+    odor_names: List[str] = []
     natural_states: List[Dict[str, float]] = []
     transferred_states: List[Dict[str, float]] = []
     successes = 0
@@ -52,6 +54,7 @@ def _run_one_setting(
         intensity = odor["odor_intensity"]
         otype = ODOR_VALENCE[name]
         odor_types.append(otype)
+        odor_names.append(name)
 
         sender_orn = sender._orn_rates(name, intensity)
         sender_signal = {orn: float(sender_orn[i]) for i, orn in enumerate(ORN_TYPES)}
@@ -73,6 +76,7 @@ def _run_one_setting(
         "mse": mean_mse(transferred_states, natural_states),
         "rsa": representational_similarity(natural_states, transferred_states),
         "decoding": odor_type_decoding(odor_types, natural_states, transferred_states),
+        "odor_id": odor_identification(odor_names, natural_states, transferred_states),
     }
 
 
@@ -111,7 +115,7 @@ def run_hardware_sweep(
             if not seed_metrics:
                 continue
             row = {param_name: val}
-            for key in ("transfer_rate", "correlation", "mse", "rsa", "decoding"):
+            for key in ("transfer_rate", "correlation", "mse", "rsa", "decoding", "odor_id"):
                 row[key] = float(np.mean([m[key] for m in seed_metrics]))
             rows.append(row)
         return rows
@@ -163,7 +167,7 @@ def run_hardware_sweep(
             seed_metrics.append(m)
         if seed_metrics:
             row = {"step": step_idx, **params}
-            for key in ("transfer_rate", "correlation", "mse", "rsa", "decoding"):
+            for key in ("transfer_rate", "correlation", "mse", "rsa", "decoding", "odor_id"):
                 row[key] = float(np.mean([m[key] for m in seed_metrics]))
             combined_rows.append(row)
     results["combined"] = combined_rows
