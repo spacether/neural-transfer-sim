@@ -1,0 +1,219 @@
+{
+  "experiment": "larva_read_write_site",
+  "description": "Drosophila larva transfer quality by read and write site pairing",
+  "timestamp": "2026-11-04T06:07:27Z",
+  "git_commit": "8e28098",
+  "parameters": {
+    "seeds_per_level": 5
+  },
+  "metrics": [
+    "read_site",
+    "write_site",
+    "valid_seeds",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "decoding"
+  ],
+  "results": [
+    {
+      "read_site": "orn",
+      "write_site": "orn",
+      "jitter_scale": 0.0,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9999999999998768,
+      "mse": 2.3339014777097764e-14,
+      "rsa": 0.9997565343961681,
+      "decoding": 0.9166666666666666
+    },
+    {
+      "read_site": "orn",
+      "write_site": "orn",
+      "jitter_scale": 0.5,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9999999999998623,
+      "mse": 2.4573817608469227e-14,
+      "rsa": 0.9997198002989487,
+      "decoding": 0.9333333333333333
+    },
+    {
+      "read_site": "orn",
+      "write_site": "orn",
+      "jitter_scale": 1.0,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9999999999998478,
+      "mse": 2.7469048991764415e-14,
+      "rsa": 0.9997533148131186,
+      "decoding": 0.95
+    },
+    {
+      "read_site": "orn",
+      "write_site": "pn",
+      "jitter_scale": 0.0,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9999999999998768,
+      "mse": 2.333901477368758e-14,
+      "rsa": 0.9997565343961681,
+      "decoding": 0.9166666666666666
+    },
+    {
+      "read_site": "orn",
+      "write_site": "pn",
+      "jitter_scale": 0.5,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9999999999998623,
+      "mse": 2.457381759793065e-14,
+      "rsa": 0.9997198002989487,
+      "decoding": 0.9333333333333333
+    },
+    {
+      "read_site": "orn",
+      "write_site": "pn",
+      "jitter_scale": 1.0,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9999999999998479,
+      "mse": 2.746904898950949e-14,
+      "rsa": 0.9997533148131186,
+      "decoding": 0.95
+    },
+    {
+      "read_site": "pn",
+      "write_site": "orn",
+      "jitter_scale": 0.0,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9999999999998647,
+      "mse": 2.560232544051867e-14,
+      "rsa": 0.9997524310359293,
+      "decoding": 0.9166666666666666
+    },
+    {
+      "read_site": "pn",
+      "write_site": "orn",
+      "jitter_scale": 0.5,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9999999999998505,
+      "mse": 2.6716721490195146e-14,
+      "rsa": 0.9997214800494214,
+      "decoding": 0.9333333333333333
+    },
+    {
+      "read_site": "pn",
+      "write_site": "orn",
+      "jitter_scale": 1.0,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9999999999998341,
+      "mse": 3.002567550829011e-14,
+      "rsa": 0.9997503248829999,
+      "decoding": 0.95
+    },
+    {
+      "read_site": "pn",
+      "write_site": "pn",
+      "jitter_scale": 0.0,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9999999999998647,
+      "mse": 2.560232543113736e-14,
+      "rsa": 0.9997524310359293,
+      "decoding": 0.9166666666666666
+    },
+    {
+      "read_site": "pn",
+      "write_site": "pn",
+      "jitter_scale": 0.5,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9999999999998505,
+      "mse": 2.6716721485058737e-14,
+      "rsa": 0.9997214800494214,
+      "decoding": 0.9333333333333333
+    },
+    {
+      "read_site": "pn",
+      "write_site": "pn",
+      "jitter_scale": 1.0,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9999999999998341,
+      "mse": 3.002567550562665e-14,
+      "rsa": 0.9997503248829999,
+      "decoding": 0.95
+    },
+    {
+      "read_site": "kc",
+      "write_site": "orn",
+      "jitter_scale": 0.0,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9999999666508497,
+      "mse": 6.846574064293768e-09,
+      "rsa": 0.9998221808296218,
+      "decoding": 0.9166666666666666
+    },
+    {
+      "read_site": "kc",
+      "write_site": "orn",
+      "jitter_scale": 0.5,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9999999633779645,
+      "mse": 6.6924783602034705e-09,
+      "rsa": 0.9997383488585818,
+      "decoding": 0.9333333333333333
+    },
+    {
+      "read_site": "kc",
+      "write_site": "orn",
+      "jitter_scale": 1.0,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9999999610792905,
+      "mse": 7.345192227780237e-09,
+      "rsa": 0.9997253555170389,
+      "decoding": 0.95
+    },
+    {
+      "read_site": "kc",
+      "write_site": "pn",
+      "jitter_scale": 0.0,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9999999666508496,
+      "mse": 6.846574064290829e-09,
+      "rsa": 0.9997756020862077,
+      "decoding": 0.9166666666666666
+    },
+    {
+      "read_site": "kc",
+      "write_site": "pn",
+      "jitter_scale": 0.5,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9999999633779645,
+      "mse": 6.692478360199202e-09,
+      "rsa": 0.9997440008647069,
+      "decoding": 0.9333333333333333
+    },
+    {
+      "read_site": "kc",
+      "write_site": "pn",
+      "jitter_scale": 1.0,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9999999610792903,
+      "mse": 7.3451922277788895e-09,
+      "rsa": 0.9997368862421518,
+      "decoding": 0.95
+    }
+  ]
+}

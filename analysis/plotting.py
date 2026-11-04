@@ -82,23 +82,65 @@ def plot_calibration_comparison(results: List[Dict], output_path: Path) -> Path:
     return output_path
 
 
-def _annotate_techs(ax, techs, invert_x: bool = False) -> None:
-    """Draw labeled vertical lines for real technology operating points."""
-    from hardware.technologies import TechPoint
+TECH_COLORS = {
+    "Patch":         "#6366f1",
+    "VoltImg":       "#0891b2",
+    "GCaMP-hi":      "#16a34a",
+    "MEA":           "#ca8a04",
+    "GCaMP-lo":      "#16a34a",
+    "Light-sheet":   "#0891b2",
+    "2P-targeted":   "#be185d",
+    "4-ch probe":    "#ca8a04",
+    "1 electrode":   "#6366f1",
+    "2P-holo":       "#be185d",
+    "Electrode":     "#6366f1",
+    "1P-opto":       "#16a34a",
+    "TrpA1":         "#ca8a04",
+    "FPGA":          "#6366f1",
+    "Intan+CereStim":"#0891b2",
+    "RT-Linux":      "#be185d",
+    "RPi":           "#ca8a04",
+    "Python loop":   "#16a34a",
+}
 
-    colors = ["#6366f1", "#0891b2", "#be185d", "#ca8a04", "#16a34a"]
-    offsets = [0.97, 0.90, 0.83, 0.76, 0.69]
-    for i, tech in enumerate(techs):
-        color = colors[i % len(colors)]
-        y_frac = offsets[i % len(offsets)]
+_FALLBACK_COLORS = ["#6366f1", "#0891b2", "#be185d", "#ca8a04", "#16a34a"]
+
+
+def _annotate_techs(ax, techs, invert_x: bool = False) -> None:
+    """Draw labeled vertical lines for real technology operating points.
+
+    Places labels above the data region with staggered y-positions and
+    alternating left/right alignment for techs whose x-values are close.
+    """
+    bbox = dict(boxstyle="round,pad=0.15", facecolor="white", edgecolor="none",
+                alpha=0.85)
+    sorted_techs = sorted(techs, key=lambda t: t.value, reverse=invert_x)
+    n = len(sorted_techs)
+    y_top, y_bot = 0.98, 0.98 - 0.035 * min(n, 5)
+    offsets = np.linspace(y_top, y_bot, n)
+
+    vals = [t.value for t in sorted_techs]
+    val_range = max(vals) - min(vals) if len(vals) > 1 else 1.0
+
+    for i, tech in enumerate(sorted_techs):
+        color = TECH_COLORS.get(tech.short, _FALLBACK_COLORS[i % len(_FALLBACK_COLORS)])
+        y_frac = offsets[i]
         ax.axvline(tech.value, color=color, linewidth=1, linestyle=":",
-                   alpha=0.65, zorder=1)
+                   alpha=0.55, zorder=1)
+        frac = (tech.value - min(vals)) / val_range if val_range > 0 else 0.5
+        if invert_x:
+            ha = "left" if frac > 0.85 else "right"
+        else:
+            ha = "right" if frac > 0.85 else "left"
+        pad_l = " " if ha == "left" else ""
+        pad_r = " " if ha == "right" else ""
+        label = f"{pad_l}{tech.short}{pad_r}"
         ax.text(
-            tech.value, y_frac, f" {tech.short}",
+            tech.value, y_frac, label,
             transform=ax.get_xaxis_transform(),
             fontsize=6.5, color=color, fontweight="bold",
-            ha="left" if not invert_x else "right",
-            va="center", clip_on=True,
+            ha=ha, va="center", clip_on=True,
+            bbox=bbox, zorder=5,
         )
 
 
@@ -161,7 +203,8 @@ def plot_hardware_boundary(all_results: Dict[str, list], output_path: Path) -> P
 
         ax.set_xlabel(xlabel)
         ax.set_ylabel("Score")
-        ax.set_ylim(-0.05, 1.1)
+        has_techs = axis_key in tech_annotations
+        ax.set_ylim(-0.05, 1.30 if has_techs else 1.1)
         ax.axhline(0.5, color="#999", linewidth=0.5, linestyle="--", alpha=0.5)
         ax.legend(fontsize=7, loc="lower left" if not invert_x else "lower right")
         if invert_x:
@@ -171,6 +214,140 @@ def plot_hardware_boundary(all_results: Dict[str, list], output_path: Path) -> P
     flat_axes[len(axis_configs)].set_visible(False)
 
     fig.tight_layout()
+    fig.savefig(output_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return output_path
+
+
+def plot_channel_sweep(results: List[Dict], output_path: Path) -> Path:
+    """Plot transfer quality vs number of connected channels at each jitter level."""
+    jitter_levels = sorted(set(r["jitter_scale"] for r in results))
+    colors = ["#2563eb", "#dc2626", "#059669", "#d97706"]
+
+    fig, axes = plt.subplots(1, 3, figsize=(14, 4.5))
+    fig.suptitle("ORN Channel Sweep: Transfer Quality vs Connected ORNs (direct broadcast)")
+
+    metrics = [
+        ("correlation", "Pearson r"),
+        ("transfer_rate", "Behavioral match rate"),
+        ("decoding", "Odor-type decoding"),
+    ]
+
+    for ax, (key, ylabel) in zip(axes, metrics):
+        for j, jitter in enumerate(jitter_levels):
+            rows = [r for r in results if r["jitter_scale"] == jitter]
+            x = [r["n_channels"] for r in rows]
+            y = [r[key] for r in rows]
+            ax.plot(x, y, "o-", color=colors[j % len(colors)],
+                    label=f"jitter={jitter:.1f}", markersize=5)
+        ax.set_xlabel("Number of connected ORNs (of 21)")
+        ax.set_ylabel(ylabel)
+        ax.set_ylim(-0.05, 1.1)
+        ax.axhline(0.5, color="#999", linewidth=0.5, linestyle="--", alpha=0.5)
+        ax.legend(fontsize=8)
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return output_path
+
+
+def plot_read_write_site(results: List[Dict], output_path: Path) -> Path:
+    """Heatmap of transfer quality for each read-write site pairing."""
+    jitter_levels = sorted(set(r["jitter_scale"] for r in results))
+    read_sites = sorted(set(r["read_site"] for r in results),
+                        key=lambda s: ["orn", "pn", "kc"].index(s))
+    write_sites = sorted(set(r["write_site"] for r in results),
+                         key=lambda s: ["orn", "pn"].index(s))
+
+    n_j = len(jitter_levels)
+    fig, axes = plt.subplots(1, n_j + 1, figsize=(5 * n_j + 1.2, 4),
+                             gridspec_kw={"width_ratios": [*([1] * n_j), 0.06]})
+    if n_j == 1:
+        axes = [axes[0], axes[1]]
+    fig.suptitle("Read Site vs Write Site: KC Correlation (odor identity)")
+
+    heatmap_axes = axes[:n_j] if n_j > 1 else [axes[0]]
+    for ax, jitter in zip(heatmap_axes, jitter_levels):
+        matrix = np.zeros((len(read_sites), len(write_sites)))
+        for r in results:
+            if r["jitter_scale"] != jitter:
+                continue
+            ri = read_sites.index(r["read_site"])
+            wi = write_sites.index(r["write_site"])
+            matrix[ri, wi] = r["correlation"]
+
+        im = ax.imshow(matrix, cmap="RdYlGn", vmin=0, vmax=1, aspect="auto")
+        ax.set_xticks(range(len(write_sites)))
+        ax.set_xticklabels([f"write:{s}" for s in write_sites])
+        ax.set_yticks(range(len(read_sites)))
+        ax.set_yticklabels([f"read:{s}" for s in read_sites])
+        ax.set_title(f"jitter={jitter:.1f}")
+
+        for ri in range(len(read_sites)):
+            for wi in range(len(write_sites)):
+                ax.text(wi, ri, f"{matrix[ri, wi]:.2f}",
+                        ha="center", va="center", fontsize=10, fontweight="bold")
+
+    cbar_ax = axes[-1] if n_j > 1 else axes[1]
+    fig.colorbar(im, cax=cbar_ax, label="Pearson r")
+    fig.text(0.01, 0.02,
+             "ORN = olfactory receptor neuron\n"
+             "PN = projection neuron\n"
+             "KC = Kenyon cell (mushroom body)",
+             fontsize=7, va="bottom", ha="left",
+             bbox=dict(boxstyle="round,pad=0.4", facecolor="white",
+                       edgecolor="#ccc", alpha=0.9))
+    fig.subplots_adjust(top=0.88)
+    fig.savefig(output_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return output_path
+
+
+def plot_pn_channel_sweep(results: List[Dict], output_path: Path) -> Path:
+    """2D heatmaps of transfer metrics vs read/write PN counts."""
+    read_counts = sorted(set(r["n_read"] for r in results))
+    write_counts = sorted(set(r["n_write"] for r in results))
+
+    metrics = [
+        ("correlation", "KC correlation (Pearson r)"),
+        ("transfer_rate", "Behavioral match"),
+        ("decoding", "Odor-type decoding"),
+    ]
+
+    n_m = len(metrics)
+    fig, axes = plt.subplots(1, n_m + 1, figsize=(6 * n_m + 1.2, 5.5),
+                             gridspec_kw={"width_ratios": [*([1] * n_m), 0.05],
+                                          "wspace": 0.3})
+    fig.suptitle("PN Channel Sweep: Transfer Quality vs Read/Write PN Count",
+                 fontsize=13)
+
+    for ax, (key, title) in zip(axes[:n_m], metrics):
+        matrix = np.full((len(read_counts), len(write_counts)), np.nan)
+        for r in results:
+            ri = read_counts.index(r["n_read"])
+            wi = write_counts.index(r["n_write"])
+            matrix[ri, wi] = r[key]
+
+        im = ax.imshow(matrix, cmap="RdYlGn", vmin=0, vmax=1,
+                       aspect="auto", origin="lower")
+        ax.set_xticks(range(len(write_counts)))
+        ax.set_xticklabels(write_counts)
+        ax.set_yticks(range(len(read_counts)))
+        ax.set_yticklabels(read_counts)
+        ax.set_xlabel("Write PNs (of 21)")
+        ax.set_ylabel("Read PNs (of 21)")
+        ax.set_title(title)
+
+        for ri in range(len(read_counts)):
+            for wi in range(len(write_counts)):
+                val = matrix[ri, wi]
+                if not np.isnan(val):
+                    ax.text(wi, ri, f"{val:.2f}",
+                            ha="center", va="center", fontsize=7,
+                            fontweight="bold")
+
+    fig.colorbar(im, cax=axes[n_m], label="Score")
     fig.savefig(output_path, dpi=150, bbox_inches="tight")
     plt.close(fig)
     return output_path

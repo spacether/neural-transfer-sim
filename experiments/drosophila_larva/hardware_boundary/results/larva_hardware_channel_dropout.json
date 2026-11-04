@@ -1,0 +1,85 @@
+{
+  "experiment": "larva_hardware_channel_dropout",
+  "description": "Drosophila larva hardware boundary: channel_dropout sweep",
+  "timestamp": "2026-11-04T05:46:16Z",
+  "git_commit": "8e28098",
+  "parameters": {
+    "axis": "channel_dropout",
+    "jitter": 0.75,
+    "seeds": 5
+  },
+  "metrics": [
+    "dropout_fraction",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "decoding"
+  ],
+  "results": [
+    {
+      "dropout_fraction": 0.0,
+      "transfer_rate": 0.9833333333333332,
+      "correlation": 0.9637255078924692,
+      "mse": 11.162221007073057,
+      "rsa": 0.9283411285328615,
+      "decoding": 0.9222222222222223
+    },
+    {
+      "dropout_fraction": 0.1,
+      "transfer_rate": 0.9444444444444444,
+      "correlation": 0.9100446196117922,
+      "mse": 25.3682330798961,
+      "rsa": 0.8752855127801897,
+      "decoding": 0.9
+    },
+    {
+      "dropout_fraction": 0.2,
+      "transfer_rate": 0.9388888888888889,
+      "correlation": 0.8696605475760609,
+      "mse": 35.61752985351036,
+      "rsa": 0.813618250618217,
+      "decoding": 0.8944444444444443
+    },
+    {
+      "dropout_fraction": 0.3,
+      "transfer_rate": 0.8833333333333332,
+      "correlation": 0.8145248119757925,
+      "mse": 49.3713244491686,
+      "rsa": 0.7544489154574622,
+      "decoding": 0.85
+    },
+    {
+      "dropout_fraction": 0.4,
+      "transfer_rate": 0.861111111111111,
+      "correlation": 0.7967832548559105,
+      "mse": 53.96736544799211,
+      "rsa": 0.7468290171819593,
+      "decoding": 0.8444444444444447
+    },
+    {
+      "dropout_fraction": 0.5,
+      "transfer_rate": 0.7555555555555555,
+      "correlation": 0.6680348093791121,
+      "mse": 80.8168254350484,
+      "rsa": 0.5231001596476373,
+      "decoding": 0.85
+    },
+    {
+      "dropout_fraction": 0.6,
+      "transfer_rate": 0.7,
+      "correlation": 0.6051673361690862,
+      "mse": 92.73520069256543,
+      "rsa": 0.4578201844088946,
+      "decoding": 0.8055555555555556
+    },
+    {
+      "dropout_fraction": 0.8,
+      "transfer_rate": 0.48888888888888893,
+      "correlation": 0.45947028140831636,
+      "mse": 115.53789021351841,
+      "rsa": 0.2694362105448955,
+      "decoding": 0.7833333333333333
+    }
+  ]
+}

@@ -19,12 +19,26 @@ from scipy.spatial.distance import pdist
 from scipy.stats import spearmanr
 
 
-ALL_NEURONS = ("AWA", "AWC_L", "AWC_R", "AWB", "ADL", "AIY", "AIB", "AVA", "AVB")
+def state_to_vec(state: Dict[str, float], keys: tuple | None = None) -> np.ndarray:
+    """Convert a neuron state dict to a fixed-length vector.
+
+    If *keys* is given, the vector follows that order.  Otherwise,
+    the dict's sorted keys are used — which is deterministic across
+    states that share the same neuron set.
+    """
+    if keys is None:
+        keys = tuple(sorted(state.keys()))
+    return np.array([state.get(n, 0.0) for n in keys])
 
 
-def state_to_vec(state: Dict[str, float]) -> np.ndarray:
-    """Convert a neuron state dict to a fixed-length vector over ALL_NEURONS."""
-    return np.array([state.get(n, 0.0) for n in ALL_NEURONS])
+def _shared_keys(states_a: List[Dict[str, float]], states_b: List[Dict[str, float]]) -> tuple:
+    """Return a sorted tuple of all neuron names present in either list."""
+    keys: set = set()
+    for s in states_a:
+        keys.update(s.keys())
+    for s in states_b:
+        keys.update(s.keys())
+    return tuple(sorted(keys))
 
 
 def correlation(
@@ -36,8 +50,9 @@ def correlation(
     Concatenates all neuron activations across all trials into one long vector
     per condition and returns the Pearson r.  1.0 = perfect linear tracking.
     """
-    vecs_a = np.array([state_to_vec(s) for s in actual_states]).ravel()
-    vecs_e = np.array([state_to_vec(s) for s in expected_states]).ravel()
+    keys = _shared_keys(actual_states, expected_states)
+    vecs_a = np.array([state_to_vec(s, keys) for s in actual_states]).ravel()
+    vecs_e = np.array([state_to_vec(s, keys) for s in expected_states]).ravel()
 
     if np.std(vecs_a) < 1e-12 or np.std(vecs_e) < 1e-12:
         return 1.0 if np.allclose(vecs_a, vecs_e) else 0.0
@@ -50,8 +65,9 @@ def mean_mse(
     expected_states: List[Dict[str, float]],
 ) -> float:
     """Mean squared error between paired states, averaged over all neurons and samples."""
-    vecs_a = np.array([state_to_vec(s) for s in actual_states])
-    vecs_e = np.array([state_to_vec(s) for s in expected_states])
+    keys = _shared_keys(actual_states, expected_states)
+    vecs_a = np.array([state_to_vec(s, keys) for s in actual_states])
+    vecs_e = np.array([state_to_vec(s, keys) for s in expected_states])
     return float(np.mean((vecs_a - vecs_e) ** 2))
 
 
@@ -68,8 +84,9 @@ def representational_similarity(
     if len(natural_states) < 3:
         return float("nan")
 
-    nat_dists = pdist(np.array([state_to_vec(s) for s in natural_states]))
-    trans_dists = pdist(np.array([state_to_vec(s) for s in transferred_states]))
+    keys = _shared_keys(natural_states, transferred_states)
+    nat_dists = pdist(np.array([state_to_vec(s, keys) for s in natural_states]))
+    trans_dists = pdist(np.array([state_to_vec(s, keys) for s in transferred_states]))
 
     if np.std(nat_dists) < 1e-12 or np.std(trans_dists) < 1e-12:
         return 1.0 if np.allclose(nat_dists, trans_dists) else 0.0
@@ -89,8 +106,9 @@ def odor_type_decoding(
     then assigns each transferred state to the nearest centroid.
     Returns fraction correctly classified.
     """
-    nat_vecs = np.array([state_to_vec(s) for s in natural_states])
-    trans_vecs = np.array([state_to_vec(s) for s in transferred_states])
+    keys = _shared_keys(natural_states, transferred_states)
+    nat_vecs = np.array([state_to_vec(s, keys) for s in natural_states])
+    trans_vecs = np.array([state_to_vec(s, keys) for s in transferred_states])
 
     categories = sorted(set(odor_types))
     centroids = {}

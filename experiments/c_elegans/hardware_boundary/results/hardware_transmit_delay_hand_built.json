@@ -1,8 +1,8 @@
 {
   "experiment": "hardware_transmit_delay_hand_built",
   "description": "Hardware boundary: transmit_delay sweep (hand_built)",
-  "timestamp": "2026-11-04T04:49:53Z",
-  "git_commit": "1b8499a",
+  "timestamp": "2026-11-04T05:46:44Z",
+  "git_commit": "8e28098",
   "parameters": {
     "model": "hand_built",
     "axis": "transmit_delay",
@@ -23,72 +23,72 @@
       "model": "hand_built",
       "delay_ms": 0.0,
       "transfer_rate": 0.7428571428571429,
-      "correlation": 0.9279064528359393,
-      "mse": 0.06154385168768617,
-      "rsa": 0.9850664170602921,
+      "correlation": 0.9279064528359395,
+      "mse": 0.06154385168768618,
+      "rsa": 0.9850246407578782,
       "decoding": 0.9428571428571428
     },
     {
       "model": "hand_built",
       "delay_ms": 0.1,
-      "transfer_rate": 0.7285714285714285,
-      "correlation": 0.9279237424374737,
-      "mse": 0.06150893818655471,
-      "rsa": 0.9850646288612614,
+      "transfer_rate": 0.7428571428571429,
+      "correlation": 0.927954920488179,
+      "mse": 0.061458590870807725,
+      "rsa": 0.9849770722354314,
       "decoding": 0.9428571428571428
     },
     {
       "model": "hand_built",
       "delay_ms": 1.0,
-      "transfer_rate": 0.7428571428571429,
-      "correlation": 0.9278137064970535,
-      "mse": 0.061594998155984,
-      "rsa": 0.9845438193411752,
-      "decoding": 0.9428571428571428
+      "transfer_rate": 0.7285714285714285,
+      "correlation": 0.9274771599500207,
+      "mse": 0.06192316532086415,
+      "rsa": 0.9852653464990702,
+      "decoding": 0.9285714285714286
     },
     {
       "model": "hand_built",
       "delay_ms": 5.0,
       "transfer_rate": 0.7428571428571429,
-      "correlation": 0.9278045216128892,
-      "mse": 0.06145450960916825,
-      "rsa": 0.9849722525752027,
+      "correlation": 0.927529464808892,
+      "mse": 0.061940408056179765,
+      "rsa": 0.9847795904689727,
       "decoding": 0.9428571428571428
     },
     {
       "model": "hand_built",
       "delay_ms": 20.0,
-      "transfer_rate": 0.7285714285714285,
-      "correlation": 0.9272944063277908,
-      "mse": 0.06200264619484891,
-      "rsa": 0.9825513755974095,
-      "decoding": 0.9285714285714286
+      "transfer_rate": 0.7571428571428572,
+      "correlation": 0.9274180392936039,
+      "mse": 0.06194742067581001,
+      "rsa": 0.9827568984941324,
+      "decoding": 0.9428571428571428
     },
     {
       "model": "hand_built",
       "delay_ms": 100.0,
-      "transfer_rate": 0.7428571428571429,
-      "correlation": 0.9278197591226773,
-      "mse": 0.06139546266076209,
-      "rsa": 0.9799345936787949,
+      "transfer_rate": 0.7428571428571428,
+      "correlation": 0.9229525947250735,
+      "mse": 0.06632186836492351,
+      "rsa": 0.9768161826683389,
       "decoding": 0.9285714285714286
     },
     {
       "model": "hand_built",
       "delay_ms": 500.0,
-      "transfer_rate": 0.7571428571428571,
-      "correlation": 0.9164969317283997,
-      "mse": 0.07230824594635596,
-      "rsa": 0.9668938143613689,
-      "decoding": 0.9285714285714286
+      "transfer_rate": 0.7285714285714284,
+      "correlation": 0.9194877681874717,
+      "mse": 0.06815867901249766,
+      "rsa": 0.9579145113088602,
+      "decoding": 0.9142857142857143
     },
     {
       "model": "hand_built",
       "delay_ms": 2000.0,
-      "transfer_rate": 0.7285714285714284,
-      "correlation": 0.8986949622916101,
-      "mse": 0.07800166974674348,
-      "rsa": 0.9267883522913303,
+      "transfer_rate": 0.7,
+      "correlation": 0.9015669618445443,
+      "mse": 0.08438194585900774,
+      "rsa": 0.9411038827616116,
       "decoding": 0.9428571428571428
     }
   ]

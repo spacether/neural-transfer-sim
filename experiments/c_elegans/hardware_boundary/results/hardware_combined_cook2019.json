@@ -1,8 +1,8 @@
 {
   "experiment": "hardware_combined_cook2019",
   "description": "Hardware boundary: combined sweep (cook2019)",
-  "timestamp": "2026-11-04T04:50:03Z",
-  "git_commit": "1b8499a",
+  "timestamp": "2026-11-04T05:46:26Z",
+  "git_commit": "8e28098",
   "parameters": {
     "model": "cook2019",
     "axis": "combined",
@@ -30,11 +30,11 @@
       "precision_bits": Infinity,
       "dropout_fraction": 0.0,
       "delay_ms": 0.0,
-      "transfer_rate": 0.6857142857142857,
-      "correlation": 0.9046954220161206,
-      "mse": 0.062164175870184725,
-      "rsa": 0.9657015448319797,
-      "decoding": 0.9285714285714286
+      "transfer_rate": 0.7714285714285714,
+      "correlation": 0.9076442120999507,
+      "mse": 0.05102496682710913,
+      "rsa": 0.9602516324255456,
+      "decoding": 0.9571428571428571
     },
     {
       "model": "cook2019",
@@ -43,11 +43,11 @@
       "precision_bits": 8,
       "dropout_fraction": 0.05,
       "delay_ms": 0.1,
-      "transfer_rate": 0.6428571428571429,
-      "correlation": 0.8375709792728527,
-      "mse": 0.09860276851532963,
-      "rsa": 0.9289345437171524,
-      "decoding": 0.9142857142857143
+      "transfer_rate": 0.7428571428571429,
+      "correlation": 0.849178046388948,
+      "mse": 0.07813217704289109,
+      "rsa": 0.9261156235069279,
+      "decoding": 0.9428571428571428
     },
     {
       "model": "cook2019",
@@ -56,11 +56,11 @@
       "precision_bits": 6,
       "dropout_fraction": 0.1,
       "delay_ms": 1.0,
-      "transfer_rate": 0.6142857142857143,
-      "correlation": 0.8169606601710312,
-      "mse": 0.11583136910603926,
-      "rsa": 0.8841121197642938,
-      "decoding": 0.8714285714285716
+      "transfer_rate": 0.7142857142857143,
+      "correlation": 0.8259221256253424,
+      "mse": 0.09380705177814154,
+      "rsa": 0.880557413600892,
+      "decoding": 0.8428571428571429
     },
     {
       "model": "cook2019",
@@ -69,11 +69,11 @@
       "precision_bits": 5,
       "dropout_fraction": 0.15,
       "delay_ms": 5.0,
-      "transfer_rate": 0.6714285714285715,
-      "correlation": 0.8164714726228246,
-      "mse": 0.11430114936983649,
-      "rsa": 0.8583532409619365,
-      "decoding": 0.9
+      "transfer_rate": 0.7714285714285714,
+      "correlation": 0.8229223616038468,
+      "mse": 0.09298268813842228,
+      "rsa": 0.8515273132664436,
+      "decoding": 0.9142857142857143
     },
     {
       "model": "cook2019",
@@ -82,10 +82,10 @@
       "precision_bits": 4,
       "dropout_fraction": 0.2,
       "delay_ms": 20.0,
-      "transfer_rate": 0.6142857142857142,
-      "correlation": 0.775407484426758,
-      "mse": 0.1355016994459752,
-      "rsa": 0.8041917160728079,
+      "transfer_rate": 0.7142857142857143,
+      "correlation": 0.7968806892458142,
+      "mse": 0.10462078693863264,
+      "rsa": 0.8104940063888575,
       "decoding": 0.8857142857142858
     },
     {
@@ -95,10 +95,10 @@
       "precision_bits": 3,
       "dropout_fraction": 0.3,
       "delay_ms": 100.0,
-      "transfer_rate": 0.5142857142857142,
-      "correlation": 0.7393163566970997,
-      "mse": 0.16064046853092043,
-      "rsa": 0.6918427185914423,
+      "transfer_rate": 0.6714285714285715,
+      "correlation": 0.7638026317511611,
+      "mse": 0.12521068964878307,
+      "rsa": 0.7035820480216574,
       "decoding": 0.8571428571428571
     },
     {
@@ -108,11 +108,11 @@
       "precision_bits": 2,
       "dropout_fraction": 0.4,
       "delay_ms": 500.0,
-      "transfer_rate": 0.5142857142857142,
-      "correlation": 0.6066635215371099,
-      "mse": 0.23726383899654852,
-      "rsa": 0.5866075716261786,
-      "decoding": 0.8428571428571429
+      "transfer_rate": 0.6,
+      "correlation": 0.6251958836863439,
+      "mse": 0.19098865168659074,
+      "rsa": 0.5814051506163752,
+      "decoding": 0.8714285714285713
     },
     {
       "model": "cook2019",
@@ -121,11 +121,11 @@
       "precision_bits": 1,
       "dropout_fraction": 0.5,
       "delay_ms": 2000.0,
-      "transfer_rate": 0.4428571428571429,
-      "correlation": 0.4757550600446237,
-      "mse": 0.30477317159536144,
-      "rsa": 0.264995892814612,
-      "decoding": 0.7
+      "transfer_rate": 0.42857142857142855,
+      "correlation": 0.5150341657111853,
+      "mse": 0.24088983849850937,
+      "rsa": 0.2777848897236846,
+      "decoding": 0.7285714285714285
     }
   ]
 }
