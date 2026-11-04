@@ -1,0 +1,131 @@
+{
+  "experiment": "hardware_combined_cook2019",
+  "description": "Hardware boundary: combined sweep (cook2019)",
+  "timestamp": "2026-11-04T05:46:26Z",
+  "git_commit": "8e28098",
+  "parameters": {
+    "model": "cook2019",
+    "axis": "combined",
+    "jitter": 0.75,
+    "seeds": 5
+  },
+  "metrics": [
+    "model",
+    "step",
+    "noise_sigma",
+    "precision_bits",
+    "dropout_fraction",
+    "delay_ms",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "decoding"
+  ],
+  "results": [
+    {
+      "model": "cook2019",
+      "step": 0,
+      "noise_sigma": 0.0,
+      "precision_bits": Infinity,
+      "dropout_fraction": 0.0,
+      "delay_ms": 0.0,
+      "transfer_rate": 0.7714285714285714,
+      "correlation": 0.9076442120999507,
+      "mse": 0.05102496682710913,
+      "rsa": 0.9602516324255456,
+      "decoding": 0.9571428571428571
+    },
+    {
+      "model": "cook2019",
+      "step": 1,
+      "noise_sigma": 0.05,
+      "precision_bits": 8,
+      "dropout_fraction": 0.05,
+      "delay_ms": 0.1,
+      "transfer_rate": 0.7428571428571429,
+      "correlation": 0.849178046388948,
+      "mse": 0.07813217704289109,
+      "rsa": 0.9261156235069279,
+      "decoding": 0.9428571428571428
+    },
+    {
+      "model": "cook2019",
+      "step": 2,
+      "noise_sigma": 0.1,
+      "precision_bits": 6,
+      "dropout_fraction": 0.1,
+      "delay_ms": 1.0,
+      "transfer_rate": 0.7142857142857143,
+      "correlation": 0.8259221256253424,
+      "mse": 0.09380705177814154,
+      "rsa": 0.880557413600892,
+      "decoding": 0.8428571428571429
+    },
+    {
+      "model": "cook2019",
+      "step": 3,
+      "noise_sigma": 0.2,
+      "precision_bits": 5,
+      "dropout_fraction": 0.15,
+      "delay_ms": 5.0,
+      "transfer_rate": 0.7714285714285714,
+      "correlation": 0.8229223616038468,
+      "mse": 0.09298268813842228,
+      "rsa": 0.8515273132664436,
+      "decoding": 0.9142857142857143
+    },
+    {
+      "model": "cook2019",
+      "step": 4,
+      "noise_sigma": 0.3,
+      "precision_bits": 4,
+      "dropout_fraction": 0.2,
+      "delay_ms": 20.0,
+      "transfer_rate": 0.7142857142857143,
+      "correlation": 0.7968806892458142,
+      "mse": 0.10462078693863264,
+      "rsa": 0.8104940063888575,
+      "decoding": 0.8857142857142858
+    },
+    {
+      "model": "cook2019",
+      "step": 5,
+      "noise_sigma": 0.5,
+      "precision_bits": 3,
+      "dropout_fraction": 0.3,
+      "delay_ms": 100.0,
+      "transfer_rate": 0.6714285714285715,
+      "correlation": 0.7638026317511611,
+      "mse": 0.12521068964878307,
+      "rsa": 0.7035820480216574,
+      "decoding": 0.8571428571428571
+    },
+    {
+      "model": "cook2019",
+      "step": 6,
+      "noise_sigma": 0.75,
+      "precision_bits": 2,
+      "dropout_fraction": 0.4,
+      "delay_ms": 500.0,
+      "transfer_rate": 0.6,
+      "correlation": 0.6251958836863439,
+      "mse": 0.19098865168659074,
+      "rsa": 0.5814051506163752,
+      "decoding": 0.8714285714285713
+    },
+    {
+      "model": "cook2019",
+      "step": 7,
+      "noise_sigma": 1.0,
+      "precision_bits": 1,
+      "dropout_fraction": 0.5,
+      "delay_ms": 2000.0,
+      "transfer_rate": 0.42857142857142855,
+      "correlation": 0.5150341657111853,
+      "mse": 0.24088983849850937,
+      "rsa": 0.2777848897236846,
+      "decoding": 0.7285714285714285
+    }
+  ]
+}

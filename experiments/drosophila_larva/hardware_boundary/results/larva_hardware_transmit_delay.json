@@ -1,0 +1,85 @@
+{
+  "experiment": "larva_hardware_transmit_delay",
+  "description": "Drosophila larva hardware boundary: transmit_delay sweep",
+  "timestamp": "2026-11-04T05:46:16Z",
+  "git_commit": "8e28098",
+  "parameters": {
+    "axis": "transmit_delay",
+    "jitter": 0.75,
+    "seeds": 5
+  },
+  "metrics": [
+    "delay_ms",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "decoding"
+  ],
+  "results": [
+    {
+      "delay_ms": 0.0,
+      "transfer_rate": 0.9833333333333332,
+      "correlation": 0.9637255078924692,
+      "mse": 11.162221007073057,
+      "rsa": 0.9283411285328615,
+      "decoding": 0.9222222222222223
+    },
+    {
+      "delay_ms": 0.1,
+      "transfer_rate": 0.9833333333333332,
+      "correlation": 0.9637243059818384,
+      "mse": 11.162588294785245,
+      "rsa": 0.9283373471934624,
+      "decoding": 0.9222222222222223
+    },
+    {
+      "delay_ms": 1.0,
+      "transfer_rate": 0.9833333333333332,
+      "correlation": 0.9637260409176507,
+      "mse": 11.162016825175815,
+      "rsa": 0.9283368960775193,
+      "decoding": 0.9222222222222223
+    },
+    {
+      "delay_ms": 5.0,
+      "transfer_rate": 0.9833333333333332,
+      "correlation": 0.9637212412896046,
+      "mse": 11.163379846186796,
+      "rsa": 0.9282902775207866,
+      "decoding": 0.9222222222222223
+    },
+    {
+      "delay_ms": 20.0,
+      "transfer_rate": 0.9833333333333332,
+      "correlation": 0.9637323048002919,
+      "mse": 11.161530558519825,
+      "rsa": 0.9282662627744764,
+      "decoding": 0.9222222222222223
+    },
+    {
+      "delay_ms": 100.0,
+      "transfer_rate": 0.9833333333333332,
+      "correlation": 0.9637351290571173,
+      "mse": 11.154994200052572,
+      "rsa": 0.9282097292543584,
+      "decoding": 0.9222222222222223
+    },
+    {
+      "delay_ms": 500.0,
+      "transfer_rate": 0.9833333333333332,
+      "correlation": 0.9636936701625846,
+      "mse": 11.163618123631073,
+      "rsa": 0.9283505111541561,
+      "decoding": 0.9222222222222223
+    },
+    {
+      "delay_ms": 2000.0,
+      "transfer_rate": 0.9888888888888889,
+      "correlation": 0.9635543485733716,
+      "mse": 11.21146017323601,
+      "rsa": 0.9283535729946955,
+      "decoding": 0.9222222222222223
+    }
+  ]
+}

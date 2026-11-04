@@ -1,0 +1,95 @@
+{
+  "experiment": "hardware_channel_dropout_hand_built",
+  "description": "Hardware boundary: channel_dropout sweep (hand_built)",
+  "timestamp": "2026-11-04T05:46:44Z",
+  "git_commit": "8e28098",
+  "parameters": {
+    "model": "hand_built",
+    "axis": "channel_dropout",
+    "jitter": 0.75,
+    "seeds": 5
+  },
+  "metrics": [
+    "model",
+    "dropout_fraction",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "decoding"
+  ],
+  "results": [
+    {
+      "model": "hand_built",
+      "dropout_fraction": 0.0,
+      "transfer_rate": 0.7428571428571429,
+      "correlation": 0.9279064528359395,
+      "mse": 0.06154385168768618,
+      "rsa": 0.9850246407578782,
+      "decoding": 0.9428571428571428
+    },
+    {
+      "model": "hand_built",
+      "dropout_fraction": 0.1,
+      "transfer_rate": 0.6857142857142857,
+      "correlation": 0.8768955506537663,
+      "mse": 0.0939179718720896,
+      "rsa": 0.9330825094277347,
+      "decoding": 0.9285714285714286
+    },
+    {
+      "model": "hand_built",
+      "dropout_fraction": 0.2,
+      "transfer_rate": 0.7285714285714285,
+      "correlation": 0.8163867475542853,
+      "mse": 0.13617026806138294,
+      "rsa": 0.9033875068863167,
+      "decoding": 0.9142857142857143
+    },
+    {
+      "model": "hand_built",
+      "dropout_fraction": 0.3,
+      "transfer_rate": 0.5,
+      "correlation": 0.7261012193761368,
+      "mse": 0.20638726906025365,
+      "rsa": 0.7803948274264206,
+      "decoding": 0.8714285714285713
+    },
+    {
+      "model": "hand_built",
+      "dropout_fraction": 0.4,
+      "transfer_rate": 0.5428571428571429,
+      "correlation": 0.6316718828442444,
+      "mse": 0.27591394831260635,
+      "rsa": 0.7298087289088115,
+      "decoding": 0.8428571428571429
+    },
+    {
+      "model": "hand_built",
+      "dropout_fraction": 0.5,
+      "transfer_rate": 0.5,
+      "correlation": 0.5794754433928495,
+      "mse": 0.2924880678378441,
+      "rsa": 0.5860466962671935,
+      "decoding": 0.7571428571428571
+    },
+    {
+      "model": "hand_built",
+      "dropout_fraction": 0.6,
+      "transfer_rate": 0.4714285714285714,
+      "correlation": 0.5755399005332201,
+      "mse": 0.3296038041649955,
+      "rsa": 0.552182942477334,
+      "decoding": 0.7285714285714286
+    },
+    {
+      "model": "hand_built",
+      "dropout_fraction": 0.8,
+      "transfer_rate": 0.38571428571428573,
+      "correlation": 0.4829433055222669,
+      "mse": 0.4015047592994854,
+      "rsa": 0.4749129967408748,
+      "decoding": 0.6714285714285715
+    }
+  ]
+}

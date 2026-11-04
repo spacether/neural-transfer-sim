@@ -1,0 +1,95 @@
+{
+  "experiment": "hardware_write_precision_hand_built",
+  "description": "Hardware boundary: write_precision sweep (hand_built)",
+  "timestamp": "2026-11-04T05:46:44Z",
+  "git_commit": "8e28098",
+  "parameters": {
+    "model": "hand_built",
+    "axis": "write_precision",
+    "jitter": 0.75,
+    "seeds": 5
+  },
+  "metrics": [
+    "model",
+    "precision_bits",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "decoding"
+  ],
+  "results": [
+    {
+      "model": "hand_built",
+      "precision_bits": Infinity,
+      "transfer_rate": 0.7428571428571429,
+      "correlation": 0.9279064528359395,
+      "mse": 0.06154385168768618,
+      "rsa": 0.9850246407578782,
+      "decoding": 0.9428571428571428
+    },
+    {
+      "model": "hand_built",
+      "precision_bits": 8,
+      "transfer_rate": 0.7428571428571429,
+      "correlation": 0.9279019955003207,
+      "mse": 0.06152863600151617,
+      "rsa": 0.9852881873588636,
+      "decoding": 0.9285714285714286
+    },
+    {
+      "model": "hand_built",
+      "precision_bits": 6,
+      "transfer_rate": 0.7428571428571429,
+      "correlation": 0.9279371696903121,
+      "mse": 0.06157733565794208,
+      "rsa": 0.9846741825157638,
+      "decoding": 0.9428571428571428
+    },
+    {
+      "model": "hand_built",
+      "precision_bits": 5,
+      "transfer_rate": 0.7428571428571429,
+      "correlation": 0.9281743623015984,
+      "mse": 0.06125092752330234,
+      "rsa": 0.9843274580844792,
+      "decoding": 0.9428571428571428
+    },
+    {
+      "model": "hand_built",
+      "precision_bits": 4,
+      "transfer_rate": 0.7428571428571429,
+      "correlation": 0.9261184816267212,
+      "mse": 0.0628551751524187,
+      "rsa": 0.98334733843524,
+      "decoding": 0.9285714285714286
+    },
+    {
+      "model": "hand_built",
+      "precision_bits": 3,
+      "transfer_rate": 0.7571428571428571,
+      "correlation": 0.9226489429512345,
+      "mse": 0.06670672324218162,
+      "rsa": 0.9826203657442806,
+      "decoding": 0.9285714285714286
+    },
+    {
+      "model": "hand_built",
+      "precision_bits": 2,
+      "transfer_rate": 0.7428571428571429,
+      "correlation": 0.9161806778001245,
+      "mse": 0.07124815703187555,
+      "rsa": 0.9449862370187185,
+      "decoding": 0.9571428571428573
+    },
+    {
+      "model": "hand_built",
+      "precision_bits": 1,
+      "transfer_rate": 0.8,
+      "correlation": 0.8779775142270866,
+      "mse": 0.10194392273746297,
+      "rsa": 0.881227500452962,
+      "decoding": 0.8571428571428571
+    }
+  ]
+}

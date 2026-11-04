@@ -1,0 +1,95 @@
+{
+  "experiment": "hardware_read_noise_hand_built",
+  "description": "Hardware boundary: read_noise sweep (hand_built)",
+  "timestamp": "2026-11-04T05:46:44Z",
+  "git_commit": "8e28098",
+  "parameters": {
+    "model": "hand_built",
+    "axis": "read_noise",
+    "jitter": 0.75,
+    "seeds": 5
+  },
+  "metrics": [
+    "model",
+    "noise_sigma",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "decoding"
+  ],
+  "results": [
+    {
+      "model": "hand_built",
+      "noise_sigma": 0.0,
+      "transfer_rate": 0.7428571428571429,
+      "correlation": 0.9279064528359395,
+      "mse": 0.06154385168768618,
+      "rsa": 0.9850246407578782,
+      "decoding": 0.9428571428571428
+    },
+    {
+      "model": "hand_built",
+      "noise_sigma": 0.05,
+      "transfer_rate": 0.7285714285714285,
+      "correlation": 0.9286665415989022,
+      "mse": 0.05937049762579901,
+      "rsa": 0.982095952440579,
+      "decoding": 0.9142857142857143
+    },
+    {
+      "model": "hand_built",
+      "noise_sigma": 0.1,
+      "transfer_rate": 0.7142857142857142,
+      "correlation": 0.9238636633432641,
+      "mse": 0.06221664177664978,
+      "rsa": 0.9641561046707455,
+      "decoding": 0.9142857142857143
+    },
+    {
+      "model": "hand_built",
+      "noise_sigma": 0.2,
+      "transfer_rate": 0.7285714285714286,
+      "correlation": 0.9087606646600698,
+      "mse": 0.07580725359021115,
+      "rsa": 0.9334542634819206,
+      "decoding": 0.9571428571428571
+    },
+    {
+      "model": "hand_built",
+      "noise_sigma": 0.3,
+      "transfer_rate": 0.6285714285714286,
+      "correlation": 0.8972854905647205,
+      "mse": 0.0892301560393915,
+      "rsa": 0.9275471743024555,
+      "decoding": 0.9285714285714286
+    },
+    {
+      "model": "hand_built",
+      "noise_sigma": 0.5,
+      "transfer_rate": 0.6,
+      "correlation": 0.8042837462351409,
+      "mse": 0.20465490943318496,
+      "rsa": 0.7851987339589062,
+      "decoding": 0.9571428571428573
+    },
+    {
+      "model": "hand_built",
+      "noise_sigma": 0.75,
+      "transfer_rate": 0.6142857142857142,
+      "correlation": 0.7392947655357323,
+      "mse": 0.26990722760511376,
+      "rsa": 0.6872596098898182,
+      "decoding": 0.8571428571428571
+    },
+    {
+      "model": "hand_built",
+      "noise_sigma": 1.0,
+      "transfer_rate": 0.6428571428571429,
+      "correlation": 0.6104119781684478,
+      "mse": 0.46191013195855984,
+      "rsa": 0.4944537878167342,
+      "decoding": 0.9
+    }
+  ]
+}

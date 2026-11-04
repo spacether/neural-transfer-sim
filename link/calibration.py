@@ -15,14 +15,11 @@ from typing import Dict, List, Tuple
 import numpy as np
 
 
-ALL_NEURONS = ("AWA", "AWC_L", "AWC_R", "AWB", "ADL")
-
-
 @dataclass
 class CalibrationTransform:
     """Ridge-regression linear map from sender signal space to receiver signal space."""
 
-    neurons: Tuple[str, ...] = ALL_NEURONS
+    neurons: Tuple[str, ...] | None = None
     alpha: float = 0.01
 
     _coef: np.ndarray | None = field(default=None, init=False, repr=False)
@@ -41,6 +38,14 @@ class CalibrationTransform:
         receiver_signals: List[Dict[str, float]],
     ) -> "CalibrationTransform":
         """Fit the linear transform from paired (sender, receiver) observations."""
+        if self.neurons is None:
+            keys: set = set()
+            for s in sender_signals:
+                keys.update(s.keys())
+            for r in receiver_signals:
+                keys.update(r.keys())
+            self.neurons = tuple(sorted(keys))
+
         X = np.array([self._to_vec(s) for s in sender_signals])
         Y = np.array([self._to_vec(r) for r in receiver_signals])
 

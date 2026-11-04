@@ -1,0 +1,82 @@
+{
+  "experiment": "larva_broadcast_sweep",
+  "description": "Drosophila larva direct broadcast baseline: transfer quality vs brain difference",
+  "timestamp": "2026-11-04T05:28:17Z",
+  "git_commit": "8e28098",
+  "parameters": {
+    "seeds_per_level": 5
+  },
+  "metrics": [
+    "valid_seeds",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "decoding"
+  ],
+  "results": [
+    {
+      "jitter_scale": 0.0,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 1.0,
+      "mse": 0.0,
+      "rsa": 1.0,
+      "decoding": 0.9444444444444444
+    },
+    {
+      "jitter_scale": 0.25,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9958739666406636,
+      "mse": 1.1995775143312826,
+      "rsa": 0.9907236625353495,
+      "decoding": 0.9388888888888888
+    },
+    {
+      "jitter_scale": 0.5,
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9836199045302939,
+      "mse": 4.826943653192746,
+      "rsa": 0.9660514570511701,
+      "decoding": 0.9166666666666666
+    },
+    {
+      "jitter_scale": 0.75,
+      "valid_seeds": 5,
+      "transfer_rate": 0.9833333333333332,
+      "correlation": 0.9637255078924692,
+      "mse": 11.162221007073057,
+      "rsa": 0.9283411285328615,
+      "decoding": 0.9222222222222223
+    },
+    {
+      "jitter_scale": 1.0,
+      "valid_seeds": 5,
+      "transfer_rate": 0.9666666666666666,
+      "correlation": 0.9375935898929665,
+      "mse": 20.825984138233018,
+      "rsa": 0.8839010878958146,
+      "decoding": 0.9
+    },
+    {
+      "jitter_scale": 1.25,
+      "valid_seeds": 5,
+      "transfer_rate": 0.9666666666666666,
+      "correlation": 0.9081295741176412,
+      "mse": 34.64404756802715,
+      "rsa": 0.8389603972345492,
+      "decoding": 0.9
+    },
+    {
+      "jitter_scale": 1.5,
+      "valid_seeds": 5,
+      "transfer_rate": 0.9333333333333333,
+      "correlation": 0.8792580986798948,
+      "mse": 53.527538948662844,
+      "rsa": 0.7980933227714383,
+      "decoding": 0.861111111111111
+    }
+  ]
+}
