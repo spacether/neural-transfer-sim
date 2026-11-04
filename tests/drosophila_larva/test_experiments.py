@@ -4,8 +4,6 @@ from experiments.drosophila_larva.broadcast import run_broadcast_sweep
 from experiments.drosophila_larva.calibration import run_calibration_sweep
 from experiments.drosophila_larva.hardware_boundary import run_hardware_sweep
 from experiments.drosophila_larva.channel_sweep import run_channel_sweep
-from experiments.drosophila_larva.read_write_site import run_site_sweep
-
 
 def test_broadcast_sweep_shape() -> None:
     results = run_broadcast_sweep(jitter_levels=[0.0, 0.5], seeds_per_level=2)
@@ -78,10 +76,3 @@ def test_channel_sweep_improves_with_channels() -> None:
     assert high["correlation"] > low["correlation"]
 
 
-def test_site_sweep_shape() -> None:
-    results = run_site_sweep(jitter_levels=[0.0], seeds_per_level=1)
-    assert len(results) >= 4  # 3 read sites x 2 write sites at one jitter
-    for row in results:
-        assert "read_site" in row
-        assert "write_site" in row
-        assert 0.0 <= row["transfer_rate"] <= 1.0

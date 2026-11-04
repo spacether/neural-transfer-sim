@@ -252,60 +252,6 @@ def plot_channel_sweep(results: List[Dict], output_path: Path) -> Path:
     return output_path
 
 
-def plot_read_write_site(results: List[Dict], output_path: Path) -> Path:
-    """Heatmap of transfer quality for each read-write site pairing."""
-    jitter_levels = sorted(set(r["jitter_scale"] for r in results))
-    read_sites = sorted(set(r["read_site"] for r in results),
-                        key=lambda s: ["orn", "pn", "kc"].index(s))
-    _write_order = ["orn", "pn", "kc"]
-    write_sites = sorted(set(r["write_site"] for r in results),
-                         key=lambda s: _write_order.index(s) if s in _write_order else 99)
-
-    n_j = len(jitter_levels)
-    fig, axes = plt.subplots(1, n_j + 1, figsize=(5 * n_j + 1.2, 4),
-                             gridspec_kw={"width_ratios": [*([1] * n_j), 0.06]})
-    if n_j == 1:
-        axes = [axes[0], axes[1]]
-    fig.suptitle("Read Site vs Write Site: KC Correlation (odor identity)")
-
-    heatmap_axes = axes[:n_j] if n_j > 1 else [axes[0]]
-    for ax, jitter in zip(heatmap_axes, jitter_levels):
-        matrix = np.zeros((len(read_sites), len(write_sites)))
-        for r in results:
-            if r["jitter_scale"] != jitter:
-                continue
-            ri = read_sites.index(r["read_site"])
-            wi = write_sites.index(r["write_site"])
-            matrix[ri, wi] = r["correlation"]
-
-        im = ax.imshow(matrix, cmap="RdYlGn", vmin=0, vmax=1, aspect="auto")
-        ax.set_xticks(range(len(write_sites)))
-        ax.set_xticklabels([f"write:{s}" for s in write_sites])
-        ax.set_yticks(range(len(read_sites)))
-        ax.set_yticklabels([f"read:{s}" for s in read_sites])
-        ax.set_title(f"jitter={jitter:.1f}")
-
-        for ri in range(len(read_sites)):
-            for wi in range(len(write_sites)):
-                ax.text(wi, ri, f"{matrix[ri, wi]:.2f}",
-                        ha="center", va="center", fontsize=10, fontweight="bold")
-
-    cbar_ax = axes[-1] if n_j > 1 else axes[1]
-    fig.colorbar(im, cax=cbar_ax, label="Pearson r")
-    abbrev = ("ORN = olfactory receptor neuron\n"
-              "PN = projection neuron\n"
-              "KC = Kenyon cell (mushroom body)")
-    if "kc" in write_sites:
-        abbrev += "\nMBON = mushroom body output neuron"
-    fig.text(0.01, 0.02, abbrev,
-             fontsize=7, va="bottom", ha="left",
-             bbox=dict(boxstyle="round,pad=0.4", facecolor="white",
-                       edgecolor="#ccc", alpha=0.9))
-    fig.subplots_adjust(top=0.88)
-    fig.savefig(output_path, dpi=150, bbox_inches="tight")
-    plt.close(fig)
-    return output_path
-
 
 def plot_pn_channel_sweep(results: List[Dict], output_path: Path) -> Path:
     """2D heatmaps of transfer metrics vs read/write PN counts."""
@@ -486,17 +432,14 @@ def plot_scaling_comparison(results: List[Dict], output_path: Path) -> Path:
         ax.set_title("Calibration cost")
 
     ax = axes[1, 1]
-    if all("best_write_site" in r for r in results):
-        for i, r in enumerate(results):
-            text = f"Read: {r.get('best_read_site', '?')}\nWrite: {r.get('best_write_site', '?')}"
-            ax.text(i, 0.5, text, ha="center", va="center", fontsize=11,
-                    bbox=dict(boxstyle="round,pad=0.5", facecolor="#f0f9ff",
-                              edgecolor="#2563eb", alpha=0.8))
+    if all("broadcast_behavioral_match" in r for r in results):
+        ax.bar(x_pos, [r["broadcast_behavioral_match"] for r in results],
+               color="#7c3aed", alpha=0.8)
         ax.set_xticks(x_pos)
         ax.set_xticklabels(organisms)
-        ax.set_ylim(0, 1)
-        ax.set_title("Best read/write sites")
-        ax.set_yticks([])
+        ax.set_ylabel("Behavioral match (broadcast)")
+        ax.set_ylim(0, 1.1)
+        ax.set_title("Broadcast transfer quality")
 
     fig.tight_layout()
     fig.savefig(output_path, dpi=150, bbox_inches="tight")

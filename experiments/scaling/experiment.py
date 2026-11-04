@@ -50,8 +50,6 @@ def _worm_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
         "bottleneck": "none",
         "signal_mode": "graded",
         "broadcast_behavioral_match": successes / max(1, total),
-        "best_read_site": "receptor",
-        "best_write_site": "receptor",
     }
 
 
@@ -76,8 +74,6 @@ def _larva_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
         "bottleneck": "glomerular (1:1)",
         "signal_mode": "spiking",
         "broadcast_behavioral_match": beh_match,
-        "best_read_site": "pn",
-        "best_write_site": "pn",
     }
 
 
@@ -104,8 +100,6 @@ def _adult_metrics(seeds: int = 5, jitter: float = 0.75) -> Dict:
         "bottleneck": "glomerular (50:1)",
         "signal_mode": "spiking",
         "broadcast_behavioral_match": beh_match,
-        "best_read_site": "pn",
-        "best_write_site": "pn",
     }
 
 
