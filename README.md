@@ -48,6 +48,26 @@ The first and most complete subject area. Four organisms of increasing complexit
 - **Hardware boundary is consistent across organisms.** Read noise and channel dropout are the binding constraints; write precision is forgiving above 4 bits; transmit delay matters only at hundreds of milliseconds.
 - **The zebrafish's granule cell recurrent lateral inhibition** is the key vertebrate architectural difference from insects — it decorrelates mitral cell representations before they reach the pallium (Dp).
 
+### Auditory (hearing)
+
+Adult *Drosophila* auditory transfer using real FlyWire v783 connectome data (Dorkenwald et al. 2024; Schlegel et al. 2024).
+
+| Organism | Receptor neurons | Bottleneck | Signal mode | Status |
+|----------|-----------------|------------|-------------|--------|
+| Adult *Drosophila* | 1103 JO neurons (359 A+B sound-sensitive) | 150 AMMC neurons → 324 WED/VLP | temporal (exact exponential integration) | Experiments running |
+
+**Pathway:** JO neurons (mechanosensory, frequency-tuned) → 150 AMMC → 324 WED/VLP → 2 output channels (courtship response / startle-escape).
+
+**Model architecture:** Split into `DrosophilaAuditoryEncoder` (peripheral) + `DrosophilaAuditoryCircuit` (central), implementing organism-agnostic `AuditoryEncoder`/`AuditoryCircuit` base classes. A human or mouse model replaces the encoder.
+
+**Subtype filter:** Configurable — default to A+B sound-sensitive neurons (359), with option to include all 1103 (adds gravity/wind subtypes C–F). Both configurations pass all validation checks.
+
+**Stimulus set:** 10 sound profiles spanning courtship songs (pulse, sine, combined), threats (wing threat, predator buzz), tones, and controls (silence, white noise, wind gust). Temporal generators: pulse trains (IPI=35ms, *D. mel* conspecific), sine song, constant.
+
+**Temporal dynamics:** Exact exponential integration (unconditionally stable), sensory adaptation with separate adaptation variable, combined steady-state + temporal output weight fitting.
+
+**Experiments:** Broadcast, calibration, JO channel sweep, hardware boundary, AMMC channel sweep (2D read/write). Same pipeline as olfactory, comparing at WED/VLP layer.
+
 ### Key metrics
 
 All experiments report:
@@ -55,50 +75,36 @@ All experiments report:
 - **Correlation** (Pearson r) — how well transferred activity tracks natural response
 - **MSE** — reconstruction error
 - **RSA** — representational similarity (geometry preservation)
-- **Odor identification** — N-way nearest-centroid classification (which specific odor, not just attractive/repellent)
+- **Odor identification** / **Sound identification** — N-way nearest-centroid classification
 
 ## Repository structure
 
 ```
-models/          per-organism brain models and individual-variation generators
-  worm_connectome.py       hand-built graded worm (AWA, AWC, AWB, ADL, ASH pathway)
-  cook2019_connectome.py   Cook et al. 2019 connectome via cect with CeNGEN signs
-  worm_variants.py         worm individual-difference generator
-  drosophila_larva.py      21-ORN → 21-PN → 72-KC → MBON larval model
-  larva_variants.py        larva variant generator
-  drosophila_adult.py      50-ORN → 50-PN → 2000-KC → MBON adult fly model
-  adult_variants.py        adult variant generator
-  zebrafish.py             100-ORN → 100-glomeruli → 80-mitral → 200-granule → 500-Dp model
-  zebrafish_variants.py    zebrafish variant generator
+neural_transfer/     importable package
+  models/            per-organism brain models and individual-variation generators
+    c_elegans/         hand-built + Cook2019 connectome graded worm models
+    drosophila_larva/  statistical + connectome larval models, .npz data
+    drosophila_adult/  olfactory + auditory connectome models, .npz data
+    zebrafish/         olfactory bulb model with recurrent lateral inhibition
+    null_model.py      shuffled-connectome controls for topology comparison
+  hardware/          read, write, noise, and compression models
+  link/              translate, encode, transmit (calibration + broadcast)
+  analysis/          metrics, plotting, results I/O
 
-hardware/        read, write, noise, and compression models
-  noise.py                 ReadNoise, WritePrecision, ChannelDropout, TransmitDelay, HardwareChain
-  technologies.py          real technology operating points for plot annotations
+experiments/         experiment modules organized by sensory modality
+  olfactory/           smell-transfer experiments
+    c_elegans/           broadcast, calibration, hardware boundary
+    drosophila_larva/    broadcast, calibration, channel sweep, hardware boundary, PN channel sweep
+    drosophila_adult/    broadcast, calibration, channel sweep, hardware boundary, PN channel sweep
+    zebrafish/           broadcast, calibration, channel sweep, hardware boundary, mitral channel sweep
+    scaling/             cross-organism scaling comparison + calibration efficiency
+    calibration_comparison/  ridge vs diagonal calibration
+    connectome_vs_null/      real connectome vs shuffled-null topology
+    sensitivity_analysis/    free-parameter sensitivity
+    rerun_connectome/        full connectome rerun with bootstrap CIs
 
-link/            translate, encode, transmit
-  receptor_to_receptor.py  direct broadcast baseline (no translation)
-  calibration.py           ridge regression calibration transform
-
-analysis/        metrics, plotting, results I/O
-  metrics.py               correlation, MSE, RSA, odor identification
-  plotting.py              all experiment plot functions
-  results_writer.py        JSON result serialization
-
-experiments/     experiment modules organized by sensory modality
-  olfactory/               smell-transfer experiments
-    c_elegans/             broadcast, calibration, hardware boundary
-    drosophila_larva/      broadcast, calibration, channel sweep, hardware boundary, PN channel sweep
-    drosophila_adult/      broadcast, calibration, channel sweep, hardware boundary, PN channel sweep
-    zebrafish/             broadcast, calibration, channel sweep, hardware boundary, mitral channel sweep
-    scaling/               cross-organism scaling comparison + calibration efficiency
-    calibration_comparison/ ridge vs diagonal calibration across organisms
-    connectome_vs_null/    real connectome vs shuffled-null wiring topology
-    sensitivity_analysis/  free-parameter sensitivity for connectome models
-    rerun_connectome/      full connectome rerun with bootstrap CIs
-
-papers/          write-ups and manuscripts
-validation/      comparisons against published data
-tests/           automated tests (pytest)
+papers/              write-ups and manuscripts
+tests/               automated tests (pytest)
 ```
 
 ## Getting started
@@ -106,7 +112,7 @@ tests/           automated tests (pytest)
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt   # or: pip install numpy scipy scikit-learn matplotlib cect
+pip install -r requirements.txt
 ```
 
 Run tests:
