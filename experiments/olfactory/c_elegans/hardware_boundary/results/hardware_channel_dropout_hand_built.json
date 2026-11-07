@@ -1,12 +1,12 @@
 {
   "experiment": "hardware_channel_dropout_hand_built",
   "description": "Hardware boundary: channel_dropout sweep (hand_built)",
-  "timestamp": "2026-11-04T08:40:55Z",
-  "git_commit": "580fdb2",
+  "timestamp": "2026-11-07T18:18:25Z",
+  "git_commit": "1531999",
   "parameters": {
     "model": "hand_built",
     "axis": "channel_dropout",
-    "jitter": 0.75,
+    "jitter": 1.0,
     "seeds": 5
   },
   "metrics": [
@@ -22,74 +22,74 @@
     {
       "model": "hand_built",
       "dropout_fraction": 0.0,
-      "transfer_rate": 0.7428571428571429,
-      "correlation": 0.9279064528359395,
-      "mse": 0.06154385168768618,
-      "rsa": 0.9850246407578782,
-      "odor_id": 0.9428571428571428
+      "transfer_rate": 0.6428571428571429,
+      "correlation": 0.8948465343112071,
+      "mse": 0.11066877549776506,
+      "rsa": 0.9724014581442919,
+      "odor_id": 0.9285714285714286
     },
     {
       "model": "hand_built",
       "dropout_fraction": 0.1,
-      "transfer_rate": 0.6571428571428571,
-      "correlation": 0.8588604588088712,
-      "mse": 0.10608367979467939,
-      "rsa": 0.8836452916725342,
-      "odor_id": 0.9285714285714286
+      "transfer_rate": 0.6,
+      "correlation": 0.8464802219786218,
+      "mse": 0.1576731913564368,
+      "rsa": 0.901927704748311,
+      "odor_id": 0.8857142857142858
     },
     {
       "model": "hand_built",
       "dropout_fraction": 0.2,
-      "transfer_rate": 0.6428571428571429,
-      "correlation": 0.830684338547481,
-      "mse": 0.13916356054393822,
-      "rsa": 0.8490771066139743,
-      "odor_id": 0.8428571428571429
+      "transfer_rate": 0.6142857142857142,
+      "correlation": 0.801147826048086,
+      "mse": 0.18250250968029494,
+      "rsa": 0.8609053935913723,
+      "odor_id": 0.9142857142857143
     },
     {
       "model": "hand_built",
       "dropout_fraction": 0.3,
-      "transfer_rate": 0.6,
-      "correlation": 0.7010469719892249,
-      "mse": 0.22452171392987735,
-      "rsa": 0.8090056398561956,
-      "odor_id": 0.9285714285714286
+      "transfer_rate": 0.45714285714285713,
+      "correlation": 0.6181224421175772,
+      "mse": 0.2945017125730913,
+      "rsa": 0.6922554124774596,
+      "odor_id": 0.8285714285714286
     },
     {
       "model": "hand_built",
       "dropout_fraction": 0.4,
-      "transfer_rate": 0.5428571428571429,
-      "correlation": 0.6753952426377083,
-      "mse": 0.2461275404646087,
-      "rsa": 0.7025526517284223,
-      "odor_id": 0.8142857142857143
+      "transfer_rate": 0.5142857142857143,
+      "correlation": 0.6066161469806709,
+      "mse": 0.29835669671884324,
+      "rsa": 0.6609126695177502,
+      "odor_id": 0.8
     },
     {
       "model": "hand_built",
       "dropout_fraction": 0.5,
-      "transfer_rate": 0.47142857142857136,
-      "correlation": 0.4863875576341443,
-      "mse": 0.371670671843936,
-      "rsa": 0.4832853688115962,
-      "odor_id": 0.7428571428571429
+      "transfer_rate": 0.4714285714285714,
+      "correlation": 0.6326297013731617,
+      "mse": 0.347305474561991,
+      "rsa": 0.5973461031218079,
+      "odor_id": 0.7571428571428572
     },
     {
       "model": "hand_built",
       "dropout_fraction": 0.6,
-      "transfer_rate": 0.5428571428571429,
-      "correlation": 0.560844665233596,
-      "mse": 0.30640648844506974,
-      "rsa": 0.5844554272309388,
-      "odor_id": 0.7571428571428571
+      "transfer_rate": 0.38571428571428573,
+      "correlation": 0.45849493023039256,
+      "mse": 0.4807425093623422,
+      "rsa": 0.5206945869145798,
+      "odor_id": 0.7285714285714284
     },
     {
       "model": "hand_built",
       "dropout_fraction": 0.8,
-      "transfer_rate": 0.45714285714285713,
-      "correlation": 0.47562566872610484,
-      "mse": 0.3910947600672695,
-      "rsa": 0.5013815788742235,
-      "odor_id": 0.6714285714285714
+      "transfer_rate": 0.4428571428571429,
+      "correlation": 0.4717973443845345,
+      "mse": 0.43375108787652056,
+      "rsa": 0.3769603155638421,
+      "odor_id": 0.6428571428571429
     }
   ]
 }

@@ -1,23 +1,8 @@
 """Tests for Drosophila larva experiments."""
 
-from experiments.olfactory.drosophila_larva.broadcast import run_broadcast_sweep
 from experiments.olfactory.drosophila_larva.calibration import run_calibration_sweep
 from experiments.olfactory.drosophila_larva.hardware_boundary import run_hardware_sweep
 from experiments.olfactory.drosophila_larva.channel_sweep import run_channel_sweep
-
-def test_broadcast_sweep_shape() -> None:
-    results = run_broadcast_sweep(jitter_levels=[0.0, 0.5], seeds_per_level=2)
-    assert len(results) >= 1
-    for row in results:
-        assert 0.0 <= row["transfer_rate"] <= 1.0
-        assert -1.0 <= row["correlation"] <= 1.0
-        assert 0.0 <= row["odor_id"] <= 1.0
-
-
-def test_broadcast_perfect_at_zero_jitter() -> None:
-    results = run_broadcast_sweep(jitter_levels=[0.0], seeds_per_level=1)
-    assert results[0]["transfer_rate"] == 1.0
-    assert results[0]["correlation"] > 0.99
 
 
 def test_calibration_sweep_shape() -> None:

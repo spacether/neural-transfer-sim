@@ -6,7 +6,7 @@ Each axis is swept independently (other two held at ideal) and then a
 combined sweep tests all three degrading together.
 
 At each hardware setting the experiment runs across the standard odor set
-with a moderately different receiver (jitter_scale=0.75, the median of the
+with a moderately different receiver (jitter_scale=1.0, the median of the
 biological range) and reports the same metrics as the other experiments.
 """
 
@@ -42,7 +42,7 @@ ODOR_SET: List[Dict[str, object]] = [
     for intensity in (0.3, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0)
 ]
 
-DEFAULT_JITTER = 0.75
+DEFAULT_JITTER = 1.0
 DEFAULT_SEEDS = 5
 
 
@@ -248,8 +248,8 @@ def main() -> None:
                         default=list(MODEL_CLASSES),
                         help="Which model(s) to run (default: all)")
     parser.add_argument("--seeds", type=int, default=5)
-    parser.add_argument("--jitter", type=float, default=0.75,
-                        help="Brain difference level (default: 0.75)")
+    parser.add_argument("--jitter", type=float, default=1.0,
+                        help="Brain difference level (default: 1.0)")
     parser.add_argument("--no-save", action="store_true")
     args = parser.parse_args()
 

@@ -240,7 +240,7 @@ def _zebrafish_efficiency(sample_counts: List[int], seeds: int, jitter: float) -
 
 def run_calibration_efficiency(
     seeds: int = 5,
-    jitter: float = 0.75,
+    jitter: float = 1.0,
     sample_counts: List[int] | None = None,
 ) -> Dict[str, List[Dict]]:
     if sample_counts is None:

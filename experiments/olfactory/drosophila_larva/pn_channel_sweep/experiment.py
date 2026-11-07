@@ -127,7 +127,7 @@ def _run_one(
 
 def run_pn_channel_sweep(
     channel_counts: List[int] | None = None,
-    jitter: float = 0.5,
+    jitter: float = 1.0,
     seeds: int = 5,
     channel_seeds: int = 3,
 ) -> List[Dict]:
@@ -178,7 +178,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Larva PN channel sweep (2D)")
     parser.add_argument("--seeds", type=int, default=3)
     parser.add_argument("--channel-seeds", type=int, default=3)
-    parser.add_argument("--jitter", type=float, default=0.5)
+    parser.add_argument("--jitter", type=float, default=1.0)
     parser.add_argument("--no-save", action="store_true")
     args = parser.parse_args()
 

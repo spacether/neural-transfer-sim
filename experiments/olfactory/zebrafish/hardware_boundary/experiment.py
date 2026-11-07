@@ -30,7 +30,7 @@ ODOR_SET: List[Dict[str, object]] = [
     for intensity in (0.5, 1.0, 1.5)
 ]
 
-DEFAULT_JITTER = 0.75
+DEFAULT_JITTER = 1.0
 DEFAULT_SEEDS = 5
 FISH_TAU_MS = 300.0
 

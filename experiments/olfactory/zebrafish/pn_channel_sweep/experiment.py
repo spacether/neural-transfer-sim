@@ -40,7 +40,7 @@ def _mask_to_set(signal: Dict[str, float], active: Set[str]) -> Dict[str, float]
 
 def run_mitral_channel_sweep(
     channel_counts: List[int] | None = None,
-    jitter: float = 0.75,
+    jitter: float = 1.0,
     seeds: int = 3,
 ) -> List[Dict]:
     if channel_counts is None:

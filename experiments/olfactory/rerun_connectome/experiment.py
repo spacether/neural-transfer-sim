@@ -260,7 +260,7 @@ def run_channel_sweep(organism, jitter_levels=None, n_seeds=5, channel_seeds=3):
 # Experiment 3: Hardware boundary
 # ------------------------------------------------------------------ #
 
-def run_hardware_boundary(organism, jitter=0.75, n_seeds=10):
+def run_hardware_boundary(organism, jitter=1.0, n_seeds=10):
     from neural_transfer.hardware.noise import ReadNoise, WritePrecision, ChannelDropout, TransmitDelay, HardwareChain
     cfg = _get_config(organism)
     gen = cfg["gen_cls"](jitter_scale=jitter)

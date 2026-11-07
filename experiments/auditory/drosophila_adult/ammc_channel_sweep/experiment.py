@@ -135,7 +135,7 @@ def _apply_2d_channel_cal_timeseries(
 
 def run_ammc_channel_sweep(
     channel_counts: List[int] | None = None,
-    jitter: float = 0.5,
+    jitter: float = 1.0,
     seeds: int = 5,
     channel_seeds: int = 3,
 ) -> List[Dict]:

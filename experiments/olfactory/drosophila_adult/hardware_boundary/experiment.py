@@ -38,7 +38,7 @@ ODOR_SET: List[Dict[str, object]] = [
     for intensity in (0.5, 1.0, 1.5)
 ]
 
-DEFAULT_JITTER = 0.75
+DEFAULT_JITTER = 1.0
 DEFAULT_SEEDS = 5
 FLY_TAU_MS = 200.0
 
@@ -208,7 +208,7 @@ AXIS_LABELS = {
 def main() -> None:
     parser = argparse.ArgumentParser(description="Adult fly hardware boundary sweep")
     parser.add_argument("--seeds", type=int, default=5)
-    parser.add_argument("--jitter", type=float, default=0.75)
+    parser.add_argument("--jitter", type=float, default=1.0)
     parser.add_argument("--no-save", action="store_true")
     args = parser.parse_args()
 

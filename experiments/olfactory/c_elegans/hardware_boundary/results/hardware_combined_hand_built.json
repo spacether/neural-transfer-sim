@@ -1,12 +1,12 @@
 {
   "experiment": "hardware_combined_hand_built",
   "description": "Hardware boundary: combined sweep (hand_built)",
-  "timestamp": "2026-11-04T08:40:55Z",
-  "git_commit": "580fdb2",
+  "timestamp": "2026-11-07T18:18:25Z",
+  "git_commit": "1531999",
   "parameters": {
     "model": "hand_built",
     "axis": "combined",
-    "jitter": 0.75,
+    "jitter": 1.0,
     "seeds": 5
   },
   "metrics": [
@@ -30,11 +30,11 @@
       "precision_bits": Infinity,
       "dropout_fraction": 0.0,
       "delay_ms": 0.0,
-      "transfer_rate": 0.7428571428571429,
-      "correlation": 0.9279064528359395,
-      "mse": 0.06154385168768618,
-      "rsa": 0.9850246407578782,
-      "odor_id": 0.9428571428571428
+      "transfer_rate": 0.6428571428571429,
+      "correlation": 0.8948465343112071,
+      "mse": 0.11066877549776506,
+      "rsa": 0.9724014581442919,
+      "odor_id": 0.9285714285714286
     },
     {
       "model": "hand_built",
@@ -43,10 +43,10 @@
       "precision_bits": 8,
       "dropout_fraction": 0.05,
       "delay_ms": 0.1,
-      "transfer_rate": 0.7285714285714285,
-      "correlation": 0.8550813343110022,
-      "mse": 0.10296124928971721,
-      "rsa": 0.9372333495934703,
+      "transfer_rate": 0.6571428571428573,
+      "correlation": 0.8197128661964564,
+      "mse": 0.15349227813066596,
+      "rsa": 0.9276793720855709,
       "odor_id": 0.9285714285714286
     },
     {
@@ -56,11 +56,11 @@
       "precision_bits": 6,
       "dropout_fraction": 0.1,
       "delay_ms": 1.0,
-      "transfer_rate": 0.6,
-      "correlation": 0.8223053654581438,
-      "mse": 0.1441663715390445,
-      "rsa": 0.8660316586095769,
-      "odor_id": 0.9
+      "transfer_rate": 0.5428571428571429,
+      "correlation": 0.7878166315856353,
+      "mse": 0.21108113973631842,
+      "rsa": 0.849104820268777,
+      "odor_id": 0.8857142857142856
     },
     {
       "model": "hand_built",
@@ -69,11 +69,11 @@
       "precision_bits": 5,
       "dropout_fraction": 0.15,
       "delay_ms": 5.0,
-      "transfer_rate": 0.6142857142857142,
-      "correlation": 0.8441025435391646,
-      "mse": 0.13580979021841622,
-      "rsa": 0.8549597906996151,
-      "odor_id": 0.9142857142857143
+      "transfer_rate": 0.5714285714285714,
+      "correlation": 0.8176321542730584,
+      "mse": 0.1928454201740388,
+      "rsa": 0.8466293793507649,
+      "odor_id": 0.8857142857142858
     },
     {
       "model": "hand_built",
@@ -82,11 +82,11 @@
       "precision_bits": 4,
       "dropout_fraction": 0.2,
       "delay_ms": 20.0,
-      "transfer_rate": 0.6142857142857143,
-      "correlation": 0.7673870248693151,
-      "mse": 0.16257311154777054,
-      "rsa": 0.7599127969754818,
-      "odor_id": 0.8714285714285713
+      "transfer_rate": 0.5714285714285714,
+      "correlation": 0.742773040243032,
+      "mse": 0.2130721669681928,
+      "rsa": 0.76373953615152,
+      "odor_id": 0.8428571428571429
     },
     {
       "model": "hand_built",
@@ -95,11 +95,11 @@
       "precision_bits": 3,
       "dropout_fraction": 0.3,
       "delay_ms": 100.0,
-      "transfer_rate": 0.5285714285714285,
-      "correlation": 0.7119099490701097,
-      "mse": 0.20789675672383795,
-      "rsa": 0.6459338373248547,
-      "odor_id": 0.8714285714285713
+      "transfer_rate": 0.48571428571428577,
+      "correlation": 0.6931164955120515,
+      "mse": 0.2581342330131998,
+      "rsa": 0.6309762657500587,
+      "odor_id": 0.8285714285714286
     },
     {
       "model": "hand_built",
@@ -108,11 +108,11 @@
       "precision_bits": 2,
       "dropout_fraction": 0.4,
       "delay_ms": 500.0,
-      "transfer_rate": 0.4428571428571429,
-      "correlation": 0.5515099842880662,
-      "mse": 0.34141902542275326,
-      "rsa": 0.4929476748623811,
-      "odor_id": 0.8714285714285713
+      "transfer_rate": 0.41428571428571426,
+      "correlation": 0.5360134628608427,
+      "mse": 0.4157821707940209,
+      "rsa": 0.48512291186896644,
+      "odor_id": 0.8571428571428571
     },
     {
       "model": "hand_built",
@@ -121,11 +121,11 @@
       "precision_bits": 1,
       "dropout_fraction": 0.5,
       "delay_ms": 2000.0,
-      "transfer_rate": 0.5285714285714286,
-      "correlation": 0.47925268317593595,
-      "mse": 0.3905305406136562,
-      "rsa": 0.31126130115107287,
-      "odor_id": 0.7285714285714285
+      "transfer_rate": 0.4714285714285714,
+      "correlation": 0.4679562364517177,
+      "mse": 0.4612363525353027,
+      "rsa": 0.2894440713635971,
+      "odor_id": 0.7142857142857142
     }
   ]
 }

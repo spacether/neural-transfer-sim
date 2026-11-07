@@ -1,12 +1,12 @@
 {
   "experiment": "hardware_write_precision_hand_built",
   "description": "Hardware boundary: write_precision sweep (hand_built)",
-  "timestamp": "2026-11-04T08:40:55Z",
-  "git_commit": "580fdb2",
+  "timestamp": "2026-11-07T18:18:25Z",
+  "git_commit": "1531999",
   "parameters": {
     "model": "hand_built",
     "axis": "write_precision",
-    "jitter": 0.75,
+    "jitter": 1.0,
     "seeds": 5
   },
   "metrics": [
@@ -22,73 +22,73 @@
     {
       "model": "hand_built",
       "precision_bits": Infinity,
-      "transfer_rate": 0.7428571428571429,
-      "correlation": 0.9279064528359395,
-      "mse": 0.06154385168768618,
-      "rsa": 0.9850246407578782,
-      "odor_id": 0.9428571428571428
+      "transfer_rate": 0.6428571428571429,
+      "correlation": 0.8948465343112071,
+      "mse": 0.11066877549776506,
+      "rsa": 0.9724014581442919,
+      "odor_id": 0.9285714285714286
     },
     {
       "model": "hand_built",
       "precision_bits": 8,
-      "transfer_rate": 0.7428571428571429,
-      "correlation": 0.9279019955003207,
-      "mse": 0.06152863600151617,
-      "rsa": 0.9852881873588636,
+      "transfer_rate": 0.6428571428571429,
+      "correlation": 0.894827696580289,
+      "mse": 0.11064875566441487,
+      "rsa": 0.9722477507484001,
       "odor_id": 0.9285714285714286
     },
     {
       "model": "hand_built",
       "precision_bits": 6,
-      "transfer_rate": 0.7428571428571429,
-      "correlation": 0.9279371696903121,
-      "mse": 0.06157733565794208,
-      "rsa": 0.9846741825157638,
-      "odor_id": 0.9428571428571428
+      "transfer_rate": 0.6571428571428571,
+      "correlation": 0.8949322546906187,
+      "mse": 0.11069530501212317,
+      "rsa": 0.9712269380018119,
+      "odor_id": 0.9285714285714286
     },
     {
       "model": "hand_built",
       "precision_bits": 5,
-      "transfer_rate": 0.7428571428571429,
-      "correlation": 0.9281743623015984,
-      "mse": 0.06125092752330234,
-      "rsa": 0.9843274580844792,
-      "odor_id": 0.9428571428571428
+      "transfer_rate": 0.6428571428571429,
+      "correlation": 0.8951725539823098,
+      "mse": 0.1101703896440519,
+      "rsa": 0.9702592211464838,
+      "odor_id": 0.9285714285714286
     },
     {
       "model": "hand_built",
       "precision_bits": 4,
-      "transfer_rate": 0.7428571428571429,
-      "correlation": 0.9261184816267212,
-      "mse": 0.0628551751524187,
-      "rsa": 0.98334733843524,
-      "odor_id": 0.9285714285714286
+      "transfer_rate": 0.6571428571428571,
+      "correlation": 0.8927912715603579,
+      "mse": 0.11246341861225422,
+      "rsa": 0.9698974568943282,
+      "odor_id": 0.9142857142857143
     },
     {
       "model": "hand_built",
       "precision_bits": 3,
-      "transfer_rate": 0.7571428571428571,
-      "correlation": 0.9226489429512345,
-      "mse": 0.06670672324218162,
-      "rsa": 0.9826203657442806,
-      "odor_id": 0.9285714285714286
+      "transfer_rate": 0.6428571428571429,
+      "correlation": 0.889673091751488,
+      "mse": 0.11790564154239677,
+      "rsa": 0.9692045574961167,
+      "odor_id": 0.9142857142857143
     },
     {
       "model": "hand_built",
       "precision_bits": 2,
-      "transfer_rate": 0.7428571428571429,
-      "correlation": 0.9161806778001245,
-      "mse": 0.07124815703187555,
-      "rsa": 0.9449862370187185,
-      "odor_id": 0.9571428571428573
+      "transfer_rate": 0.6285714285714286,
+      "correlation": 0.8850191940755586,
+      "mse": 0.12009597790954396,
+      "rsa": 0.9323019249231022,
+      "odor_id": 0.9142857142857144
     },
     {
       "model": "hand_built",
       "precision_bits": 1,
-      "transfer_rate": 0.8,
-      "correlation": 0.8779775142270866,
-      "mse": 0.10194392273746297,
-      "rsa": 0.881227500452962,
+      "transfer_rate": 0.6714285714285715,
+      "correlation": 0.8457001588444089,
+      "mse": 0.15327496409193408,
+      "rsa": 0.8548607727807532,
       "odor_id": 0.8571428571428571
     }
   ]

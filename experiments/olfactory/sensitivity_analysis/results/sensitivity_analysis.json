@@ -1,11 +1,11 @@
 {
   "experiment": "sensitivity_analysis",
   "description": "Parameter sensitivity: broadcast transfer vs free-parameter perturbation",
-  "timestamp": "2026-11-06T22:01:00Z",
-  "git_commit": "0fcbe07",
+  "timestamp": "2026-11-07T18:19:39Z",
+  "git_commit": "1531999",
   "parameters": {
     "n_seeds": 3,
-    "jitter_scale": 0.5,
+    "jitter_scale": 1.0,
     "organisms": [
       "larva",
       "adult"
@@ -30,8 +30,8 @@
       "is_default": false,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -41,8 +41,8 @@
       "is_default": false,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -52,8 +52,8 @@
       "is_default": true,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -63,8 +63,8 @@
       "is_default": false,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -74,8 +74,8 @@
       "is_default": false,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -85,8 +85,8 @@
       "is_default": false,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -96,8 +96,8 @@
       "is_default": false,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -107,8 +107,8 @@
       "is_default": false,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -118,8 +118,8 @@
       "is_default": true,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -129,8 +129,8 @@
       "is_default": false,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -140,8 +140,8 @@
       "is_default": false,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -151,8 +151,8 @@
       "is_default": false,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -162,8 +162,8 @@
       "is_default": false,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -173,8 +173,8 @@
       "is_default": true,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -184,8 +184,8 @@
       "is_default": false,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -195,8 +195,8 @@
       "is_default": false,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -206,8 +206,8 @@
       "is_default": false,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -217,8 +217,8 @@
       "is_default": false,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -228,8 +228,8 @@
       "is_default": false,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -239,8 +239,8 @@
       "is_default": true,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -250,8 +250,8 @@
       "is_default": false,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -261,8 +261,8 @@
       "is_default": false,
       "valid_seeds": 3,
       "transfer_rate": 1.0,
-      "correlation": 0.9970615523948144,
-      "rsa": 0.9968675935926722,
+      "correlation": 0.9890497260508083,
+      "rsa": 0.9833984851187618,
       "odor_id": 0.16666666666666666
     },
     {
@@ -271,9 +271,9 @@
       "value": 1.0,
       "is_default": false,
       "valid_seeds": 3,
-      "transfer_rate": 0.912280701754386,
-      "correlation": 0.9919637767030381,
-      "rsa": 0.9908785815037547,
+      "transfer_rate": 0.30701754385964913,
+      "correlation": 0.9682373571680728,
+      "rsa": 0.994483779255186,
       "odor_id": 0.05263157894736842
     },
     {
@@ -282,9 +282,9 @@
       "value": 3.0,
       "is_default": false,
       "valid_seeds": 3,
-      "transfer_rate": 0.8684210526315789,
-      "correlation": 0.9908286768555191,
-      "rsa": 0.9908785815037547,
+      "transfer_rate": 0.48538011695906436,
+      "correlation": 0.9678024930665948,
+      "rsa": 0.994483779255186,
       "odor_id": 0.05263157894736842
     },
     {
@@ -293,9 +293,9 @@
       "value": 5.0,
       "is_default": true,
       "valid_seeds": 3,
-      "transfer_rate": 0.8684210526315789,
-      "correlation": 0.9870476602210179,
-      "rsa": 0.9908785815037547,
+      "transfer_rate": 0.5292397660818714,
+      "correlation": 0.9647519833821856,
+      "rsa": 0.994483779255186,
       "odor_id": 0.05263157894736842
     },
     {
@@ -304,9 +304,9 @@
       "value": 7.0,
       "is_default": false,
       "valid_seeds": 3,
-      "transfer_rate": 0.912280701754386,
-      "correlation": 0.9810071268051246,
-      "rsa": 0.9908785815037547,
+      "transfer_rate": 0.48538011695906436,
+      "correlation": 0.9594675202232102,
+      "rsa": 0.994483779255186,
       "odor_id": 0.05263157894736842
     },
     {
@@ -315,9 +315,9 @@
       "value": 10.0,
       "is_default": false,
       "valid_seeds": 3,
-      "transfer_rate": 0.8011695906432749,
-      "correlation": 0.9686501002589569,
-      "rsa": 0.9908785815037547,
+      "transfer_rate": 0.5526315789473685,
+      "correlation": 0.9482249918060001,
+      "rsa": 0.994483779255186,
       "odor_id": 0.05263157894736842
     },
     {
@@ -326,9 +326,9 @@
       "value": 0.0,
       "is_default": false,
       "valid_seeds": 3,
-      "transfer_rate": 0.8684210526315789,
-      "correlation": 0.9844643532516649,
-      "rsa": 0.99672224480481,
+      "transfer_rate": 0.5526315789473685,
+      "correlation": 0.9626346571114529,
+      "rsa": 0.9980955927528087,
       "odor_id": 0.05263157894736842
     },
     {
@@ -337,9 +337,9 @@
       "value": 0.05,
       "is_default": false,
       "valid_seeds": 3,
-      "transfer_rate": 0.8684210526315789,
-      "correlation": 0.9854143526930029,
-      "rsa": 0.9944885294870649,
+      "transfer_rate": 0.5526315789473685,
+      "correlation": 0.9634306987354876,
+      "rsa": 0.9980955927528087,
       "odor_id": 0.05263157894736842
     },
     {
@@ -348,9 +348,9 @@
       "value": 0.1,
       "is_default": false,
       "valid_seeds": 3,
-      "transfer_rate": 0.8684210526315789,
-      "correlation": 0.9862766629402842,
-      "rsa": 0.9908785815037547,
+      "transfer_rate": 0.5526315789473685,
+      "correlation": 0.9641379004509322,
+      "rsa": 0.9922503518558637,
       "odor_id": 0.05263157894736842
     },
     {
@@ -359,9 +359,9 @@
       "value": 0.15,
       "is_default": true,
       "valid_seeds": 3,
-      "transfer_rate": 0.8684210526315789,
-      "correlation": 0.9870476602210179,
-      "rsa": 0.9908785815037547,
+      "transfer_rate": 0.5292397660818714,
+      "correlation": 0.9647519833821856,
+      "rsa": 0.994483779255186,
       "odor_id": 0.05263157894736842
     },
     {
@@ -370,9 +370,9 @@
       "value": 0.25,
       "is_default": false,
       "valid_seeds": 3,
-      "transfer_rate": 0.8684210526315789,
-      "correlation": 0.988304058972298,
-      "rsa": 0.9908785815037547,
+      "transfer_rate": 0.48538011695906436,
+      "correlation": 0.9657081246192476,
+      "rsa": 0.994483779255186,
       "odor_id": 0.05263157894736842
     },
     {
@@ -381,9 +381,9 @@
       "value": 0.4,
       "is_default": false,
       "valid_seeds": 3,
-      "transfer_rate": 0.8684210526315789,
-      "correlation": 0.9894272689832295,
-      "rsa": 0.9918799437494744,
+      "transfer_rate": 0.4619883040935672,
+      "correlation": 0.9663814358243358,
+      "rsa": 0.9954856589752877,
       "odor_id": 0.05263157894736842
     },
     {
@@ -392,9 +392,9 @@
       "value": 0.1,
       "is_default": false,
       "valid_seeds": 3,
-      "transfer_rate": 0.8684210526315789,
-      "correlation": 0.9870476602210179,
-      "rsa": 0.9908785815037547,
+      "transfer_rate": 0.5292397660818714,
+      "correlation": 0.9647519833821856,
+      "rsa": 0.994483779255186,
       "odor_id": 0.05263157894736842
     },
     {
@@ -403,9 +403,9 @@
       "value": 0.2,
       "is_default": false,
       "valid_seeds": 3,
-      "transfer_rate": 0.8684210526315789,
-      "correlation": 0.9870476602210179,
-      "rsa": 0.9908785815037547,
+      "transfer_rate": 0.5292397660818714,
+      "correlation": 0.9647519833821856,
+      "rsa": 0.994483779255186,
       "odor_id": 0.05263157894736842
     },
     {
@@ -414,9 +414,9 @@
       "value": 0.3,
       "is_default": true,
       "valid_seeds": 3,
-      "transfer_rate": 0.8684210526315789,
-      "correlation": 0.9870476602210179,
-      "rsa": 0.9908785815037547,
+      "transfer_rate": 0.5292397660818714,
+      "correlation": 0.9647519833821856,
+      "rsa": 0.994483779255186,
       "odor_id": 0.05263157894736842
     },
     {
@@ -425,9 +425,9 @@
       "value": 0.4,
       "is_default": false,
       "valid_seeds": 3,
-      "transfer_rate": 0.8684210526315789,
-      "correlation": 0.9870476602210179,
-      "rsa": 0.9908785815037547,
+      "transfer_rate": 0.5292397660818714,
+      "correlation": 0.9647519833821856,
+      "rsa": 0.994483779255186,
       "odor_id": 0.05263157894736842
     },
     {
@@ -436,9 +436,9 @@
       "value": 0.5,
       "is_default": false,
       "valid_seeds": 3,
-      "transfer_rate": 0.8684210526315789,
-      "correlation": 0.9870476602210179,
-      "rsa": 0.9908785815037547,
+      "transfer_rate": 0.5292397660818714,
+      "correlation": 0.9647519833821856,
+      "rsa": 0.994483779255186,
       "odor_id": 0.05263157894736842
     },
     {
@@ -447,9 +447,9 @@
       "value": 0.7,
       "is_default": false,
       "valid_seeds": 3,
-      "transfer_rate": 0.8684210526315789,
-      "correlation": 0.9870476602210179,
-      "rsa": 0.9908785815037547,
+      "transfer_rate": 0.5292397660818714,
+      "correlation": 0.9647519833821856,
+      "rsa": 0.994483779255186,
       "odor_id": 0.05263157894736842
     },
     {
@@ -458,9 +458,9 @@
       "value": 0.01,
       "is_default": false,
       "valid_seeds": 3,
-      "transfer_rate": 0.8684210526315789,
-      "correlation": 0.9870476602210179,
-      "rsa": 0.9908785815037547,
+      "transfer_rate": 0.5292397660818714,
+      "correlation": 0.9647519833821856,
+      "rsa": 0.994483779255186,
       "odor_id": 0.05263157894736842
     },
     {
@@ -469,9 +469,9 @@
       "value": 0.03,
       "is_default": false,
       "valid_seeds": 3,
-      "transfer_rate": 0.8684210526315789,
-      "correlation": 0.9870476602210179,
-      "rsa": 0.9908785815037547,
+      "transfer_rate": 0.5292397660818714,
+      "correlation": 0.9647519833821856,
+      "rsa": 0.994483779255186,
       "odor_id": 0.05263157894736842
     },
     {
@@ -480,9 +480,9 @@
       "value": 0.05,
       "is_default": true,
       "valid_seeds": 3,
-      "transfer_rate": 0.8684210526315789,
-      "correlation": 0.9870476602210179,
-      "rsa": 0.9908785815037547,
+      "transfer_rate": 0.5292397660818714,
+      "correlation": 0.9647519833821856,
+      "rsa": 0.994483779255186,
       "odor_id": 0.05263157894736842
     },
     {
@@ -491,9 +491,9 @@
       "value": 0.1,
       "is_default": false,
       "valid_seeds": 3,
-      "transfer_rate": 0.8684210526315789,
-      "correlation": 0.9870476602210179,
-      "rsa": 0.9908785815037547,
+      "transfer_rate": 0.5292397660818714,
+      "correlation": 0.9647519833821856,
+      "rsa": 0.994483779255186,
       "odor_id": 0.05263157894736842
     },
     {
@@ -502,9 +502,9 @@
       "value": 0.2,
       "is_default": false,
       "valid_seeds": 3,
-      "transfer_rate": 0.8684210526315789,
-      "correlation": 0.9870476602210179,
-      "rsa": 0.9908785815037547,
+      "transfer_rate": 0.5292397660818714,
+      "correlation": 0.9647519833821856,
+      "rsa": 0.994483779255186,
       "odor_id": 0.05263157894736842
     }
   ]

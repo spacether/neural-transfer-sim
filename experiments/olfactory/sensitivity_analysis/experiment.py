@@ -61,7 +61,7 @@ def _broadcast_metrics(sender, receiver, odor_profiles, odor_valence, receptor_n
 
 def run_sensitivity(
     organism: str = "larva",
-    jitter_scale: float = 0.5,
+    jitter_scale: float = 1.0,
     n_seeds: int = 3,
 ) -> List[Dict]:
     """Sweep each free parameter while holding others at default.
@@ -164,7 +164,7 @@ RESULTS_DIR = Path(__file__).parent / "results"
 def main() -> None:
     parser = argparse.ArgumentParser(description="Parameter sensitivity analysis")
     parser.add_argument("--seeds", type=int, default=3)
-    parser.add_argument("--jitter", type=float, default=0.5)
+    parser.add_argument("--jitter", type=float, default=1.0)
     parser.add_argument("--no-save", action="store_true")
     args = parser.parse_args()
 
