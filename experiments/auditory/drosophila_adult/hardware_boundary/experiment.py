@@ -27,7 +27,7 @@ from neural_transfer.analysis.metrics import (
     correlation,
     mean_mse,
     representational_similarity,
-    odor_identification,
+    temporal_stimulus_identification,
     bootstrap_ci,
 )
 from neural_transfer.analysis.results_writer import write_results
@@ -57,6 +57,19 @@ def _agg_with_ci(seed_metrics: List[Dict[str, float]]) -> Dict:
     return row
 
 
+def _apply_hardware_timeseries(
+    ammc_ts: np.ndarray, ammc_names: List[str],
+    hardware: HardwareChain, rng: np.random.Generator,
+) -> np.ndarray:
+    """Apply hardware degradation to full AMMC timeseries (vectorized)."""
+    return hardware.apply_array(ammc_ts, rng)
+
+
+def _wv_avg_from_temporal(result: Dict, avg_w: int) -> Dict[str, float]:
+    wv_avg = result["wedvlp"][-avg_w:].mean(axis=0)
+    return {f"WV_{i:03d}": float(wv_avg[i]) for i in range(len(wv_avg))}
+
+
 def _run_one_setting(
     sender: AuditoryAdultModel,
     receiver: AuditoryAdultModel,
@@ -68,6 +81,8 @@ def _run_one_setting(
     sound_names: List[str] = []
     natural_states: List[Dict[str, float]] = []
     transferred_states: List[Dict[str, float]] = []
+    natural_wv_ts: List[np.ndarray] = []
+    transferred_wv_ts: List[np.ndarray] = []
     successes = 0
 
     for stim in SOUND_SET:
@@ -78,27 +93,25 @@ def _run_one_setting(
         stimulus = make_temporal_stimulus(name, intensity)
         sender_result = sender.simulate_timesteps(stimulus)
         sender_beh = sender_result["behavior"]
-        sender_ammc_avg = sender_result["ammc"][-avg_w:].mean(axis=0)
-        sender_signal = {n: float(sender_ammc_avg[i]) for i, n in enumerate(ammc_names)}
+        sender_ammc_ts = sender_result["ammc"]
 
-        degraded = hardware.apply(sender_signal, rng)
-        result = receiver.simulate_from_ammc(degraded)
-        if result["behavior"] == sender_beh:
+        degraded_ts = _apply_hardware_timeseries(sender_ammc_ts, ammc_names, hardware, rng)
+        trans_result = receiver.simulate_timesteps_from_ammc(degraded_ts)
+        if trans_result["behavior"] == sender_beh:
             successes += 1
 
         recv_result = receiver.simulate_timesteps(stimulus)
-        recv_wv_avg = recv_result["wedvlp"][-avg_w:].mean(axis=0)
-        natural_state = {f"WV_{i:03d}": float(recv_wv_avg[i]) for i in range(len(recv_wv_avg))}
-        natural_states.append(natural_state)
-        trans_wv = {k: v for k, v in result["neurons"].items() if k.startswith("WV_")}
-        transferred_states.append(trans_wv)
+        natural_states.append(_wv_avg_from_temporal(recv_result, avg_w))
+        natural_wv_ts.append(recv_result["wedvlp"])
+        transferred_states.append(_wv_avg_from_temporal(trans_result, avg_w))
+        transferred_wv_ts.append(trans_result["wedvlp"])
 
     return {
         "transfer_rate": successes / len(SOUND_SET),
         "correlation": correlation(transferred_states, natural_states),
         "mse": mean_mse(transferred_states, natural_states),
         "rsa": representational_similarity(natural_states, transferred_states),
-        "sound_id": odor_identification(sound_names, natural_states, transferred_states),
+        "sound_id": temporal_stimulus_identification(sound_names, natural_wv_ts, transferred_wv_ts),
     }
 
 

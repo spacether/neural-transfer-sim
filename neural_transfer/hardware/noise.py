@@ -30,6 +30,11 @@ class ReadNoise:
             for k, v in signal.items()
         }
 
+    def apply_array(self, arr: np.ndarray, rng: np.random.Generator) -> np.ndarray:
+        if self.sigma <= 0:
+            return arr.copy()
+        return np.maximum(arr + rng.normal(0, self.sigma, size=arr.shape), 0.0)
+
 
 @dataclass
 class WritePrecision:
@@ -53,6 +58,14 @@ class WritePrecision:
             for k, v in signal.items()
         }
 
+    def apply_array(self, arr: np.ndarray, _rng: np.random.Generator | None = None) -> np.ndarray:
+        if self.bits == float("inf") or self.bits <= 0:
+            return arr.copy()
+        n_levels = 2 ** self.bits
+        step = self.clip_max / n_levels
+        clipped = np.clip(arr, 0.0, self.clip_max)
+        return np.round(clipped / step) * step
+
 
 @dataclass
 class ChannelDropout:
@@ -72,6 +85,12 @@ class ChannelDropout:
             k: 0.0 if rng.random() < self.drop_fraction else v
             for k, v in signal.items()
         }
+
+    def apply_array(self, arr: np.ndarray, rng: np.random.Generator) -> np.ndarray:
+        if self.drop_fraction <= 0:
+            return arr.copy()
+        mask = rng.random(arr.shape[-1]) >= self.drop_fraction
+        return arr * mask
 
 
 @dataclass
@@ -101,6 +120,12 @@ class TransmitDelay:
             for k, v in signal.items()
         }
 
+    def apply_array(self, arr: np.ndarray, rng: np.random.Generator) -> np.ndarray:
+        if self.delay_ms <= 0:
+            return arr.copy()
+        sigma = self.drift_rate * (self.delay_ms / self.tau_ms) ** 0.5
+        return np.maximum(arr + rng.normal(0, sigma, size=arr.shape), 0.0)
+
 
 @dataclass
 class HardwareChain:
@@ -117,4 +142,12 @@ class HardwareChain:
             out = self.transmit_delay.apply(out, rng)
         out = self.channel_dropout.apply(out, rng)
         out = self.write_precision.apply(out)
+        return out
+
+    def apply_array(self, arr: np.ndarray, rng: np.random.Generator) -> np.ndarray:
+        out = self.read_noise.apply_array(arr, rng)
+        if self.transmit_delay is not None:
+            out = self.transmit_delay.apply_array(out, rng)
+        out = self.channel_dropout.apply_array(out, rng)
+        out = self.write_precision.apply_array(out)
         return out

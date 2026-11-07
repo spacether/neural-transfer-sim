@@ -33,7 +33,7 @@ from neural_transfer.analysis.metrics import (
     correlation,
     mean_mse,
     representational_similarity,
-    odor_identification,
+    temporal_stimulus_identification,
     bootstrap_ci,
 )
 from neural_transfer.analysis.results_writer import write_results
@@ -59,12 +59,17 @@ def _agg_with_ci(seed_metrics: List[Dict[str, float]]) -> Dict:
     return row
 
 
+def _wv_avg_from_temporal(result: Dict, avg_w: int) -> Dict[str, float]:
+    wv_avg = result["wedvlp"][-avg_w:].mean(axis=0)
+    return {f"WV_{i:03d}": float(wv_avg[i]) for i in range(len(wv_avg))}
+
+
 def _precompute_sender(
     sender: AuditoryAdultModel,
     stimuli: List[Tuple[str, float]],
     avg_w: int,
 ) -> List[Dict]:
-    """Run sender temporal sims once, return time-averaged AMMC + behavior."""
+    """Run sender temporal sims once, return AMMC timeseries + time-averaged AMMC + behavior."""
     cache = []
     ammc_names = sender.ammc_names
     for name, intensity in stimuli:
@@ -74,6 +79,7 @@ def _precompute_sender(
         full_ammc = {n: float(ammc_avg[i]) for i, n in enumerate(ammc_names)}
         cache.append({
             "ammc": full_ammc,
+            "ammc_ts": result["ammc"],
             "behavior": result["behavior"],
         })
     return cache
@@ -83,19 +89,36 @@ def _precompute_receiver(
     receiver: AuditoryAdultModel,
     stimuli: List[Tuple[str, float]],
     avg_w: int,
-) -> Tuple[List[Dict[str, float]], List[Dict[str, float]]]:
-    """Run receiver temporal sims once, return time-averaged AMMC and WV."""
+) -> Tuple[List[Dict[str, float]], List[Dict[str, float]], List[np.ndarray]]:
+    """Run receiver temporal sims once, return time-averaged AMMC, WV, and full WV timeseries."""
     ammc_list = []
     wv_list = []
+    wv_ts_list: List[np.ndarray] = []
     r_ammc_names = receiver.ammc_names
     for name, intensity in stimuli:
         stimulus = make_temporal_stimulus(name, intensity)
         result = receiver.simulate_timesteps(stimulus)
         ammc_avg = result["ammc"][-avg_w:].mean(axis=0)
         ammc_list.append({n: float(ammc_avg[i]) for i, n in enumerate(r_ammc_names)})
-        wv_avg = result["wedvlp"][-avg_w:].mean(axis=0)
-        wv_list.append({f"WV_{i:03d}": float(wv_avg[i]) for i in range(len(wv_avg))})
-    return ammc_list, wv_list
+        wv_list.append(_wv_avg_from_temporal(result, avg_w))
+        wv_ts_list.append(result["wedvlp"])
+    return ammc_list, wv_list, wv_ts_list
+
+
+def _apply_channel_cal_timeseries(
+    ammc_ts: np.ndarray, ammc_names: List[str],
+    active_idx: List[int], transform: CalibrationTransform,
+    active_ammc: List[str], active_set: set,
+    baseline: float,
+) -> np.ndarray:
+    """Apply channel selection + calibration to AMMC timeseries (vectorized)."""
+    n_steps, n_ammc = ammc_ts.shape
+    # Extract active channels, calibrate, write back
+    sub_ts = ammc_ts[:, active_idx]
+    cal_out = transform.transform_array(sub_ts, col_names=active_ammc)
+    out = np.full((n_steps, n_ammc), baseline)
+    out[:, active_idx] = cal_out
+    return out
 
 
 def run_channel_sweep(
@@ -117,7 +140,6 @@ def run_channel_sweep(
     sender_cal_cache = _precompute_sender(sender, CAL_SET, avg_w)
     sender_hold_cache = _precompute_sender(sender, HOLDOUT_SET, avg_w)
 
-    # Precompute receivers once per (jitter, seed) — reused across channel counts
     recv_by_jitter: Dict[float, Dict[int, Tuple]] = {}
     for jitter in jitter_levels:
         gen = AuditoryAdultVariantGenerator(jitter_scale=jitter)
@@ -126,9 +148,9 @@ def run_channel_sweep(
             receiver = gen.generate_variant(sender, seed=seed)
             if not gen.sanity_check(receiver):
                 continue
-            recv_cal_ammc, _ = _precompute_receiver(receiver, CAL_SET, avg_w)
-            _, recv_hold_wv = _precompute_receiver(receiver, HOLDOUT_SET, avg_w)
-            recv_by_jitter[jitter][seed] = (receiver, recv_cal_ammc, recv_hold_wv)
+            recv_cal_ammc, _, _ = _precompute_receiver(receiver, CAL_SET, avg_w)
+            _, recv_hold_wv, recv_hold_wv_ts = _precompute_receiver(receiver, HOLDOUT_SET, avg_w)
+            recv_by_jitter[jitter][seed] = (receiver, recv_cal_ammc, recv_hold_wv, recv_hold_wv_ts)
 
     results: List[Dict] = []
 
@@ -144,7 +166,7 @@ def run_channel_sweep(
 
                 sender_cal = [{n: sc["ammc"][n] for n in active_ammc} for sc in sender_cal_cache]
 
-                for seed, (receiver, recv_cal_ammc, recv_hold_wv) in recv_by_jitter[jitter].items():
+                for seed, (receiver, recv_cal_ammc, recv_hold_wv, recv_hold_wv_ts) in recv_by_jitter[jitter].items():
                     receiver_cal = [{n: ra[n] for n in active_ammc if n in ra}
                                     for ra in recv_cal_ammc]
 
@@ -155,32 +177,35 @@ def run_channel_sweep(
                     sound_names: List[str] = []
                     natural_states: List[Dict[str, float]] = []
                     transferred_states: List[Dict[str, float]] = []
+                    natural_wv_ts: List[np.ndarray] = []
+                    transferred_wv_ts: List[np.ndarray] = []
                     successes = 0
 
                     for idx, (name, inten) in enumerate(HOLDOUT_SET):
                         sound_names.append(name)
-
-                        sender_sig = {n: sender_hold_cache[idx]["ammc"][n] for n in active_ammc}
                         sender_beh = sender_hold_cache[idx]["behavior"]
+                        sender_ammc_ts = sender_hold_cache[idx]["ammc_ts"]
 
-                        cal_sig = transform.transform(sender_sig)
-                        write_sig = {k: v for k, v in cal_sig.items() if k in active_set}
-                        full_ammc = {n: sender.circuit.ammc_baseline for n in ammc_names}
-                        full_ammc.update(write_sig)
-                        result = receiver.simulate_from_ammc(full_ammc)
-                        if result["behavior"] == sender_beh:
+                        cal_ts = _apply_channel_cal_timeseries(
+                            sender_ammc_ts, ammc_names, active_idx,
+                            transform, active_ammc, active_set,
+                            sender.circuit.ammc_baseline,
+                        )
+                        trans_result = receiver.simulate_timesteps_from_ammc(cal_ts)
+                        if trans_result["behavior"] == sender_beh:
                             successes += 1
 
                         natural_states.append(recv_hold_wv[idx])
-                        trans_wv = {k: v for k, v in result["neurons"].items() if k.startswith("WV_")}
-                        transferred_states.append(trans_wv)
+                        natural_wv_ts.append(recv_hold_wv_ts[idx])
+                        transferred_states.append(_wv_avg_from_temporal(trans_result, avg_w))
+                        transferred_wv_ts.append(trans_result["wedvlp"])
 
                     all_metrics.append({
                         "transfer_rate": successes / len(HOLDOUT_SET),
                         "correlation": correlation(transferred_states, natural_states),
                         "mse": mean_mse(transferred_states, natural_states),
                         "rsa": representational_similarity(natural_states, transferred_states),
-                        "sound_id": odor_identification(sound_names, natural_states, transferred_states),
+                        "sound_id": temporal_stimulus_identification(sound_names, natural_wv_ts, transferred_wv_ts),
                     })
 
             if not all_metrics:

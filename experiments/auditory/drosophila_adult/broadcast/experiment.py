@@ -26,7 +26,7 @@ from neural_transfer.analysis.metrics import (
     correlation,
     mean_mse,
     representational_similarity,
-    odor_identification,
+    temporal_stimulus_identification,
     bootstrap_ci,
 )
 from neural_transfer.analysis.results_writer import write_results
@@ -78,6 +78,8 @@ def run_broadcast_sweep(
             sound_names: List[str] = []
             natural_states: List[Dict[str, float]] = []
             transferred_states: List[Dict[str, float]] = []
+            natural_wv_ts: List[np.ndarray] = []
+            transferred_wv_ts: List[np.ndarray] = []
             successes = 0
 
             for stim in SOUND_SET:
@@ -88,19 +90,21 @@ def run_broadcast_sweep(
                 stimulus = make_temporal_stimulus(name, intensity)
                 sender_result = sender.simulate_timesteps(stimulus)
                 sender_beh = sender_result["behavior"]
-                sender_ammc_avg = sender_result["ammc"][-avg_w:].mean(axis=0)
-                ammc_signal = {n: float(sender_ammc_avg[i]) for i, n in enumerate(ammc_names)}
+                sender_ammc_ts = sender_result["ammc"]
 
-                result = receiver.simulate_from_ammc(ammc_signal)
-                if result["behavior"] == sender_beh:
+                trans_result = receiver.simulate_timesteps_from_ammc(sender_ammc_ts)
+                if trans_result["behavior"] == sender_beh:
                     successes += 1
 
                 recv_result = receiver.simulate_timesteps(stimulus)
                 recv_wv_avg = recv_result["wedvlp"][-avg_w:].mean(axis=0)
                 natural_state = {f"WV_{i:03d}": float(recv_wv_avg[i]) for i in range(len(recv_wv_avg))}
                 natural_states.append(natural_state)
-                trans_wv = {k: v for k, v in result["neurons"].items() if k.startswith("WV_")}
-                transferred_states.append(trans_wv)
+                natural_wv_ts.append(recv_result["wedvlp"])
+                trans_wv_avg = trans_result["wedvlp"][-avg_w:].mean(axis=0)
+                trans_state = {f"WV_{i:03d}": float(trans_wv_avg[i]) for i in range(len(trans_wv_avg))}
+                transferred_states.append(trans_state)
+                transferred_wv_ts.append(trans_result["wedvlp"])
 
             if len(SOUND_SET) > 0:
                 seed_metrics.append({
@@ -108,7 +112,7 @@ def run_broadcast_sweep(
                     "correlation": correlation(transferred_states, natural_states),
                     "mse": mean_mse(transferred_states, natural_states),
                     "rsa": representational_similarity(natural_states, transferred_states),
-                    "sound_id": odor_identification(sound_names, natural_states, transferred_states),
+                    "sound_id": temporal_stimulus_identification(sound_names, natural_wv_ts, transferred_wv_ts),
                 })
 
         if not seed_metrics:

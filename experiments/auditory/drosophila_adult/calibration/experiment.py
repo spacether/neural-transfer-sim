@@ -28,7 +28,7 @@ from neural_transfer.analysis.metrics import (
     correlation,
     mean_mse,
     representational_similarity,
-    odor_identification,
+    temporal_stimulus_identification,
 )
 from neural_transfer.analysis.results_writer import write_results
 from neural_transfer.analysis.plotting import plot_calibration_comparison
@@ -53,11 +53,25 @@ def _get_ammc_signal(
     return {n: float(ammc_avg[i]) for i, n in enumerate(model.ammc_names)}
 
 
+def _apply_transform_timeseries(
+    ammc_ts: np.ndarray, transform: CalibrationTransform,
+    ammc_names: list,
+) -> np.ndarray:
+    """Apply calibration transform to full AMMC timeseries (vectorized)."""
+    return transform.transform_array(ammc_ts, col_names=ammc_names)
+
+
+def _wv_avg_from_temporal(result: Dict, avg_w: int) -> Dict[str, float]:
+    wv_avg = result["wedvlp"][-avg_w:].mean(axis=0)
+    return {f"WV_{i:03d}": float(wv_avg[i]) for i in range(len(wv_avg))}
+
+
 def _run_one_pair(
     sender: AuditoryAdultModel,
     receiver: AuditoryAdultModel,
 ) -> Dict:
     avg_w = temporal_avg_window()
+    ammc_names = sender.ammc_names
 
     sender_cal = [_get_ammc_signal(sender, name, intensity, avg_w) for name, intensity in CAL_SET]
     receiver_cal = [_get_ammc_signal(receiver, name, intensity, avg_w) for name, intensity in CAL_SET]
@@ -69,6 +83,9 @@ def _run_one_pair(
     natural_states: List[Dict[str, float]] = []
     direct_states: List[Dict[str, float]] = []
     cal_states: List[Dict[str, float]] = []
+    natural_wv_ts: List[np.ndarray] = []
+    direct_wv_ts: List[np.ndarray] = []
+    cal_wv_ts: List[np.ndarray] = []
     direct_ok, cal_ok = 0, 0
 
     for name, intensity in HOLDOUT_SET:
@@ -77,33 +94,34 @@ def _run_one_pair(
         stimulus = make_temporal_stimulus(name, intensity)
         sender_result = sender.simulate_timesteps(stimulus)
         sender_beh = sender_result["behavior"]
-        sender_ammc_avg = sender_result["ammc"][-avg_w:].mean(axis=0)
-        sender_sig = {n: float(sender_ammc_avg[i]) for i, n in enumerate(sender.ammc_names)}
+        sender_ammc_ts = sender_result["ammc"]
 
         recv_result = receiver.simulate_timesteps(stimulus)
-        recv_wv_avg = recv_result["wedvlp"][-avg_w:].mean(axis=0)
-        natural_state = {f"WV_{i:03d}": float(recv_wv_avg[i]) for i in range(len(recv_wv_avg))}
-        natural_states.append(natural_state)
+        natural_states.append(_wv_avg_from_temporal(recv_result, avg_w))
+        natural_wv_ts.append(recv_result["wedvlp"])
 
-        d_result = receiver.simulate_from_ammc(dict(sender_sig))
-        d_wv = {k: v for k, v in d_result["neurons"].items() if k.startswith("WV_")}
-        direct_states.append(d_wv)
+        d_result = receiver.simulate_timesteps_from_ammc(sender_ammc_ts)
+        direct_states.append(_wv_avg_from_temporal(d_result, avg_w))
+        direct_wv_ts.append(d_result["wedvlp"])
         direct_ok += d_result["behavior"] == sender_beh
 
-        cal_sig = transform.transform(sender_sig)
-        c_result = receiver.simulate_from_ammc(cal_sig)
-        c_wv = {k: v for k, v in c_result["neurons"].items() if k.startswith("WV_")}
-        cal_states.append(c_wv)
+        cal_ammc_ts = _apply_transform_timeseries(sender_ammc_ts, transform, ammc_names)
+        c_result = receiver.simulate_timesteps_from_ammc(cal_ammc_ts)
+        cal_states.append(_wv_avg_from_temporal(c_result, avg_w))
+        cal_wv_ts.append(c_result["wedvlp"])
         cal_ok += c_result["behavior"] == sender_beh
 
     n = len(HOLDOUT_SET)
     out: Dict = {"n_holdout": n, "n_calibration": len(CAL_SET)}
-    for prefix, states, ok in [("direct", direct_states, direct_ok), ("calibrated", cal_states, cal_ok)]:
+    for prefix, states, ok, wv_ts in [
+        ("direct", direct_states, direct_ok, direct_wv_ts),
+        ("calibrated", cal_states, cal_ok, cal_wv_ts),
+    ]:
         out[f"{prefix}_transfer_rate"] = ok / max(1, n)
         out[f"{prefix}_correlation"] = correlation(states, natural_states)
         out[f"{prefix}_mse"] = mean_mse(states, natural_states)
         out[f"{prefix}_rsa"] = representational_similarity(natural_states, states)
-        out[f"{prefix}_sound_id"] = odor_identification(sound_names, natural_states, states)
+        out[f"{prefix}_sound_id"] = temporal_stimulus_identification(sound_names, natural_wv_ts, wv_ts)
     return out
 
 

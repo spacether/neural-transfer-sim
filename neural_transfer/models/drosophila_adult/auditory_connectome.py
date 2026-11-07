@@ -412,6 +412,7 @@ class DrosophilaAuditoryCircuit(AuditoryCircuit):
         self._ammc_names = [f"AMMC_{ct}_{i:03d}" for i, ct in enumerate(self._ammc_cell_types)]
         self._wv_names = [f"WV_{ct}_{i:04d}" for i, ct in enumerate(self._wv_cell_types)]
         self._w_output: Optional[np.ndarray] = None
+        self._cache_normalized_weights()
         self._build_output()
 
     @property
@@ -437,22 +438,15 @@ class DrosophilaAuditoryCircuit(AuditoryCircuit):
     # ── Internal forward pass ────────────────────────────────────────
 
     def _ammc_rates(self, jo_rates: np.ndarray) -> np.ndarray:
-        w_norm = self._w_jo_ammc / (self._w_jo_ammc.max() + 1e-9)
-        raw = w_norm @ jo_rates
-        if self.lateral_gain > 0:
-            w_lat = self._w_ammc_ammc / (self._w_ammc_ammc.max() + 1e-9)
-            lateral = (w_lat * self._ammc_nt_signs[:, None]) @ raw
-            raw = raw + self.lateral_gain * lateral
+        raw = self._w_jo_ammc_norm @ jo_rates
+        if self._w_lat_norm is not None:
+            raw = raw + self.lateral_gain * (self._w_lat_norm @ raw)
         return np.maximum(raw + self.ammc_baseline, 0.0)
 
     def _wedvlp_rates(self, ammc_rates: np.ndarray) -> np.ndarray:
-        w_norm = self._w_ammc_wedvlp / (self._w_ammc_wedvlp.max() + 1e-9)
-        raw = w_norm @ ammc_rates
-        peak = raw.max()
-        if peak < 1e-9:
-            return np.zeros(self.n_wedvlp)
-        normed = raw / peak
-        return np.where(normed > self.vlp_threshold, normed, 0.0)
+        raw = self._wedvlp_drive(ammc_rates)
+        driven = np.maximum(raw - self._wv_baseline, 0.0)
+        return self._threshold_wedvlp(driven)
 
     def _threshold_wedvlp(self, wv: np.ndarray) -> np.ndarray:
         peak = wv.max()
@@ -462,17 +456,13 @@ class DrosophilaAuditoryCircuit(AuditoryCircuit):
         return np.where(normed > self.vlp_threshold, wv, 0.0)
 
     def _ammc_drive(self, jo_rates: np.ndarray) -> np.ndarray:
-        w_norm = self._w_jo_ammc / (self._w_jo_ammc.max() + 1e-9)
-        raw = w_norm @ jo_rates
-        if self.lateral_gain > 0:
-            w_lat = self._w_ammc_ammc / (self._w_ammc_ammc.max() + 1e-9)
-            lateral = (w_lat * self._ammc_nt_signs[:, None]) @ raw
-            raw = raw + self.lateral_gain * lateral
+        raw = self._w_jo_ammc_norm @ jo_rates
+        if self._w_lat_norm is not None:
+            raw = raw + self.lateral_gain * (self._w_lat_norm @ raw)
         return raw + self.ammc_baseline
 
     def _wedvlp_drive(self, ammc_rates: np.ndarray) -> np.ndarray:
-        w_norm = self._w_ammc_wedvlp / (self._w_ammc_wedvlp.max() + 1e-9)
-        return w_norm @ ammc_rates
+        return self._w_ammc_wedvlp_norm @ ammc_rates
 
     def _behavior_from_output(self, out: np.ndarray) -> str:
         mag = abs(out[0]) + abs(out[1])
@@ -571,6 +561,15 @@ class DrosophilaAuditoryCircuit(AuditoryCircuit):
         else:
             self._w_output = rng.normal(0, 0.01, (N_OUTPUT, self.n_wedvlp))
 
+    def _cache_normalized_weights(self) -> None:
+        self._w_jo_ammc_norm = self._w_jo_ammc / (self._w_jo_ammc.max() + 1e-9)
+        if self.lateral_gain > 0:
+            self._w_lat_norm = (self._w_ammc_ammc / (self._w_ammc_ammc.max() + 1e-9)) * self._ammc_nt_signs[:, None]
+        else:
+            self._w_lat_norm = None
+        self._w_ammc_wedvlp_norm = self._w_ammc_wedvlp / (self._w_ammc_wedvlp.max() + 1e-9)
+        self._wv_baseline = self._w_ammc_wedvlp_norm @ np.full(self.n_ammc, self.ammc_baseline)
+
     # ── AuditoryCircuit interface ────────────────────────────────────
 
     def forward_from_receptors(self, receptor_signal: Dict[str, float]) -> Dict:
@@ -622,7 +621,8 @@ class DrosophilaAuditoryCircuit(AuditoryCircuit):
             wv_drive = self._wedvlp_drive(ammc_state)
             wv_state = d_wv * wv_state + o_wv * wv_drive
             wv_state = np.maximum(wv_state, 0.0)
-            wv_out = self._threshold_wedvlp(wv_state)
+            wv_driven = np.maximum(wv_state - self._wv_baseline, 0.0)
+            wv_out = self._threshold_wedvlp(wv_driven)
             out_state = d_out * out_state + o_out * (self._w_output @ wv_out)
             ammc_rec[t] = ammc_state
             wv_rec[t] = wv_out
@@ -653,7 +653,8 @@ class DrosophilaAuditoryCircuit(AuditoryCircuit):
             wv_drive = self._wedvlp_drive(bottleneck_timeseries[t])
             wv_state = d_wv * wv_state + o_wv * wv_drive
             wv_state = np.maximum(wv_state, 0.0)
-            wv_out = self._threshold_wedvlp(wv_state)
+            wv_driven = np.maximum(wv_state - self._wv_baseline, 0.0)
+            wv_out = self._threshold_wedvlp(wv_driven)
             out_state = d_out * out_state + o_out * (self._w_output @ wv_out)
             wv_rec[t] = wv_out
             out_rec[t] = out_state
