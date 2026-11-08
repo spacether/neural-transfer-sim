@@ -1,13 +1,8 @@
 """Hardware boundary experiment for the worm stage.
 
-Sweeps three hardware impairment axes — read noise, write precision, and
-channel dropout — to find where receptor-to-receptor transfer breaks down.
-Each axis is swept independently (other two held at ideal) and then a
-combined sweep tests all three degrading together.
-
-At each hardware setting the experiment runs across the standard odor set
-with a moderately different receiver (jitter_scale=1.0, the median of the
-biological range) and reports the same metrics as the other experiments.
+Uses calibration at the receptor level (the worm has no bottleneck), then
+sweeps hardware impairment axes — read noise, write precision, channel
+dropout, and transmit delay — to find where transfer breaks down.
 """
 
 from __future__ import annotations
@@ -20,11 +15,13 @@ from neural_transfer.models.c_elegans.hand_built import HandBuiltWormModel
 from neural_transfer.models.c_elegans.cook2019 import Cook2019WormModel
 from neural_transfer.models.c_elegans.variants import WormVariantGenerator
 from neural_transfer.hardware.noise import ReadNoise, WritePrecision, ChannelDropout, TransmitDelay, HardwareChain
+from neural_transfer.link.calibration import CalibrationTransform
 from neural_transfer.analysis.metrics import (
     correlation,
     mean_mse,
     representational_similarity,
     odor_identification,
+    bootstrap_ci,
 )
 import argparse
 from pathlib import Path
@@ -36,37 +33,56 @@ MODEL_CLASSES = {
     "cook2019": Cook2019WormModel,
 }
 
-ODOR_SET: List[Dict[str, object]] = [
-    {"odor_intensity": intensity, "odor_type": odor_type}
-    for odor_type in ("attractive", "repellent")
-    for intensity in (0.3, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0)
+CALIBRATION_ODORS: List[Dict[str, object]] = [
+    {"odor_intensity": i, "odor_type": t}
+    for t in ("attractive", "repellent")
+    for i in (0.3, 0.5, 0.75, 1.0, 1.5, 2.0)
+]
+
+HOLDOUT_ODORS: List[Dict[str, object]] = [
+    {"odor_intensity": i, "odor_type": t}
+    for t in ("attractive", "repellent")
+    for i in (0.4, 0.9, 1.25, 1.75)
 ]
 
 DEFAULT_JITTER = 1.0
 DEFAULT_SEEDS = 5
 
+METRIC_KEYS = ("transfer_rate", "correlation", "mse", "rsa", "odor_id")
+
+
+def _agg_with_ci(seed_metrics: List[Dict[str, float]]) -> Dict:
+    row: Dict = {}
+    for k in METRIC_KEYS:
+        vals = [m[k] for m in seed_metrics]
+        mean, lo, hi = bootstrap_ci(vals)
+        row[k] = mean
+        row[f"{k}_ci_lo"] = lo
+        row[f"{k}_ci_hi"] = hi
+    return row
+
 
 def _run_one_setting(
     sender: object,
     receiver: object,
+    transform: CalibrationTransform,
     hardware: HardwareChain,
-    odors: List[Dict[str, object]],
     rng: np.random.Generator,
 ) -> Dict[str, float]:
-    """Evaluate transfer quality for one sender-receiver pair at one hardware setting."""
     odor_types: List[str] = []
     natural_states: List[Dict[str, float]] = []
     transferred_states: List[Dict[str, float]] = []
     successes = 0
 
-    for odor in odors:
+    for odor in HOLDOUT_ODORS:
         intensity, otype = odor["odor_intensity"], odor["odor_type"]
         odor_types.append(otype)
 
         sender_signal = sender.odor_response(intensity, otype)
         sender_behavior = sender.behavior_from_signal(sender_signal, otype)
 
-        degraded = hardware.apply(sender_signal, rng)
+        cal_signal = transform.transform(sender_signal)
+        degraded = hardware.apply(cal_signal, rng)
 
         result = receiver.simulate_from_receptors(degraded, otype)
         if result["behavior"] == sender_behavior:
@@ -76,7 +92,7 @@ def _run_one_setting(
         transferred_states.append(result["neurons"])
 
     return {
-        "transfer_rate": successes / len(odors),
+        "transfer_rate": successes / len(HOLDOUT_ODORS),
         "correlation": correlation(transferred_states, natural_states),
         "mse": mean_mse(transferred_states, natural_states),
         "rsa": representational_similarity(natural_states, transferred_states),
@@ -92,14 +108,7 @@ def run_hardware_sweep(
     precision_levels: List[float] | None = None,
     dropout_levels: List[float] | None = None,
     delay_levels: List[float] | None = None,
-    odors: List[Dict[str, object]] | None = None,
 ) -> Dict[str, List[Dict]]:
-    """Sweep each hardware axis independently, plus a combined degradation.
-
-    Returns a dict with keys 'read_noise', 'write_precision',
-    'channel_dropout', 'transmit_delay', and 'combined', each mapping
-    to a list of result rows.
-    """
     if noise_levels is None:
         noise_levels = [0.0, 0.05, 0.1, 0.2, 0.3, 0.5, 0.75, 1.0]
     if precision_levels is None:
@@ -108,76 +117,56 @@ def run_hardware_sweep(
         dropout_levels = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8]
     if delay_levels is None:
         delay_levels = [0.0, 0.1, 1.0, 5.0, 20.0, 100.0, 500.0, 2000.0]
-    if odors is None:
-        odors = ODOR_SET
 
     ModelClass = MODEL_CLASSES[model_name]
     sender = ModelClass()
     gen = WormVariantGenerator(jitter_scale=jitter)
+
+    sender_cal = [sender.odor_response(o["odor_intensity"], o["odor_type"]) for o in CALIBRATION_ODORS]
+
+    receivers = {}
+    for seed in range(seeds):
+        receiver = gen.generate_model_variant(sender, seed=seed)
+        receiver_cal = [receiver.odor_response(o["odor_intensity"], o["odor_type"]) for o in CALIBRATION_ODORS]
+        transform = CalibrationTransform()
+        transform.fit(sender_cal, receiver_cal)
+        receivers[seed] = (receiver, transform)
 
     def _sweep_axis(make_chain, param_values, param_name):
         rows = []
         for val in param_values:
             chain = make_chain(val)
             seed_metrics = []
-            for seed in range(seeds):
-                receiver = gen.generate_model_variant(sender, seed=seed)
+            for seed, (receiver, transform) in receivers.items():
                 rng = np.random.default_rng(seed * 1000 + hash(str(val)) % 10000)
-                m = _run_one_setting(sender, receiver, chain, odors, rng)
+                m = _run_one_setting(sender, receiver, transform, chain, rng)
                 seed_metrics.append(m)
-            row = {
-                "model": model_name,
-                param_name: val,
-            }
-            for key in ("transfer_rate", "correlation", "mse", "rsa", "odor_id"):
-                row[key] = float(np.mean([m[key] for m in seed_metrics]))
+            if not seed_metrics:
+                continue
+            row = {"model": model_name, param_name: val, "n_seeds": len(seed_metrics)}
+            row.update(_agg_with_ci(seed_metrics))
             rows.append(row)
         return rows
 
     results = {}
 
     results["read_noise"] = _sweep_axis(
-        lambda sigma: HardwareChain(
-            ReadNoise(sigma=sigma),
-            WritePrecision(),
-            ChannelDropout(),
-        ),
-        noise_levels,
-        "noise_sigma",
+        lambda sigma: HardwareChain(ReadNoise(sigma=sigma), WritePrecision(), ChannelDropout()),
+        noise_levels, "noise_sigma",
     )
-
     results["write_precision"] = _sweep_axis(
-        lambda bits: HardwareChain(
-            ReadNoise(),
-            WritePrecision(bits=bits),
-            ChannelDropout(),
-        ),
-        precision_levels,
-        "precision_bits",
+        lambda bits: HardwareChain(ReadNoise(), WritePrecision(bits=bits), ChannelDropout()),
+        precision_levels, "precision_bits",
     )
-
     results["channel_dropout"] = _sweep_axis(
-        lambda frac: HardwareChain(
-            ReadNoise(),
-            WritePrecision(),
-            ChannelDropout(drop_fraction=frac),
-        ),
-        dropout_levels,
-        "dropout_fraction",
+        lambda frac: HardwareChain(ReadNoise(), WritePrecision(), ChannelDropout(drop_fraction=frac)),
+        dropout_levels, "dropout_fraction",
     )
-
     results["transmit_delay"] = _sweep_axis(
-        lambda ms: HardwareChain(
-            ReadNoise(),
-            WritePrecision(),
-            ChannelDropout(),
-            TransmitDelay(delay_ms=ms),
-        ),
-        delay_levels,
-        "delay_ms",
+        lambda ms: HardwareChain(ReadNoise(), WritePrecision(), ChannelDropout(), TransmitDelay(delay_ms=ms)),
+        delay_levels, "delay_ms",
     )
 
-    # Combined: degrade all four together at matched severity
     combined_steps = [
         {"noise_sigma": 0.0, "precision_bits": float("inf"), "dropout_fraction": 0.0, "delay_ms": 0.0},
         {"noise_sigma": 0.05, "precision_bits": 8, "dropout_fraction": 0.05, "delay_ms": 0.1},
@@ -197,15 +186,14 @@ def run_hardware_sweep(
             TransmitDelay(delay_ms=params["delay_ms"]),
         )
         seed_metrics = []
-        for seed in range(seeds):
-            receiver = gen.generate_model_variant(sender, seed=seed)
+        for seed, (receiver, transform) in receivers.items():
             rng = np.random.default_rng(seed * 1000 + step_idx)
-            m = _run_one_setting(sender, receiver, chain, odors, rng)
+            m = _run_one_setting(sender, receiver, transform, chain, rng)
             seed_metrics.append(m)
-        row = {"model": model_name, "step": step_idx, **params}
-        for key in ("transfer_rate", "correlation", "mse", "rsa", "odor_id"):
-            row[key] = float(np.mean([m[key] for m in seed_metrics]))
-        combined_rows.append(row)
+        if seed_metrics:
+            row: Dict = {"model": model_name, "step": step_idx, **params}
+            row.update(_agg_with_ci(seed_metrics))
+            combined_rows.append(row)
     results["combined"] = combined_rows
 
     return results

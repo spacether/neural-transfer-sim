@@ -1,11 +1,8 @@
 """Hardware boundary experiment for the adult Drosophila stage.
 
-Sweeps hardware impairment axes — read noise, write precision, channel
-dropout, and transmit delay — to find where ORN-to-ORN transfer breaks
-down in the adult fly olfactory circuit.
-
-Uses a shorter behavioral decision timescale (tau=200ms) than the worm
-(tau=3000ms), reflecting the fly's faster escape response.
+Reads and writes at the PN bottleneck with calibration, then sweeps
+hardware impairment axes — read noise, write precision, channel dropout,
+and transmit delay — to find where transfer breaks down.
 
 Uses the connectome-based adult model (FlyWire v783, Dorkenwald et al. 2024).
 """
@@ -20,6 +17,7 @@ from neural_transfer.models.drosophila_adult import ConnectomeAdultModel
 from neural_transfer.models.drosophila_adult import ConnectomeAdultVariantGenerator
 from neural_transfer.models.drosophila_adult import ODOR_PROFILES, ODOR_VALENCE
 from neural_transfer.hardware.noise import ReadNoise, WritePrecision, ChannelDropout, TransmitDelay, HardwareChain
+from neural_transfer.link.calibration import CalibrationTransform
 from neural_transfer.analysis.metrics import (
     correlation,
     mean_mse,
@@ -32,17 +30,22 @@ from pathlib import Path
 from neural_transfer.analysis.results_writer import write_results
 from neural_transfer.analysis.plotting import plot_hardware_boundary
 
-ODOR_SET: List[Dict[str, object]] = [
-    {"odor_name": name, "odor_intensity": intensity}
-    for name in ODOR_PROFILES
-    for intensity in (0.5, 1.0, 1.5)
-]
+ALL_ODOR_NAMES = list(ODOR_PROFILES.keys())
+CAL_INTENSITIES = [0.3, 0.5, 0.75, 1.0, 1.5]
+HOLDOUT_INTENSITIES = [0.4, 0.9, 1.25]
+CAL_SET = [(name, i) for name in ALL_ODOR_NAMES for i in CAL_INTENSITIES]
+HOLDOUT_SET = [(name, i) for name in ALL_ODOR_NAMES for i in HOLDOUT_INTENSITIES]
 
 DEFAULT_JITTER = 1.0
 DEFAULT_SEEDS = 5
 FLY_TAU_MS = 200.0
 
 METRIC_KEYS = ("transfer_rate", "correlation", "mse", "rsa", "odor_id")
+
+
+def _get_pn_signal(model: ConnectomeAdultModel, odor_name: str, intensity: float) -> Dict[str, float]:
+    pn = model._pn_rates_for_odor(odor_name, intensity)
+    return {n: float(pn[i]) for i, n in enumerate(model.pn_names)}
 
 
 def _agg_with_ci(seed_metrics: List[Dict[str, float]]) -> Dict:
@@ -59,27 +62,25 @@ def _agg_with_ci(seed_metrics: List[Dict[str, float]]) -> Dict:
 def _run_one_setting(
     sender: ConnectomeAdultModel,
     receiver: ConnectomeAdultModel,
+    transform: CalibrationTransform,
     hardware: HardwareChain,
     rng: np.random.Generator,
 ) -> Dict[str, float]:
-    receptor_names = list(sender._receptor_names)
     odor_names: List[str] = []
     natural_states: List[Dict[str, float]] = []
     transferred_states: List[Dict[str, float]] = []
     successes = 0
 
-    for odor in ODOR_SET:
-        name = odor["odor_name"]
-        intensity = odor["odor_intensity"]
+    for name, intensity in HOLDOUT_SET:
         odor_names.append(name)
 
-        sender_orn = sender._orn_rates(name, intensity)
-        sender_signal = {orn: float(sender_orn[i]) for i, orn in enumerate(receptor_names)}
+        sender_pn = _get_pn_signal(sender, name, intensity)
         sender_layers = sender._forward(name, intensity)
         sender_beh = sender._behavior_from_output(sender_layers["output"])
 
-        degraded = hardware.apply(sender_signal, rng)
-        result = receiver.simulate_from_receptors(degraded)
+        cal_pn = transform.transform(sender_pn)
+        degraded = hardware.apply(cal_pn, rng)
+        result = receiver.simulate_from_pn(degraded)
         if result["behavior"] == sender_beh:
             successes += 1
 
@@ -90,7 +91,7 @@ def _run_one_setting(
     natural_kc = [{k: v for k, v in s.items() if k.startswith("KC_")} for s in natural_states]
     transferred_kc = [{k: v for k, v in s.items() if k.startswith("KC_")} for s in transferred_states]
     return {
-        "transfer_rate": successes / len(ODOR_SET),
+        "transfer_rate": successes / len(HOLDOUT_SET),
         "correlation": correlation(transferred_states, natural_states),
         "mse": mean_mse(transferred_states, natural_states),
         "rsa": representational_similarity(natural_states, transferred_states),
@@ -118,17 +119,26 @@ def run_hardware_sweep(
     sender = ConnectomeAdultModel()
     gen = ConnectomeAdultVariantGenerator(jitter_scale=jitter)
 
+    sender_cal_pn = [_get_pn_signal(sender, name, intensity) for name, intensity in CAL_SET]
+
+    receivers = {}
+    for seed in range(seeds):
+        receiver = gen.generate_variant(sender, seed=seed)
+        if not gen.sanity_check(receiver):
+            continue
+        receiver_cal_pn = [_get_pn_signal(receiver, name, intensity) for name, intensity in CAL_SET]
+        transform = CalibrationTransform()
+        transform.fit(sender_cal_pn, receiver_cal_pn)
+        receivers[seed] = (receiver, transform)
+
     def _sweep_axis(make_chain, param_values, param_name):
         rows = []
         for val in param_values:
             chain = make_chain(val)
             seed_metrics = []
-            for seed in range(seeds):
-                receiver = gen.generate_variant(sender, seed=seed)
-                if not gen.sanity_check(receiver):
-                    continue
+            for seed, (receiver, transform) in receivers.items():
                 rng = np.random.default_rng(seed * 1000 + hash(str(val)) % 10000)
-                m = _run_one_setting(sender, receiver, chain, rng)
+                m = _run_one_setting(sender, receiver, transform, chain, rng)
                 seed_metrics.append(m)
             if not seed_metrics:
                 continue
@@ -178,12 +188,9 @@ def run_hardware_sweep(
             TransmitDelay(delay_ms=params["delay_ms"], tau_ms=FLY_TAU_MS),
         )
         seed_metrics = []
-        for seed in range(seeds):
-            receiver = gen.generate_variant(sender, seed=seed)
-            if not gen.sanity_check(receiver):
-                continue
+        for seed, (receiver, transform) in receivers.items():
             rng = np.random.default_rng(seed * 1000 + step_idx)
-            m = _run_one_setting(sender, receiver, chain, rng)
+            m = _run_one_setting(sender, receiver, transform, chain, rng)
             seed_metrics.append(m)
         if seed_metrics:
             row: Dict = {"step": step_idx, **params}
