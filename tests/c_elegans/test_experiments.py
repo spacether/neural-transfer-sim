@@ -1,29 +1,6 @@
-"""Tests for the receptor-to-receptor and calibration experiments."""
+"""Tests for the calibration experiments."""
 
-from experiments.olfactory.c_elegans.receptor_to_receptor_broadcast import run_receptor_to_receptor_sweep
 from experiments.olfactory.c_elegans.calibration import run_calibration_sweep
-
-
-def test_receptor_to_receptor_sweep_returns_expected_shape() -> None:
-    levels = [0.0, 0.15]
-    results = run_receptor_to_receptor_sweep(jitter_levels=levels, seeds_per_level=2)
-
-    assert len(results) == 2
-    for row in results:
-        assert 0.0 <= row["transfer_rate"] <= 1.0
-        assert -1.0 <= row["correlation"] <= 1.0
-        assert row["mse"] >= 0.0
-        assert -1.0 <= row["rsa"] <= 1.0 or row["rsa"] != row["rsa"]  # allow NaN
-        assert 0.0 <= row["odor_id"] <= 1.0
-
-
-def test_receptor_to_receptor_perfect_at_zero_jitter() -> None:
-    results = run_receptor_to_receptor_sweep(jitter_levels=[0.0], seeds_per_level=1)
-    assert results[0]["transfer_rate"] == 1.0
-    assert results[0]["correlation"] > 0.99
-    assert results[0]["mse"] < 1e-10
-    assert results[0]["rsa"] > 0.99
-    assert results[0]["odor_id"] > 0.9
 
 
 def test_calibration_sweep_returns_expected_shape() -> None:
@@ -46,15 +23,6 @@ def test_calibration_perfect_at_zero_jitter() -> None:
     assert results[0]["calibrated_transfer_rate"] == 1.0
     assert results[0]["direct_mse"] < 1e-10
     assert results[0]["calibrated_mse"] < 1e-5
-
-
-def test_receptor_to_receptor_sweep_cook2019() -> None:
-    results = run_receptor_to_receptor_sweep(
-        jitter_levels=[0.0], seeds_per_level=1, model_name="cook2019",
-    )
-    assert results[0]["model"] == "cook2019"
-    assert results[0]["transfer_rate"] == 1.0
-    assert results[0]["correlation"] > 0.99
 
 
 def test_calibration_sweep_cook2019() -> None:

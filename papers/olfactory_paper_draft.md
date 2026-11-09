@@ -8,7 +8,7 @@ Correspondence: justin.a.black@gmail.com
 
 ## Abstract
 
-We present a computational framework for estimating the hardware and software requirements of transferring olfactory signals between two simulated brains. Using neural circuit models with weight matrices derived from published connectomes — the Winding et al. (2023) larval brain connectome and the FlyWire v783 adult *Drosophila* connectome — plus models of *C. elegans* and zebrafish, we systematically vary channel count, hardware impairments, calibration strategy, and inter-individual neural variability to identify the conditions under which a receiver brain reproduces the sender's odor-evoked behavioral response. Our key finding is that bottleneck architecture, not brain size, determines transfer requirements: N-way odor identification accuracy at 50% channel connectivity is 59% for the 100-channel zebrafish, 44% for the 21-channel larva, and 36% for the 49-channel adult fly — a ranking that tracks architectural complexity rather than receptor count. Three additional results strengthen this conclusion: (1) connectome-based models with real wiring maintain higher transfer quality under variation than shuffled-connectome controls matched in weight statistics, confirming that topology matters; (2) per-channel diagonal calibration (2N parameters) performs identically to full ridge regression (N² parameters), confirming that calibration success is a scaling artifact, not a biological finding; and (3) sensitivity analysis shows results are insensitive to unconstrained model parameters while depending moderately on biophysically measurable quantities. These results establish quantitative lower bounds on inter-brain olfactory transfer and demonstrate that the critical engineering challenge is matching the write site to the receiver's bottleneck architecture, not scaling channel count to match receptor number.
+We present a computational framework for estimating the hardware and software requirements of transferring olfactory signals between two simulated brains. Using neural circuit models with weight matrices derived from published connectomes — the Winding et al. (2023) larval brain connectome and the FlyWire v783 adult *Drosophila* connectome — plus models of *C. elegans* and zebrafish, we systematically vary channel count, hardware impairments, calibration strategy, and inter-individual neural variability to identify the conditions under which a receiver brain reproduces the sender's odor-evoked behavioral response. Our key finding is that bottleneck architecture, not brain size, determines transfer requirements: N-way odor identification accuracy at 50% channel connectivity is 59% for the 100-channel zebrafish, 44% for the 21-channel larva, and 36% for the 49-channel adult fly — a ranking that tracks architectural complexity rather than receptor count. Three additional results strengthen this conclusion: (1) connectome-based models with real wiring maintain higher transfer quality under variation than shuffled-connectome controls matched in weight statistics, confirming that topology matters; (2) per-channel diagonal calibration (2N parameters) performs identically to full ridge regression (N² parameters), confirming that calibration success is a scaling artifact, not a biological finding; and (3) sensitivity analysis shows results are insensitive to unconstrained model parameters while depending moderately on biophysically measurable quantities. All hardware boundary experiments use calibration at the bottleneck layer — the same pipeline a real transfer system would use — and show that channel dropout, not read noise or write precision, is the binding hardware constraint. These results establish quantitative lower bounds on inter-brain olfactory transfer and demonstrate that the critical engineering challenge is matching the write site to the receiver's bottleneck architecture, not scaling channel count to match receptor number.
 
 ## 1. Introduction
 
@@ -55,10 +55,10 @@ All variants must pass a sanity check: correct behavioral response to known attr
 
 The transfer pipeline consists of:
 
-1. **Read.** The sender's receptor-layer activity is recorded. For PN/mitral channel sweeps, a subset of projection neurons is read instead.
-2. **Hardware degradation.** Read noise (additive Gaussian, σ = 0–1.0), write precision (quantization to 1–8 bits), channel dropout (random fraction 0–0.8), and transmit delay (0–2000 ms, modeled as exponential decay toward baseline).
-3. **Calibration.** Two calibration methods are compared: (a) full ridge regression (N² + N parameters), which learns cross-channel interactions; and (b) diagonal calibration (2N parameters), which learns only per-channel scale and offset. Both are fitted on shared calibration odors (sender receptor activity → receiver receptor activity) and applied to held-out test odors. The direct broadcast baseline skips calibration entirely.
-4. **Write.** The (optionally calibrated and degraded) signal is injected into the receiver's receptor layer (or PN/mitral layer), and the receiver's circuit propagates it to behavioral output.
+1. **Read.** The sender's bottleneck-layer activity is recorded — projection neurons (PNs) for the insect stages, mitral cells for the zebrafish, receptors for the worm (which has no bottleneck). For channel sweeps, a subset of these neurons is read.
+2. **Calibration.** A linear transform is fitted on shared calibration odors, mapping sender bottleneck activity to receiver bottleneck activity on held-out test odors. Two calibration methods are compared: (a) full ridge regression (N² + N parameters), which learns cross-channel interactions; and (b) diagonal calibration (2N parameters), which learns only per-channel scale and offset. The direct broadcast baseline skips calibration entirely.
+3. **Hardware degradation.** Read noise (additive Gaussian, σ = 0–1.0), write precision (quantization to 1–8 bits, with clip_max matched to each organism's signal range), channel dropout (random fraction 0–0.8), and transmit delay (0–2000 ms, modeled as exponential decay toward baseline). Hardware degradation is applied after calibration, modeling physical link imperfections between the calibrated signal and the receiver's brain.
+4. **Write.** The calibrated and degraded signal is injected into the receiver's bottleneck layer (PNs, mitral cells, or receptors), and the receiver's circuit propagates it to behavioral output.
 
 ### 2.4 Metrics
 
@@ -74,11 +74,10 @@ We deliberately replaced an earlier 2-way attractive/repellent decoding metric w
 
 For each organism, we run five experiment types:
 
-1. **Broadcast sweep.** Direct receptor-to-receptor transfer across 7 jitter levels (0.0–1.5), 5 seeds per level.
-2. **Calibration sweep.** Ridge regression vs. direct broadcast on held-out odors, same jitter levels.
-3. **Channel sweep.** Transfer quality vs. number of connected ORNs (1 to all), at 3 jitter levels, with 3 random channel selections per count.
-4. **Hardware boundary.** Four single-axis sweeps (noise, precision, dropout, delay) plus a combined sweep, at fixed jitter = 0.75.
-5. **PN/mitral channel sweep.** 2D sweep of read and write projection neuron counts with calibration (larva, adult, zebrafish only).
+1. **Calibration sweep.** Ridge regression vs. direct broadcast on held-out odors, across 7 jitter levels (0.0–1.5), 5 seeds per level.
+2. **Channel sweep.** Transfer quality vs. number of connected ORNs (1 to all), at 3 jitter levels, with 3 random channel selections per count.
+3. **Hardware boundary.** Four single-axis sweeps (noise, precision, dropout, delay) plus a combined sweep, at fixed jitter = 1.0 (the biological median coefficient of variation). All hardware experiments use calibration at the bottleneck layer — the same pipeline a real system would use.
+4. **PN/mitral channel sweep.** 2D sweep of read and write projection neuron counts with calibration (larva, adult, zebrafish only).
 
 Cross-organism scaling compares minimum channels for 90% behavioral match, calibration sample requirements, and broadcast quality.
 
@@ -86,19 +85,19 @@ Cross-organism scaling compares minimum channels for 90% behavioral match, calib
 
 ### 3.1 Broadcast Transfer Degrades Gracefully with Brain Difference
 
-Direct broadcast (copying sender receptor activity to the receiver with no calibration) maintains high behavioral match even at substantial inter-individual variability:
+Direct broadcast (copying sender bottleneck activity to the receiver with no calibration) maintains high behavioral match even at substantial inter-individual variability. At jitter = 1.0, the biological median coefficient of variation:
 
-| Organism | Behavioral match (jitter = 0.75) | Correlation (jitter = 0.75) | Odor ID (jitter = 0.75) |
-|----------|--------------------------------|---------------------------|------------------------|
-| *C. elegans* | 0.70 | 0.91 | 0.93 |
-| *D.* larva | 0.97 | 0.96 | 0.87 |
-| Adult *Drosophila* | 0.72 | 0.97 | 0.88 |
-| Zebrafish | 1.00 | 0.97 | 0.99 |
+| Organism | Behavioral match | Correlation | Odor ID |
+|----------|-----------------|-------------|---------|
+| *C. elegans* | 0.58 | 0.87 | 0.90 |
+| *D.* larva | 1.00 | 0.94 | 0.86 |
+| Adult *Drosophila* | 0.77 | 0.96 | 0.84 |
+| Zebrafish | 1.00 | 0.95 | 0.98 |
 
-The worm and adult fly degrade fastest — the worm because its 8-dimensional receptor space provides little redundancy and multiplexed receptor types mean individual variation in one neuron affects multiple odor dimensions, the adult fly because its 53× KC expansion amplifies weight jitter across 2,580 Kenyon cells. The larva (0.97) and zebrafish (1.00) are far more robust: each has a clean bottleneck without massive downstream expansion, so individual variation in one channel remains contained.
+The worm and adult fly degrade fastest — the worm because its 8-dimensional receptor space provides little redundancy and multiplexed receptor types mean individual variation in one neuron affects multiple odor dimensions, the adult fly because its 53× KC expansion amplifies weight jitter across 2,580 Kenyon cells. The larva (1.00) and zebrafish (1.00) are far more robust: each has a clean bottleneck without massive downstream expansion, so individual variation in one channel remains contained.
 
 ![Figure 1. Broadcast transfer quality vs. brain difference for all four organisms.](experiments/olfactory/scaling/results/scaling_comparison.png)
-*Figure 1. Cross-organism scaling comparison. Top left: receptor repertoire size. Top right: minimum channels for 90% behavioral match. Bottom left: calibration samples needed. Bottom right: broadcast behavioral match at jitter = 0.75.*
+*Figure 1. Cross-organism scaling comparison. Top left: receptor repertoire size. Top right: minimum channels for 90% behavioral match. Bottom left: calibration samples needed. Bottom right: broadcast behavioral match at jitter = 1.0 (biological median CV).*
 
 ### 3.2 Calibration Achieves Near-Perfect Transfer
 
@@ -129,16 +128,18 @@ If channel count alone determined performance, normalized curves would collapse.
 ![Figure 4. Zebrafish ORN channel sweep.](experiments/olfactory/zebrafish/channel_sweep/results/zebrafish_channel_sweep.png)
 *Figure 4. Zebrafish channel sweep. Granule cell lateral inhibition provides partial compensation for missing channels, producing a shallower degradation curve than the adult fly.*
 
-### 3.4 Hardware Boundary: Read Noise and Dropout Dominate
+### 3.4 Hardware Boundary: Dropout Dominates Under Calibration
+
+All hardware boundary experiments use calibration at the bottleneck layer (PNs for insects, mitral cells for zebrafish, receptors for the worm) — the same pipeline a real transfer system would use. At jitter = 1.0 with zero hardware degradation, calibrated transfer achieves 100% behavioral match and 1.000 odor identification for the adult fly and zebrafish, confirming that calibration eliminates the effect of inter-individual variability before hardware impairments are introduced.
 
 Across all four organisms, the hardware parameters rank in the same order of importance:
 
-1. **Channel dropout** — the most damaging impairment. At 50% dropout, behavioral match drops to 0.56–0.91 depending on organism.
-2. **Read noise** — additive noise at σ = 0.5 reduces correlation by 0.05–0.15.
-3. **Write precision** — quantization to 4 bits or above has negligible effect; 2 bits begins to degrade.
+1. **Channel dropout** — the most damaging impairment. At 50% dropout, calibrated behavioral match drops to 0.28–0.90 depending on organism (worm 0.28, larva 0.58, adult fly 0.54, zebrafish 0.90). Dropout directly removes bottleneck channels that calibration mapped to, leaving gaps the receiver cannot fill.
+2. **Write precision** — quantization to 4 bits reduces behavioral match to 0.55–1.00 depending on organism. The effect depends critically on matching the quantizer's clip range to the actual signal amplitude: AMMC signals (~0–9 Hz) require clip_max ≈ 10, while PN firing rates (~0–250 Hz) require clip_max ≈ 150–260.
+3. **Read noise** — additive noise at σ = 0.5 has little effect on the calibrated olfactory organisms (adult fly 0.96, zebrafish 1.00) because calibration absorbs moderate noise. The worm (0.68) is more sensitive due to its low-dimensional receptor space.
 4. **Transmit delay** — delays below 100 ms have no measurable effect in our rate-coded models; delays of 500+ ms cause mild degradation through exponential decay toward baseline.
 
-Annotating these curves with real technology operating points reveals that:
+Technology operating points:
 - Patch clamp and voltage imaging operate well within the safe region for read noise
 - GCaMP calcium imaging adds smoothing and delay but stays within useful read-noise bounds
 - Multi-electrode arrays (MEAs) are noisier but adequate for organisms with > 20 channels
@@ -146,10 +147,10 @@ Annotating these curves with real technology operating points reveals that:
 - FPGA-based systems achieve transmit delay < 1 ms, far below the sensitivity threshold
 
 ![Figure 5. Hardware boundary for the adult fly.](experiments/olfactory/drosophila_adult/hardware_boundary/results/hardware_boundary_adult.png)
-*Figure 5. Hardware boundary for the adult fly. Each panel sweeps one hardware axis while holding others at ideal. Dashed vertical lines mark operating points of real technologies. Channel dropout (top right) is the most damaging impairment.*
+*Figure 5. Hardware boundary for the adult fly with calibrated PN-to-PN transfer. Each panel sweeps one hardware axis while holding others at ideal. Channel dropout (top right) is the most damaging impairment; read noise and write precision degrade gradually.*
 
 ![Figure 6. Hardware boundary for zebrafish.](experiments/olfactory/zebrafish/hardware_boundary/results/hardware_boundary_zebrafish.png)
-*Figure 6. Hardware boundary for zebrafish. The same ranking of impairment severity holds: dropout > noise > precision > delay.*
+*Figure 6. Hardware boundary for zebrafish with calibrated mitral-to-mitral transfer. Dropout remains the binding constraint; the zebrafish's lateral inhibition provides partial robustness to noise and quantization.*
 
 ### 3.5 Calibration Efficiency Is Primarily Dimensional
 
@@ -189,7 +190,7 @@ This asymmetry exists because the calibration transform can compensate for incom
 | Receptor types | 8 | 21 | 49 | 100 |
 | Min channels for 90% behavioral match | 6 | 15 | 35 | 70 |
 | Calibration samples to 90% odor ID | 5 | 30 | 50 | 75 |
-| Broadcast behavioral match (jitter = 0.75) | 0.65 | 0.97 | 0.72 | 1.00 |
+| Broadcast behavioral match (jitter = 1.0) | 0.58 | 1.00 | 0.77 | 1.00 |
 
 Minimum channel count for 90% behavioral match scales approximately linearly with receptor type count (~0.7× the total). Calibration cost scales approximately linearly with receptor count (~0.6–1.4× the receptor-type count to reach 90% odor identification), well below the N² parameter count of ridge regression, because correlated receptor response profiles provide implicit regularization (§3.5).
 

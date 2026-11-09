@@ -1,8 +1,8 @@
 """Hardware boundary experiment for the Drosophila larva stage.
 
-Sweeps hardware impairment axes — read noise, write precision, channel
-dropout, and transmit delay — to find where ORN-to-ORN transfer breaks
-down in the larval olfactory circuit.
+Reads and writes at the PN bottleneck with calibration, then sweeps
+hardware impairment axes — read noise, write precision, channel dropout,
+and transmit delay — to find where transfer breaks down.
 
 Uses the connectome-based larva model (Winding et al. 2023).
 """
@@ -16,7 +16,9 @@ import numpy as np
 from neural_transfer.models.drosophila_larva import ConnectomeLarvaModel
 from neural_transfer.models.drosophila_larva import ConnectomeLarvaVariantGenerator
 from neural_transfer.models.drosophila_larva import ODOR_PROFILES, ODOR_VALENCE
+from neural_transfer.models.drosophila_larva.model import PN_NAMES
 from neural_transfer.hardware.noise import ReadNoise, WritePrecision, ChannelDropout, TransmitDelay, HardwareChain
+from neural_transfer.link.calibration import CalibrationTransform
 from neural_transfer.analysis.metrics import (
     correlation,
     mean_mse,
@@ -24,17 +26,27 @@ from neural_transfer.analysis.metrics import (
     odor_identification,
     bootstrap_ci,
 )
+import argparse
+from pathlib import Path
+from neural_transfer.analysis.results_writer import write_results
+from neural_transfer.analysis.plotting import plot_hardware_boundary
 
-ODOR_SET: List[Dict[str, object]] = [
-    {"odor_name": name, "odor_intensity": intensity}
-    for name in ODOR_PROFILES
-    for intensity in (0.5, 1.0, 1.5)
-]
+ALL_ODOR_NAMES = list(ODOR_PROFILES.keys())
+CAL_INTENSITIES = [0.3, 0.5, 0.75, 1.0, 1.5]
+HOLDOUT_INTENSITIES = [0.4, 0.9, 1.25]
+CAL_SET = [(name, i) for name in ALL_ODOR_NAMES for i in CAL_INTENSITIES]
+HOLDOUT_SET = [(name, i) for name in ALL_ODOR_NAMES for i in HOLDOUT_INTENSITIES]
 
-DEFAULT_JITTER = 0.75
+DEFAULT_JITTER = 1.0
 DEFAULT_SEEDS = 5
 
 METRIC_KEYS = ("transfer_rate", "correlation", "mse", "rsa", "odor_id")
+
+
+def _get_pn_signal(model: ConnectomeLarvaModel, odor_name: str, intensity: float) -> Dict[str, float]:
+    orn = model._orn_rates(odor_name, intensity)
+    pn = model._pn_rates(orn)
+    return {n: float(pn[i]) for i, n in enumerate(PN_NAMES)}
 
 
 def _agg_with_ci(seed_metrics: List[Dict[str, float]]) -> Dict:
@@ -51,27 +63,25 @@ def _agg_with_ci(seed_metrics: List[Dict[str, float]]) -> Dict:
 def _run_one_setting(
     sender: ConnectomeLarvaModel,
     receiver: ConnectomeLarvaModel,
+    transform: CalibrationTransform,
     hardware: HardwareChain,
     rng: np.random.Generator,
 ) -> Dict[str, float]:
-    orn_order = sender._orn_order
     odor_names: List[str] = []
     natural_states: List[Dict[str, float]] = []
     transferred_states: List[Dict[str, float]] = []
     successes = 0
 
-    for odor in ODOR_SET:
-        name = odor["odor_name"]
-        intensity = odor["odor_intensity"]
+    for name, intensity in HOLDOUT_SET:
         odor_names.append(name)
 
-        sender_orn = sender._orn_rates(name, intensity)
-        sender_signal = {orn: float(sender_orn[i]) for i, orn in enumerate(orn_order)}
+        sender_pn = _get_pn_signal(sender, name, intensity)
         sender_layers = sender._forward(name, intensity)
         sender_beh = sender._behavior_from_output(sender_layers["output"])
 
-        degraded = hardware.apply(sender_signal, rng)
-        result = receiver.simulate_from_receptors(degraded)
+        cal_pn = transform.transform(sender_pn)
+        degraded = hardware.apply(cal_pn, rng)
+        result = receiver.simulate_from_pn(degraded)
         if result["behavior"] == sender_beh:
             successes += 1
 
@@ -80,7 +90,7 @@ def _run_one_setting(
         transferred_states.append(result["neurons"])
 
     return {
-        "transfer_rate": successes / len(ODOR_SET),
+        "transfer_rate": successes / len(HOLDOUT_SET),
         "correlation": correlation(transferred_states, natural_states),
         "mse": mean_mse(transferred_states, natural_states),
         "rsa": representational_similarity(natural_states, transferred_states),
@@ -108,17 +118,26 @@ def run_hardware_sweep(
     sender = ConnectomeLarvaModel()
     gen = ConnectomeLarvaVariantGenerator(jitter_scale=jitter)
 
+    sender_cal_pn = [_get_pn_signal(sender, name, intensity) for name, intensity in CAL_SET]
+
+    receivers = {}
+    for seed in range(seeds):
+        receiver = gen.generate_variant(sender, seed=seed)
+        if not gen.sanity_check(receiver):
+            continue
+        receiver_cal_pn = [_get_pn_signal(receiver, name, intensity) for name, intensity in CAL_SET]
+        transform = CalibrationTransform()
+        transform.fit(sender_cal_pn, receiver_cal_pn)
+        receivers[seed] = (receiver, transform)
+
     def _sweep_axis(make_chain, param_values, param_name):
         rows = []
         for val in param_values:
             chain = make_chain(val)
             seed_metrics = []
-            for seed in range(seeds):
-                receiver = gen.generate_variant(sender, seed=seed)
-                if not gen.sanity_check(receiver):
-                    continue
+            for seed, (receiver, transform) in receivers.items():
                 rng = np.random.default_rng(seed * 1000 + hash(str(val)) % 10000)
-                m = _run_one_setting(sender, receiver, chain, rng)
+                m = _run_one_setting(sender, receiver, transform, chain, rng)
                 seed_metrics.append(m)
             if not seed_metrics:
                 continue
@@ -134,7 +153,7 @@ def run_hardware_sweep(
         noise_levels, "noise_sigma",
     )
     results["write_precision"] = _sweep_axis(
-        lambda bits: HardwareChain(ReadNoise(), WritePrecision(bits=bits, clip_max=100.0), ChannelDropout()),
+        lambda bits: HardwareChain(ReadNoise(), WritePrecision(bits=bits, clip_max=150.0), ChannelDropout()),
         precision_levels, "precision_bits",
     )
     results["channel_dropout"] = _sweep_axis(
@@ -160,17 +179,14 @@ def run_hardware_sweep(
     for step_idx, params in enumerate(combined_steps):
         chain = HardwareChain(
             ReadNoise(sigma=params["noise_sigma"]),
-            WritePrecision(bits=params["precision_bits"], clip_max=100.0),
+            WritePrecision(bits=params["precision_bits"], clip_max=150.0),
             ChannelDropout(drop_fraction=params["dropout_fraction"]),
             TransmitDelay(delay_ms=params["delay_ms"]),
         )
         seed_metrics = []
-        for seed in range(seeds):
-            receiver = gen.generate_variant(sender, seed=seed)
-            if not gen.sanity_check(receiver):
-                continue
+        for seed, (receiver, transform) in receivers.items():
             rng = np.random.default_rng(seed * 1000 + step_idx)
-            m = _run_one_setting(sender, receiver, chain, rng)
+            m = _run_one_setting(sender, receiver, transform, chain, rng)
             seed_metrics.append(m)
         if seed_metrics:
             row: Dict = {"step": step_idx, **params}
@@ -179,3 +195,58 @@ def run_hardware_sweep(
     results["combined"] = combined_rows
 
     return results
+
+
+RESULTS_DIR = Path(__file__).parent / "results"
+
+AXIS_LABELS = {
+    "read_noise": ("noise_sigma", "sigma"),
+    "write_precision": ("precision_bits", "bits"),
+    "channel_dropout": ("dropout_fraction", "drop"),
+    "transmit_delay": ("delay_ms", "ms"),
+    "combined": ("step", "step"),
+}
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Larva hardware boundary sweep")
+    parser.add_argument("--seeds", type=int, default=5)
+    parser.add_argument("--jitter", type=float, default=1.0)
+    parser.add_argument("--no-save", action="store_true")
+    args = parser.parse_args()
+
+    all_results = run_hardware_sweep(jitter=args.jitter, seeds=args.seeds)
+
+    print("=== Drosophila Larva: Hardware Boundary ===")
+    for axis, rows in all_results.items():
+        param_key, short = AXIS_LABELS[axis]
+        print(f"\n  --- {axis} ---")
+        print(f"  {short:>6}  {'rate':>6}  {'corr':>6}  {'mse':>8}  {'odor_id':>6}")
+        print(f"  {'-' * 48}")
+        for row in rows:
+            val = row[param_key]
+            val_str = f"{val:6.2f}" if isinstance(val, float) and val != float("inf") else f"{val!s:>6}"
+            print(
+                f"  {val_str}  {row['transfer_rate']:6.3f}  "
+                f"{row['correlation']:6.3f}  {row['mse']:8.2f}  "
+                f"{row['odor_id']:6.3f}"
+            )
+
+    if not args.no_save:
+        for axis, rows in all_results.items():
+            json_path = write_results(
+                experiment=f"larva_hardware_{axis}",
+                description=f"Drosophila larva hardware boundary: {axis} sweep",
+                parameters={"axis": axis, "jitter": args.jitter, "seeds": args.seeds},
+                results=rows,
+                output_dir=RESULTS_DIR,
+            )
+            print(f"  {axis} results: {json_path}")
+
+        plot_path = RESULTS_DIR / "hardware_boundary_larva.png"
+        plot_hardware_boundary(all_results, plot_path)
+        print(f"  Plot: {plot_path}")
+
+
+if __name__ == "__main__":
+    main()

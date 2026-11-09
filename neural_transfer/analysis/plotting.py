@@ -9,6 +9,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+def _id_key(r: Dict) -> str:
+    return "odor_id" if "odor_id" in r else "sound_id"
+
+
+def _get_id(r: Dict) -> float:
+    return r.get("odor_id", r.get("sound_id", 0.0))
+
+
 def plot_receptor_to_receptor_sweep(results: List[Dict], output_path: Path) -> Path:
     """Plot transfer metrics vs brain difference for the receptor-to-receptor baseline."""
     jitter = [r["jitter_scale"] for r in results]
@@ -37,10 +45,11 @@ def plot_receptor_to_receptor_sweep(results: List[Dict], output_path: Path) -> P
     ax.set_ylim(None, 1.05)
 
     ax = axes[1, 1]
-    ax.plot(jitter, [r["odor_id"] for r in results], "o-", color="#d97706")
+    ax.plot(jitter, [_get_id(r) for r in results], "o-", color="#d97706")
     ax.set_ylabel("Accuracy")
     ax.set_xlabel("Brain difference (× biological CV)")
-    ax.set_title("Odor identification (N-way)")
+    id_label = "Sound" if "sound_id" in results[0] else "Odor"
+    ax.set_title(f"{id_label} identification (N-way)")
     ax.set_ylim(None, 1.05)
 
     fig.tight_layout()
@@ -53,11 +62,13 @@ def plot_calibration_comparison(results: List[Dict], output_path: Path) -> Path:
     """Plot receptor-to-receptor vs calibrated transfer across brain-difference levels."""
     jitter = [r["jitter_scale"] for r in results]
 
+    id_key = "odor_id" if f"direct_odor_id" in results[0] else "sound_id"
+    id_label = "Odor" if id_key == "odor_id" else "Sound"
     metrics = [
         ("correlation", "Correlation (Pearson r)", True),
         ("mse", "MSE (reconstruction error)", False),
         ("rsa", "RSA (representational similarity)", True),
-        ("odor_id", "Odor identification (N-way)", True),
+        (id_key, f"{id_label} identification (N-way)", True),
     ]
 
     fig, axes = plt.subplots(2, 2, figsize=(10, 8))
@@ -175,9 +186,12 @@ def plot_hardware_boundary(all_results: Dict[str, list], output_path: Path) -> P
         "transmit_delay": TRANSMIT_DELAY_TECHS,
     }
 
+    first_rows = next(iter(all_results.values()), [])
+    id_key = "odor_id" if (first_rows and "odor_id" in first_rows[0]) else "sound_id"
+    id_label = "Odor" if id_key == "odor_id" else "Sound"
     metric_styles = [
         ("correlation", "Pearson r", "#2563eb", "o-"),
-        ("odor_id", "Odor identification", "#d97706", "s--"),
+        (id_key, f"{id_label} identification", "#d97706", "s--"),
         ("transfer_rate", "Behavioral match", "#059669", "^:"),
     ]
 
@@ -224,13 +238,19 @@ def plot_channel_sweep(results: List[Dict], output_path: Path) -> Path:
     jitter_levels = sorted(set(r["jitter_scale"] for r in results))
     colors = ["#2563eb", "#dc2626", "#059669", "#d97706"]
 
+    is_auditory = results and "sound_id" in results[0]
+    id_key = "sound_id" if is_auditory else "odor_id"
+    id_label = "Sound" if is_auditory else "Odor"
+    neuron_label = "AMMC neurons" if is_auditory else "bottleneck neurons"
+    n_total = max(r["n_channels"] for r in results) if results else "?"
+
     fig, axes = plt.subplots(1, 3, figsize=(14, 4.5))
-    fig.suptitle("ORN Channel Sweep: Transfer Quality vs Connected ORNs (direct broadcast)")
+    fig.suptitle(f"Channel Sweep: Transfer Quality vs Connected {neuron_label}")
 
     metrics = [
         ("correlation", "Pearson r"),
         ("transfer_rate", "Behavioral match rate"),
-        ("odor_id", "Odor identification"),
+        (id_key, f"{id_label} identification"),
     ]
 
     for ax, (key, ylabel) in zip(axes, metrics):
@@ -240,7 +260,7 @@ def plot_channel_sweep(results: List[Dict], output_path: Path) -> Path:
             y = [r[key] for r in rows]
             ax.plot(x, y, "o-", color=colors[j % len(colors)],
                     label=f"jitter={jitter:.1f}", markersize=5)
-        ax.set_xlabel("Number of connected ORNs (of 21)")
+        ax.set_xlabel(f"Number of connected {neuron_label} (of {n_total})")
         ax.set_ylabel(ylabel)
         ax.set_ylim(-0.05, 1.1)
         ax.axhline(0.5, color="#999", linewidth=0.5, linestyle="--", alpha=0.5)
@@ -254,21 +274,25 @@ def plot_channel_sweep(results: List[Dict], output_path: Path) -> Path:
 
 
 def plot_pn_channel_sweep(results: List[Dict], output_path: Path) -> Path:
-    """2D heatmaps of transfer metrics vs read/write PN counts."""
+    """2D heatmaps of transfer metrics vs read/write bottleneck neuron counts."""
     read_counts = sorted(set(r["n_read"] for r in results))
     write_counts = sorted(set(r["n_write"] for r in results))
 
+    is_auditory = results and "sound_id" in results[0]
+    id_key = "sound_id" if is_auditory else "odor_id"
+    id_label = "Sound" if is_auditory else "Odor"
+    neuron_label = "AMMC neurons" if is_auditory else "PNs"
     metrics = [
-        ("correlation", "KC correlation (Pearson r)"),
+        ("correlation", "Downstream correlation (Pearson r)"),
         ("transfer_rate", "Behavioral match"),
-        ("odor_id", "Odor identification"),
+        (id_key, f"{id_label} identification"),
     ]
 
     n_m = len(metrics)
     fig, axes = plt.subplots(1, n_m + 1, figsize=(6 * n_m + 1.2, 5.5),
                              gridspec_kw={"width_ratios": [*([1] * n_m), 0.05],
                                           "wspace": 0.3})
-    fig.suptitle("PN Channel Sweep: Transfer Quality vs Read/Write PN Count",
+    fig.suptitle(f"{neuron_label} Channel Sweep: Transfer Quality vs Read/Write {neuron_label} Count",
                  fontsize=13)
 
     for ax, (key, title) in zip(axes[:n_m], metrics):
@@ -285,8 +309,8 @@ def plot_pn_channel_sweep(results: List[Dict], output_path: Path) -> Path:
         ax.set_yticks(range(len(read_counts)))
         ax.set_yticklabels(read_counts)
         n_total = max(write_counts)
-        ax.set_xlabel(f"Write PNs (of {n_total})")
-        ax.set_ylabel(f"Read PNs (of {n_total})")
+        ax.set_xlabel(f"Write {neuron_label} (of {n_total})")
+        ax.set_ylabel(f"Read {neuron_label} (of {n_total})")
         ax.set_title(title)
 
         for ri in range(len(read_counts)):
@@ -312,14 +336,17 @@ def plot_calibration_efficiency(results: Dict[str, List[Dict]], output_path: Pat
               "D. adult": "#059669", "Zebrafish": "#d97706"}
     for organism, rows in results.items():
         x = [r["n_samples"] for r in rows]
-        y = [r["odor_id"] for r in rows]
-        yerr = [r.get("odor_id_std", 0) for r in rows]
+        y = [_get_id(r) for r in rows]
+        id_key = _id_key(rows[0]) if rows else "odor_id"
+        yerr = [r.get(f"{id_key}_std", 0) for r in rows]
         color = colors.get(organism, "#666")
         ax.errorbar(x, y, yerr=yerr, fmt="o-", color=color, label=organism,
                     markersize=5, capsize=3)
 
     ax.set_xlabel("Number of calibration samples")
-    ax.set_ylabel("Odor identification accuracy")
+    has_sound = any(_id_key(rows[0]) == "sound_id" for rows in results.values() if rows)
+    id_label = "Sound" if has_sound else "Odor"
+    ax.set_ylabel(f"{id_label} identification accuracy")
     ax.set_ylim(-0.05, 1.1)
     ax.axhline(0.5, color="#999", linewidth=0.5, linestyle="--", alpha=0.5)
     ax.legend()

@@ -1,7 +1,10 @@
 """Hardware boundary experiment for the zebrafish stage.
 
-Uses tau=300ms for the zebrafish larval response timescale — faster than
-worm (3000ms) but slower than adult fly (200ms).
+Reads and writes at the mitral cell bottleneck with calibration, then
+sweeps hardware impairment axes — read noise, write precision, channel
+dropout, and transmit delay — to find where transfer breaks down.
+
+Uses tau=300ms for the zebrafish larval response timescale.
 """
 
 from __future__ import annotations
@@ -11,52 +14,73 @@ from typing import Dict, List
 import numpy as np
 
 from neural_transfer.models.zebrafish import (
-    ZebrafishModel, ODOR_PROFILES, ODOR_VALENCE, OR_TYPES,
+    ZebrafishModel, ODOR_PROFILES, ODOR_VALENCE,
 )
+from neural_transfer.models.zebrafish.model import MITRAL_NAMES
 from neural_transfer.models.zebrafish.variants import ZebrafishVariantGenerator
 from neural_transfer.hardware.noise import ReadNoise, WritePrecision, ChannelDropout, TransmitDelay, HardwareChain
+from neural_transfer.link.calibration import CalibrationTransform
 from neural_transfer.analysis.metrics import (
     correlation, mean_mse, representational_similarity,
-    odor_identification,
+    odor_identification, bootstrap_ci,
 )
+import argparse
+from pathlib import Path
+from neural_transfer.analysis.results_writer import write_results
+from neural_transfer.analysis.plotting import plot_hardware_boundary
 
-ODOR_SET: List[Dict[str, object]] = [
-    {"odor_name": name, "odor_intensity": intensity}
-    for name in ODOR_PROFILES
-    for intensity in (0.5, 1.0, 1.5)
-]
+ALL_ODOR_NAMES = list(ODOR_PROFILES.keys())
+CAL_INTENSITIES = [0.3, 0.5, 0.75, 1.0, 1.5]
+HOLDOUT_INTENSITIES = [0.4, 0.9, 1.25]
+CAL_SET = [(name, i) for name in ALL_ODOR_NAMES for i in CAL_INTENSITIES]
+HOLDOUT_SET = [(name, i) for name in ALL_ODOR_NAMES for i in HOLDOUT_INTENSITIES]
 
-DEFAULT_JITTER = 0.75
+DEFAULT_JITTER = 1.0
 DEFAULT_SEEDS = 5
 FISH_TAU_MS = 300.0
+
+METRIC_KEYS = ("transfer_rate", "correlation", "mse", "rsa", "odor_id")
+
+
+def _get_mitral_signal(model: ZebrafishModel, odor_name: str, intensity: float) -> Dict[str, float]:
+    orn = model._orn_type_rates(odor_name, intensity)
+    mc = model._mitral_rates(orn)
+    return {n: float(mc[i]) for i, n in enumerate(MITRAL_NAMES)}
+
+
+def _agg_with_ci(seed_metrics: List[Dict[str, float]]) -> Dict:
+    row: Dict = {}
+    for k in METRIC_KEYS:
+        vals = [m[k] for m in seed_metrics]
+        mean, lo, hi = bootstrap_ci(vals)
+        row[k] = mean
+        row[f"{k}_ci_lo"] = lo
+        row[f"{k}_ci_hi"] = hi
+    return row
 
 
 def _run_one_setting(
     sender: ZebrafishModel,
     receiver: ZebrafishModel,
+    transform: CalibrationTransform,
     hardware: HardwareChain,
     rng: np.random.Generator,
 ) -> Dict[str, float]:
-    odor_types: List[str] = []
     odor_names: List[str] = []
     natural_states: List[Dict[str, float]] = []
     transferred_states: List[Dict[str, float]] = []
     successes = 0
 
-    for odor in ODOR_SET:
-        name = odor["odor_name"]
-        intensity = odor["odor_intensity"]
-        otype = ODOR_VALENCE[name]
-        odor_types.append(otype)
+    for name, intensity in HOLDOUT_SET:
         odor_names.append(name)
 
-        sender_orn = sender._orn_type_rates(name, intensity)
-        sender_signal = {orn: float(sender_orn[i]) for i, orn in enumerate(OR_TYPES)}
+        sender_mc = _get_mitral_signal(sender, name, intensity)
         sender_layers = sender._forward(name, intensity)
         sender_beh = sender._behavior_from_output(sender_layers["output"])
 
-        degraded = hardware.apply(sender_signal, rng)
-        result = receiver.simulate_from_receptors(degraded)
+        cal_mc = transform.transform(sender_mc)
+        degraded = hardware.apply(cal_mc, rng)
+        result = receiver.simulate_from_mitral(degraded)
         if result["behavior"] == sender_beh:
             successes += 1
 
@@ -67,7 +91,7 @@ def _run_one_setting(
     natural_dp = [{k: v for k, v in s.items() if k.startswith("Dp_")} for s in natural_states]
     transferred_dp = [{k: v for k, v in s.items() if k.startswith("Dp_")} for s in transferred_states]
     return {
-        "transfer_rate": successes / len(ODOR_SET),
+        "transfer_rate": successes / len(HOLDOUT_SET),
         "correlation": correlation(transferred_states, natural_states),
         "mse": mean_mse(transferred_states, natural_states),
         "rsa": representational_similarity(natural_states, transferred_states),
@@ -95,23 +119,31 @@ def run_hardware_sweep(
     sender = ZebrafishModel()
     gen = ZebrafishVariantGenerator(jitter_scale=jitter)
 
+    sender_cal_mc = [_get_mitral_signal(sender, name, intensity) for name, intensity in CAL_SET]
+
+    receivers = {}
+    for seed in range(seeds):
+        receiver = gen.generate_variant(sender, seed=seed)
+        if not gen.sanity_check(receiver):
+            continue
+        receiver_cal_mc = [_get_mitral_signal(receiver, name, intensity) for name, intensity in CAL_SET]
+        transform = CalibrationTransform()
+        transform.fit(sender_cal_mc, receiver_cal_mc)
+        receivers[seed] = (receiver, transform)
+
     def _sweep_axis(make_chain, param_values, param_name):
         rows = []
         for val in param_values:
             chain = make_chain(val)
             seed_metrics = []
-            for seed in range(seeds):
-                receiver = gen.generate_variant(sender, seed=seed)
-                if not gen.sanity_check(receiver):
-                    continue
+            for seed, (receiver, transform) in receivers.items():
                 rng = np.random.default_rng(seed * 1000 + hash(str(val)) % 10000)
-                m = _run_one_setting(sender, receiver, chain, rng)
+                m = _run_one_setting(sender, receiver, transform, chain, rng)
                 seed_metrics.append(m)
             if not seed_metrics:
                 continue
-            row = {param_name: val}
-            for key in ("transfer_rate", "correlation", "mse", "rsa", "odor_id"):
-                row[key] = float(np.mean([m[key] for m in seed_metrics]))
+            row = {param_name: val, "n_seeds": len(seed_metrics)}
+            row.update(_agg_with_ci(seed_metrics))
             rows.append(row)
         return rows
 
@@ -121,7 +153,7 @@ def run_hardware_sweep(
         noise_levels, "noise_sigma",
     )
     results["write_precision"] = _sweep_axis(
-        lambda bits: HardwareChain(ReadNoise(), WritePrecision(bits=bits, clip_max=100.0), ChannelDropout()),
+        lambda bits: HardwareChain(ReadNoise(), WritePrecision(bits=bits, clip_max=250.0), ChannelDropout()),
         precision_levels, "precision_bits",
     )
     results["channel_dropout"] = _sweep_axis(
@@ -150,23 +182,59 @@ def run_hardware_sweep(
     for step_idx, params in enumerate(combined_steps):
         chain = HardwareChain(
             ReadNoise(sigma=params["noise_sigma"]),
-            WritePrecision(bits=params["precision_bits"], clip_max=100.0),
+            WritePrecision(bits=params["precision_bits"], clip_max=250.0),
             ChannelDropout(drop_fraction=params["dropout_fraction"]),
             TransmitDelay(delay_ms=params["delay_ms"], tau_ms=FISH_TAU_MS),
         )
         seed_metrics = []
-        for seed in range(seeds):
-            receiver = gen.generate_variant(sender, seed=seed)
-            if not gen.sanity_check(receiver):
-                continue
+        for seed, (receiver, transform) in receivers.items():
             rng = np.random.default_rng(seed * 1000 + step_idx)
-            m = _run_one_setting(sender, receiver, chain, rng)
+            m = _run_one_setting(sender, receiver, transform, chain, rng)
             seed_metrics.append(m)
         if seed_metrics:
-            row = {"step": step_idx, **params}
-            for key in ("transfer_rate", "correlation", "mse", "rsa", "odor_id"):
-                row[key] = float(np.mean([m[key] for m in seed_metrics]))
+            row: Dict = {"step": step_idx, **params}
+            row.update(_agg_with_ci(seed_metrics))
             combined_rows.append(row)
     results["combined"] = combined_rows
 
     return results
+
+
+RESULTS_DIR = Path(__file__).parent / "results"
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Zebrafish hardware boundary experiment")
+    parser.add_argument("--seeds", type=int, default=5)
+    parser.add_argument("--no-save", action="store_true")
+    args = parser.parse_args()
+
+    results = run_hardware_sweep(seeds=args.seeds)
+
+    for axis, rows in results.items():
+        print(f"\n  --- {axis} ---")
+        if not rows:
+            continue
+        param_key = [k for k in rows[0] if k not in ("transfer_rate", "correlation", "mse", "rsa", "odor_id", "step")][0]
+        print(f"  {param_key:>8}  {'rate':>6}  {'corr':>6}  {'mse':>9}  {'odor_id':>7}")
+        print("  " + "-" * 50)
+        for r in rows:
+            print(f"  {r[param_key]:8.2f}  {r['transfer_rate']:6.3f}  "
+                  f"{r['correlation']:6.3f}  {r['mse']:9.2f}  {r['odor_id']:7.3f}")
+
+    if not args.no_save:
+        RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+        for axis, rows in results.items():
+            json_path = write_results(
+                experiment=f"zebrafish_hardware_{axis}",
+                description=f"Zebrafish: hardware boundary — {axis}",
+                parameters={"seeds": args.seeds},
+                results=rows,
+                output_dir=RESULTS_DIR,
+            )
+        plot_path = plot_hardware_boundary(results, RESULTS_DIR / "hardware_boundary_zebrafish.png")
+        print(f"  Plot: {plot_path}")
+
+
+if __name__ == "__main__":
+    main()

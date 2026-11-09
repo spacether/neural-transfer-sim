@@ -128,6 +128,64 @@ def odor_identification(
     return correct / max(1, len(transferred_states))
 
 
+stimulus_identification = odor_identification
+
+
+def _autocorr_features(
+    timeseries: np.ndarray, dt_ms: float, lags_ms: tuple = (15, 30, 35, 40, 50, 70),
+) -> np.ndarray:
+    """Per-neuron autocorrelation at IPI-relevant lags, flattened to a feature vector."""
+    n_t, n_n = timeseries.shape
+    lags = [max(1, int(l / dt_ms)) for l in lags_ms]
+    feat = np.zeros(len(lags) * n_n)
+    for li, lag in enumerate(lags):
+        if lag >= n_t:
+            continue
+        a = timeseries[:n_t - lag]
+        b = timeseries[lag:]
+        a_c = a - a.mean(axis=0)
+        b_c = b - b.mean(axis=0)
+        num = (a_c * b_c).mean(axis=0)
+        denom = a_c.std(axis=0) * b_c.std(axis=0) + 1e-12
+        feat[li * n_n:(li + 1) * n_n] = num / denom
+    return feat
+
+
+def temporal_stimulus_identification(
+    labels: List[str],
+    natural_timeseries: List[np.ndarray],
+    transferred_timeseries: List[np.ndarray],
+    dt_ms: float = 0.5,
+) -> float:
+    """N-way identification using temporal autocorrelation features.
+
+    Extracts per-neuron autocorrelation at IPI-relevant lags (15–70 ms),
+    capturing the temporal pattern structure that time-averaging destroys.
+    Uses centroid-based nearest-neighbor classification on these features.
+    """
+    unique_labels = sorted(set(labels))
+
+    nat_feats = [_autocorr_features(ts, dt_ms) for ts in natural_timeseries]
+    trans_feats = [_autocorr_features(ts, dt_ms) for ts in transferred_timeseries]
+
+    centroids: Dict[str, np.ndarray] = {}
+    for label in unique_labels:
+        indices = [i for i, l in enumerate(labels) if l == label]
+        centroids[label] = np.mean([nat_feats[i] for i in indices], axis=0)
+
+    correct = 0
+    for i, feat in enumerate(trans_feats):
+        dists = {
+            label: np.sum((feat - centroid) ** 2)
+            for label, centroid in centroids.items()
+        }
+        predicted = min(dists, key=dists.get)
+        if predicted == labels[i]:
+            correct += 1
+
+    return correct / max(1, len(transferred_timeseries))
+
+
 def bootstrap_ci(
     values: List[float],
     confidence: float = 0.95,

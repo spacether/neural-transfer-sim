@@ -22,6 +22,9 @@ from neural_transfer.analysis.metrics import (
     representational_similarity,
     odor_identification,
 )
+import argparse
+from pathlib import Path
+from neural_transfer.analysis.results_writer import write_results
 
 CAL_INTENSITIES = [0.3, 0.5, 0.75, 1.0, 1.5]
 HOLDOUT_INTENSITIES = [0.4, 0.9, 1.25]
@@ -176,3 +179,41 @@ def run_calibration_comparison(
                 })
 
     return results
+
+
+RESULTS_DIR = Path(__file__).parent / "results"
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Ridge vs diagonal calibration comparison")
+    parser.add_argument("--seeds", type=int, default=5)
+    parser.add_argument("--no-save", action="store_true")
+    args = parser.parse_args()
+
+    all_results = []
+    for org in ["larva", "adult"]:
+        print(f"\n{'='*70}")
+        print(f"  {org.upper()} (connectome): Ridge vs Diagonal Calibration")
+        print(f"{'='*70}")
+        results = run_calibration_comparison(org, "connectome", seeds_per_level=args.seeds)
+        all_results.extend(results)
+        for r in results:
+            print(
+                f"  jitter={r['jitter_scale']:.2f}  {r['method']:8s} ({r['n_params']:>3s})  "
+                f"transfer={r['transfer_rate']:.2f}  corr={r['correlation']:.3f}  "
+                f"rsa={r['rsa']:.3f}  odor_id={r['odor_id']:.3f}"
+            )
+
+    if not args.no_save:
+        json_path = write_results(
+            experiment="calibration_comparison",
+            description="Ridge (N² params) vs diagonal (2N params) calibration across organisms",
+            parameters={"seeds_per_level": args.seeds, "organisms": ["larva", "adult"]},
+            results=all_results,
+            output_dir=RESULTS_DIR,
+        )
+        print(f"\nResults: {json_path}")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,333 @@
+{
+  "experiment": "connectome_vs_null",
+  "description": "Broadcast transfer: real connectome vs shuffled-null wiring topology",
+  "timestamp": "2026-11-06T22:00:59Z",
+  "git_commit": "0fcbe07",
+  "parameters": {
+    "seeds_per_level": 5,
+    "organisms": [
+      "larva",
+      "adult"
+    ]
+  },
+  "metrics": [
+    "organism",
+    "model",
+    "valid_seeds",
+    "transfer_rate",
+    "correlation",
+    "mse",
+    "rsa",
+    "odor_id"
+  ],
+  "results": [
+    {
+      "organism": "larva",
+      "jitter_scale": 0.0,
+      "model": "connectome",
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9999999999999998,
+      "mse": 0.0,
+      "rsa": 1.0,
+      "odor_id": 0.16666666666666666
+    },
+    {
+      "organism": "larva",
+      "jitter_scale": 0.0,
+      "model": "shuffled_null",
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 1.0,
+      "mse": 0.0,
+      "rsa": 1.0,
+      "odor_id": 1.0
+    },
+    {
+      "organism": "larva",
+      "jitter_scale": 0.25,
+      "model": "connectome",
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9957292900807632,
+      "mse": 2.6694856428794314,
+      "rsa": 0.9973884418572023,
+      "odor_id": 0.16666666666666666
+    },
+    {
+      "organism": "larva",
+      "jitter_scale": 0.25,
+      "model": "shuffled_null",
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9990328937625991,
+      "mse": 0.26247920480503373,
+      "rsa": 0.9974524954382925,
+      "odor_id": 1.0
+    },
+    {
+      "organism": "larva",
+      "jitter_scale": 0.5,
+      "model": "connectome",
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9821362675560372,
+      "mse": 12.065457452376144,
+      "rsa": 0.9964267160289898,
+      "odor_id": 0.16666666666666666
+    },
+    {
+      "organism": "larva",
+      "jitter_scale": 0.5,
+      "model": "shuffled_null",
+      "valid_seeds": 5,
+      "transfer_rate": 0.9833333333333332,
+      "correlation": 0.9962523136013175,
+      "mse": 1.0511976674421875,
+      "rsa": 0.9905218241856805,
+      "odor_id": 0.9944444444444445
+    },
+    {
+      "organism": "larva",
+      "jitter_scale": 0.75,
+      "model": "connectome",
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9612501144379257,
+      "mse": 31.296271562809913,
+      "rsa": 0.9864049905926425,
+      "odor_id": 0.1611111111111111
+    },
+    {
+      "organism": "larva",
+      "jitter_scale": 0.75,
+      "model": "shuffled_null",
+      "valid_seeds": 5,
+      "transfer_rate": 0.8166666666666667,
+      "correlation": 0.9917977065880871,
+      "mse": 2.422950492074283,
+      "rsa": 0.9798111916317896,
+      "odor_id": 0.9888888888888889
+    },
+    {
+      "organism": "larva",
+      "jitter_scale": 1.0,
+      "model": "connectome",
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.937529887036489,
+      "mse": 65.07065720397965,
+      "rsa": 0.982324711496848,
+      "odor_id": 0.1611111111111111
+    },
+    {
+      "organism": "larva",
+      "jitter_scale": 1.0,
+      "model": "shuffled_null",
+      "valid_seeds": 5,
+      "transfer_rate": 0.7666666666666667,
+      "correlation": 0.985766556214943,
+      "mse": 4.508296753515877,
+      "rsa": 0.9655553310562215,
+      "odor_id": 0.9555555555555555
+    },
+    {
+      "organism": "larva",
+      "jitter_scale": 1.25,
+      "model": "connectome",
+      "valid_seeds": 5,
+      "transfer_rate": 0.85,
+      "correlation": 0.9144652655700565,
+      "mse": 119.74592141512895,
+      "rsa": 0.9808874478921563,
+      "odor_id": 0.15555555555555556
+    },
+    {
+      "organism": "larva",
+      "jitter_scale": 1.25,
+      "model": "shuffled_null",
+      "valid_seeds": 5,
+      "transfer_rate": 0.75,
+      "correlation": 0.9782102377886973,
+      "mse": 7.532121868543027,
+      "rsa": 0.9473608796042734,
+      "odor_id": 0.9333333333333332
+    },
+    {
+      "organism": "larva",
+      "jitter_scale": 1.5,
+      "model": "connectome",
+      "valid_seeds": 5,
+      "transfer_rate": 0.8,
+      "correlation": 0.8937922797260528,
+      "mse": 202.88766162055668,
+      "rsa": 0.9818562065401506,
+      "odor_id": 0.15
+    },
+    {
+      "organism": "larva",
+      "jitter_scale": 1.5,
+      "model": "shuffled_null",
+      "valid_seeds": 5,
+      "transfer_rate": 0.75,
+      "correlation": 0.9694258533182953,
+      "mse": 11.754801573377161,
+      "rsa": 0.9247525205840867,
+      "odor_id": 0.9111111111111111
+    },
+    {
+      "organism": "adult",
+      "jitter_scale": 0.0,
+      "model": "connectome",
+      "valid_seeds": 5,
+      "transfer_rate": 0.868421052631579,
+      "correlation": 0.9941809954376571,
+      "mse": 0.21498472781557204,
+      "rsa": 0.9947076694051876,
+      "odor_id": 0.05263157894736842
+    },
+    {
+      "organism": "adult",
+      "jitter_scale": 0.0,
+      "model": "shuffled_null",
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 1.0,
+      "mse": 0.0,
+      "rsa": 0.9999999999999998,
+      "odor_id": 0.868421052631579
+    },
+    {
+      "organism": "adult",
+      "jitter_scale": 0.25,
+      "model": "connectome",
+      "valid_seeds": 5,
+      "transfer_rate": 0.6684210526315789,
+      "correlation": 0.9924314144566289,
+      "mse": 0.3090724435014333,
+      "rsa": 0.9925879568693796,
+      "odor_id": 0.05263157894736842
+    },
+    {
+      "organism": "adult",
+      "jitter_scale": 0.25,
+      "model": "shuffled_null",
+      "valid_seeds": 5,
+      "transfer_rate": 1.0,
+      "correlation": 0.9992424523592934,
+      "mse": 0.01963003793207288,
+      "rsa": 0.9978506154668096,
+      "odor_id": 0.8631578947368421
+    },
+    {
+      "organism": "adult",
+      "jitter_scale": 0.5,
+      "model": "connectome",
+      "valid_seeds": 5,
+      "transfer_rate": 0.8421052631578947,
+      "correlation": 0.9858295468545017,
+      "mse": 0.5738662657968389,
+      "rsa": 0.990709438134185,
+      "odor_id": 0.05263157894736842
+    },
+    {
+      "organism": "adult",
+      "jitter_scale": 0.5,
+      "model": "shuffled_null",
+      "valid_seeds": 5,
+      "transfer_rate": 0.9789473684210526,
+      "correlation": 0.9971253548899549,
+      "mse": 0.07988478855904202,
+      "rsa": 0.9915638947345353,
+      "odor_id": 0.8473684210526315
+    },
+    {
+      "organism": "adult",
+      "jitter_scale": 0.75,
+      "model": "connectome",
+      "valid_seeds": 5,
+      "transfer_rate": 0.7228070175438596,
+      "correlation": 0.974536431274551,
+      "mse": 0.9834283119191312,
+      "rsa": 0.9924171241364105,
+      "odor_id": 0.05263157894736842
+    },
+    {
+      "organism": "adult",
+      "jitter_scale": 0.75,
+      "model": "shuffled_null",
+      "valid_seeds": 5,
+      "transfer_rate": 0.8526315789473683,
+      "correlation": 0.9938341148341884,
+      "mse": 0.18758198611800886,
+      "rsa": 0.9815089865313578,
+      "odor_id": 0.8385964912280702
+    },
+    {
+      "organism": "adult",
+      "jitter_scale": 1.0,
+      "model": "connectome",
+      "valid_seeds": 5,
+      "transfer_rate": 0.6385964912280702,
+      "correlation": 0.9594315325266012,
+      "mse": 1.509769940124675,
+      "rsa": 0.9909897230124247,
+      "odor_id": 0.05263157894736842
+    },
+    {
+      "organism": "adult",
+      "jitter_scale": 1.0,
+      "model": "shuffled_null",
+      "valid_seeds": 5,
+      "transfer_rate": 0.7789473684210526,
+      "correlation": 0.9895408252416853,
+      "mse": 0.35416890558122266,
+      "rsa": 0.9678632450613222,
+      "odor_id": 0.8087719298245615
+    },
+    {
+      "organism": "adult",
+      "jitter_scale": 1.25,
+      "model": "connectome",
+      "valid_seeds": 5,
+      "transfer_rate": 0.7473684210526316,
+      "correlation": 0.9417925403434302,
+      "mse": 2.125936726106795,
+      "rsa": 0.9769999269783524,
+      "odor_id": 0.05263157894736842
+    },
+    {
+      "organism": "adult",
+      "jitter_scale": 1.25,
+      "model": "shuffled_null",
+      "valid_seeds": 5,
+      "transfer_rate": 0.6842105263157895,
+      "correlation": 0.9844253522872382,
+      "mse": 0.5951658765586102,
+      "rsa": 0.9513610624779705,
+      "odor_id": 0.7894736842105263
+    },
+    {
+      "organism": "adult",
+      "jitter_scale": 1.5,
+      "model": "connectome",
+      "valid_seeds": 5,
+      "transfer_rate": 0.6263157894736843,
+      "correlation": 0.9230509068390857,
+      "mse": 2.8019242239242197,
+      "rsa": 0.9715633501582632,
+      "odor_id": 0.050877192982456146
+    },
+    {
+      "organism": "adult",
+      "jitter_scale": 1.5,
+      "model": "shuffled_null",
+      "valid_seeds": 5,
+      "transfer_rate": 0.6105263157894736,
+      "correlation": 0.9786403591005506,
+      "mse": 0.9326739174302938,
+      "rsa": 0.932813575838668,
+      "odor_id": 0.7649122807017543
+    }
+  ]
+}

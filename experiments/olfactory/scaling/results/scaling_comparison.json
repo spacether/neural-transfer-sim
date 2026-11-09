@@ -1,11 +1,11 @@
 {
   "experiment": "scaling_comparison",
   "description": "Cross-organism scaling: transfer requirements vs complexity",
-  "timestamp": "2026-11-04T10:14:58Z",
-  "git_commit": "a240da9",
+  "timestamp": "2026-11-07T19:27:53Z",
+  "git_commit": "1531999",
   "parameters": {
-    "seeds": 10,
-    "jitter": 0.75
+    "seeds": 5,
+    "jitter": 1.0
   },
   "metrics": [
     "organism",
@@ -28,9 +28,9 @@
       "kc_equivalent": 0,
       "bottleneck": "none",
       "signal_mode": "graded",
-      "broadcast_behavioral_match": 0.6500000000000001,
+      "broadcast_behavioral_match": 0.725,
       "min_channels_90": 6,
-      "calibration_samples": 24
+      "calibration_samples": 5
     },
     {
       "organism": "D. larva",
@@ -40,9 +40,9 @@
       "kc_equivalent": 73,
       "bottleneck": "glomerular (1:1)",
       "signal_mode": "spiking",
-      "broadcast_behavioral_match": 0.975,
+      "broadcast_behavioral_match": 1.0,
       "min_channels_90": 15,
-      "calibration_samples": 63
+      "calibration_samples": 30
     },
     {
       "organism": "D. adult",
@@ -52,9 +52,9 @@
       "kc_equivalent": 2580,
       "bottleneck": "glomerular (23:1)",
       "signal_mode": "spiking",
-      "broadcast_behavioral_match": 0.718421052631579,
+      "broadcast_behavioral_match": 0.768421052631579,
       "min_channels_90": 35,
-      "calibration_samples": 147
+      "calibration_samples": 50
     },
     {
       "organism": "Zebrafish",
@@ -66,7 +66,7 @@
       "signal_mode": "spiking",
       "broadcast_behavioral_match": 1.0,
       "min_channels_90": 70,
-      "calibration_samples": 300
+      "calibration_samples": 75
     }
   ]
 }

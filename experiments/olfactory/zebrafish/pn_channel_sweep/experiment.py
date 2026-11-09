@@ -17,6 +17,10 @@ from neural_transfer.models.zebrafish import (
 from neural_transfer.models.zebrafish.variants import ZebrafishVariantGenerator
 from neural_transfer.link.calibration import CalibrationTransform
 from neural_transfer.analysis.metrics import correlation, mean_mse, odor_identification
+import argparse
+from pathlib import Path
+from neural_transfer.analysis.results_writer import write_results
+from neural_transfer.analysis.plotting import plot_pn_channel_sweep
 
 ALL_ODOR_NAMES = list(ODOR_PROFILES.keys())
 CAL_INTENSITIES = [0.3, 0.5, 0.75, 1.0, 1.5]
@@ -36,7 +40,7 @@ def _mask_to_set(signal: Dict[str, float], active: Set[str]) -> Dict[str, float]
 
 def run_mitral_channel_sweep(
     channel_counts: List[int] | None = None,
-    jitter: float = 0.75,
+    jitter: float = 1.0,
     seeds: int = 3,
 ) -> List[Dict]:
     if channel_counts is None:
@@ -110,3 +114,39 @@ def run_mitral_channel_sweep(
             })
 
     return results
+
+
+RESULTS_DIR = Path(__file__).parent / "results"
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Zebrafish mitral cell channel sweep")
+    parser.add_argument("--seeds", type=int, default=3)
+    parser.add_argument("--no-save", action="store_true")
+    args = parser.parse_args()
+
+    results = run_mitral_channel_sweep(seeds=args.seeds)
+
+    print("=== Zebrafish: Mitral Cell Channel Sweep ===")
+    print(f"{'read':>5}  {'write':>5}  {'rate':>6}  {'corr':>6}  {'odor_id':>6}")
+    print("-" * 35)
+    for r in results:
+        print(f"{r['n_read']:5d}  {r['n_write']:5d}  {r['transfer_rate']:6.3f}  "
+              f"{r['correlation']:6.3f}  {r['odor_id']:6.3f}")
+
+    if not args.no_save:
+        RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+        json_path = write_results(
+            experiment="zebrafish_mitral_channel_sweep",
+            description="Zebrafish: 2D sweep of read/write mitral cell counts",
+            parameters={"seeds": args.seeds},
+            results=results,
+            output_dir=RESULTS_DIR,
+        )
+        plot_path = plot_pn_channel_sweep(results, json_path.with_suffix(".png"))
+        print(f"\nResults: {json_path}")
+        print(f"Plot: {plot_path}")
+
+
+if __name__ == "__main__":
+    main()

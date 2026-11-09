@@ -15,7 +15,7 @@ RESULTS_DIR = Path(__file__).parent / "results"
 def main() -> None:
     parser = argparse.ArgumentParser(description="Calibration sample efficiency sweep")
     parser.add_argument("--seeds", type=int, default=5)
-    parser.add_argument("--jitter", type=float, default=0.75)
+    parser.add_argument("--jitter", type=float, default=1.0)
     parser.add_argument("--no-save", action="store_true")
     args = parser.parse_args()
 

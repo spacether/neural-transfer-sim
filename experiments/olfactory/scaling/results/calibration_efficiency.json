@@ -1,11 +1,11 @@
 {
   "experiment": "calibration_efficiency",
   "description": "Calibration sample efficiency: odor identification vs training set size",
-  "timestamp": "2026-11-04T10:14:08Z",
-  "git_commit": "a240da9",
+  "timestamp": "2026-11-07T18:19:35Z",
+  "git_commit": "1531999",
   "parameters": {
     "seeds": 5,
-    "jitter": 0.75
+    "jitter": 1.0
   },
   "metrics": [
     "organism",
@@ -89,110 +89,110 @@
     {
       "organism": "D. larva",
       "n_samples": 10,
-      "odor_id": 0.6666666666666666,
-      "odor_id_std": 0.1337954953199144
+      "odor_id": 0.65,
+      "odor_id_std": 0.12247448713915891
     },
     {
       "organism": "D. larva",
       "n_samples": 15,
-      "odor_id": 0.8944444444444445,
-      "odor_id_std": 0.047790695928014576
+      "odor_id": 0.8722222222222221,
+      "odor_id_std": 0.048432210483785244
     },
     {
       "organism": "D. larva",
       "n_samples": 20,
-      "odor_id": 0.8944444444444445,
-      "odor_id_std": 0.027216552697590827
+      "odor_id": 0.8777777777777779,
+      "odor_id_std": 0.028327886186626548
     },
     {
       "organism": "D. larva",
       "n_samples": 30,
-      "odor_id": 0.9277777777777777,
-      "odor_id_std": 0.022222222222222233
+      "odor_id": 0.9111111111111111,
+      "odor_id_std": 0.011111111111111117
     },
     {
       "organism": "D. larva",
       "n_samples": 50,
-      "odor_id": 0.9277777777777777,
-      "odor_id_std": 0.022222222222222233
+      "odor_id": 0.9111111111111111,
+      "odor_id_std": 0.011111111111111117
     },
     {
       "organism": "D. larva",
       "n_samples": 75,
-      "odor_id": 0.9277777777777777,
-      "odor_id_std": 0.022222222222222233
+      "odor_id": 0.9111111111111111,
+      "odor_id_std": 0.011111111111111117
     },
     {
       "organism": "D. larva",
       "n_samples": 100,
-      "odor_id": 0.9277777777777777,
-      "odor_id_std": 0.022222222222222233
+      "odor_id": 0.9111111111111111,
+      "odor_id_std": 0.011111111111111117
     },
     {
       "organism": "D. larva",
       "n_samples": 150,
-      "odor_id": 0.9277777777777777,
-      "odor_id_std": 0.022222222222222233
+      "odor_id": 0.9111111111111111,
+      "odor_id_std": 0.011111111111111117
     },
     {
       "organism": "D. adult",
       "n_samples": 3,
-      "odor_id": 0.0807017543859649,
-      "odor_id_std": 0.02443576890734056
+      "odor_id": 0.07192982456140351,
+      "odor_id_std": 0.014035087719298246
     },
     {
       "organism": "D. adult",
       "n_samples": 5,
-      "odor_id": 0.13508771929824562,
-      "odor_id_std": 0.0162695061324486
+      "odor_id": 0.13859649122807016,
+      "odor_id_std": 0.020308485794368815
     },
     {
       "organism": "D. adult",
       "n_samples": 10,
-      "odor_id": 0.3175438596491228,
-      "odor_id_std": 0.04753058661103181
+      "odor_id": 0.3157894736842105,
+      "odor_id_std": 0.060265136973044454
     },
     {
       "organism": "D. adult",
       "n_samples": 15,
-      "odor_id": 0.4631578947368421,
-      "odor_id_std": 0.03938586722919938
+      "odor_id": 0.45964912280701753,
+      "odor_id_std": 0.04136781095632139
     },
     {
       "organism": "D. adult",
       "n_samples": 20,
-      "odor_id": 0.6894736842105262,
-      "odor_id_std": 0.05860804592452652
+      "odor_id": 0.6684210526315789,
+      "odor_id_std": 0.06359497880839246
     },
     {
       "organism": "D. adult",
       "n_samples": 30,
-      "odor_id": 0.8631578947368421,
-      "odor_id_std": 0.025784102555612413
+      "odor_id": 0.8421052631578947,
+      "odor_id_std": 0.016643566632465173
     },
     {
       "organism": "D. adult",
       "n_samples": 50,
-      "odor_id": 0.9578947368421054,
-      "odor_id_std": 0.026836944808383095
+      "odor_id": 0.9421052631578947,
+      "odor_id_std": 0.03491183989847789
     },
     {
       "organism": "D. adult",
       "n_samples": 75,
+      "odor_id": 0.9473684210526315,
+      "odor_id_std": 0.03721614637823935
+    },
+    {
+      "organism": "D. adult",
+      "n_samples": 100,
       "odor_id": 0.9631578947368421,
       "odor_id_std": 0.026836944808383095
     },
     {
       "organism": "D. adult",
-      "n_samples": 100,
-      "odor_id": 0.9736842105263157,
-      "odor_id_std": 0.016643566632465173
-    },
-    {
-      "organism": "D. adult",
       "n_samples": 150,
-      "odor_id": 0.9789473684210526,
-      "odor_id_std": 0.019692933614599704
+      "odor_id": 0.968421052631579,
+      "odor_id_std": 0.019692933614599718
     },
     {
       "organism": "Zebrafish",
@@ -209,32 +209,32 @@
     {
       "organism": "Zebrafish",
       "n_samples": 10,
-      "odor_id": 0.3288888888888889,
-      "odor_id_std": 0.015071844406945041
+      "odor_id": 0.3311111111111111,
+      "odor_id_std": 0.023726840560069573
     },
     {
       "organism": "Zebrafish",
       "n_samples": 15,
-      "odor_id": 0.4622222222222222,
-      "odor_id_std": 0.031111111111111114
+      "odor_id": 0.4733333333333333,
+      "odor_id_std": 0.0413357227505295
     },
     {
       "organism": "Zebrafish",
       "n_samples": 20,
       "odor_id": 0.571111111111111,
-      "odor_id_std": 0.04365973934308556
+      "odor_id_std": 0.026851213274654617
     },
     {
       "organism": "Zebrafish",
       "n_samples": 30,
-      "odor_id": 0.6977777777777778,
-      "odor_id_std": 0.021545243810739214
+      "odor_id": 0.7022222222222222,
+      "odor_id_std": 0.022662308949301272
     },
     {
       "organism": "Zebrafish",
       "n_samples": 50,
-      "odor_id": 0.8755555555555556,
-      "odor_id_std": 0.03325917677132392
+      "odor_id": 0.8800000000000001,
+      "odor_id_std": 0.03471222078180736
     },
     {
       "organism": "Zebrafish",
@@ -245,8 +245,8 @@
     {
       "organism": "Zebrafish",
       "n_samples": 100,
-      "odor_id": 0.9955555555555555,
-      "odor_id_std": 0.008888888888888903
+      "odor_id": 0.9933333333333334,
+      "odor_id_std": 0.01333333333333333
     },
     {
       "organism": "Zebrafish",

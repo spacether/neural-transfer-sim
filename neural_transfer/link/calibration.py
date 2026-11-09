@@ -68,6 +68,45 @@ class CalibrationTransform:
         y = x @ self._coef + self._intercept
         return self._from_vec(y)
 
+    def transform_array(
+        self, x: np.ndarray, col_names: tuple | list | None = None,
+    ) -> np.ndarray:
+        """Map a 1-D or 2-D array without dict overhead.
+
+        If *col_names* matches self.neurons order, x is used directly.
+        Otherwise columns are permuted to match the fitted neuron order,
+        and the output is permuted back to *col_names* order.
+        """
+        if not self._fitted:
+            raise RuntimeError("Call fit() before transform_array().")
+        if col_names is None or tuple(col_names) == self.neurons:
+            return x @ self._coef + self._intercept
+        neuron_list = list(self.neurons)
+        in_perm = [col_names.index(n) if n in col_names else -1 for n in neuron_list]
+        n_neurons = len(neuron_list)
+        if x.ndim == 1:
+            xp = np.zeros(n_neurons)
+            for i, pi in enumerate(in_perm):
+                if pi >= 0:
+                    xp[i] = x[pi]
+            yp = xp @ self._coef + self._intercept
+            out = np.zeros_like(x)
+            for i, pi in enumerate(in_perm):
+                if pi >= 0:
+                    out[pi] = yp[i]
+            return out
+        # 2-D: build permutation indices once, apply with fancy indexing
+        n_steps = x.shape[0]
+        xp = np.zeros((n_steps, n_neurons))
+        valid = [(i, pi) for i, pi in enumerate(in_perm) if pi >= 0]
+        cal_idx = np.array([v[0] for v in valid])
+        src_idx = np.array([v[1] for v in valid])
+        xp[:, cal_idx] = x[:, src_idx]
+        yp = xp @ self._coef + self._intercept
+        out = np.zeros_like(x)
+        out[:, src_idx] = yp[:, cal_idx]
+        return out
+
     @property
     def is_fitted(self) -> bool:
         return self._fitted
