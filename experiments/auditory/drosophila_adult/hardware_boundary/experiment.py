@@ -173,7 +173,7 @@ def run_hardware_sweep(
         noise_levels, "noise_sigma",
     )
     results["write_precision"] = _sweep_axis(
-        lambda bits: HardwareChain(ReadNoise(), WritePrecision(bits=bits, clip_max=200.0), ChannelDropout()),
+        lambda bits: HardwareChain(ReadNoise(), WritePrecision(bits=bits, clip_max=10.0), ChannelDropout()),
         precision_levels, "precision_bits",
     )
     results["channel_dropout"] = _sweep_axis(
@@ -202,7 +202,7 @@ def run_hardware_sweep(
     for step_idx, params in enumerate(combined_steps):
         chain = HardwareChain(
             ReadNoise(sigma=params["noise_sigma"]),
-            WritePrecision(bits=params["precision_bits"], clip_max=200.0),
+            WritePrecision(bits=params["precision_bits"], clip_max=10.0),
             ChannelDropout(drop_fraction=params["dropout_fraction"]),
             TransmitDelay(delay_ms=params["delay_ms"], tau_ms=FLY_AUDITORY_TAU_MS),
         )
