@@ -96,7 +96,7 @@ Direct broadcast (copying sender bottleneck activity to the receiver with no cal
 
 The worm and adult fly degrade fastest — the worm because its 8-dimensional receptor space provides little redundancy and multiplexed receptor types mean individual variation in one neuron affects multiple odor dimensions, the adult fly because its 53× KC expansion amplifies weight jitter across 2,580 Kenyon cells. The larva (1.00) and zebrafish (1.00) are far more robust: each has a clean bottleneck without massive downstream expansion, so individual variation in one channel remains contained.
 
-![Figure 1. Broadcast transfer quality vs. brain difference for all four organisms.](experiments/olfactory/scaling/results/scaling_comparison.png)
+![Figure 1. Broadcast transfer quality vs. brain difference for all four organisms.](../experiments/olfactory/scaling/results/scaling_comparison.png)
 *Figure 1. Cross-organism scaling comparison. Top left: receptor repertoire size. Top right: minimum channels for 90% behavioral match. Bottom left: calibration samples needed. Bottom right: broadcast behavioral match at jitter = 1.0 (biological median CV).*
 
 ### 3.2 Calibration Achieves Near-Perfect Transfer
@@ -119,13 +119,13 @@ At 50% of channels connected (jitter = 0.0):
 
 If channel count alone determined performance, normalized curves would collapse. They do not. The adult fly performs worst despite having an intermediate channel count, because its 53× KC expansion amplifies missing-channel errors: each KC samples ~4 PNs, so a missing PN silences all KCs in its receptive field. The larva's 1:1 PN-to-KC connectivity limits damage to the missing channel itself. The zebrafish's granule cell lateral inhibition partially compensates for missing channels by redistributing information across mitral cells.
 
-![Figure 2. Larva ORN channel sweep.](experiments/olfactory/drosophila_larva/channel_sweep/results/larva_channel_sweep.png)
+![Figure 2. Larva ORN channel sweep.](../experiments/olfactory/drosophila_larva/channel_sweep/results/larva_channel_sweep.png)
 *Figure 2. Larva channel sweep: transfer quality vs. number of connected ORNs at three brain-difference levels (jitter = 0.0, 0.5, 1.0). Odor identification degrades faster than behavioral match as channels are removed.*
 
-![Figure 3. Adult fly ORN channel sweep.](experiments/olfactory/drosophila_adult/channel_sweep/results/adult_channel_sweep.png)
+![Figure 3. Adult fly ORN channel sweep.](../experiments/olfactory/drosophila_adult/channel_sweep/results/adult_channel_sweep.png)
 *Figure 3. Adult fly channel sweep. The steeper drop in odor identification reflects the 53× KC expansion amplifying missing-channel errors.*
 
-![Figure 4. Zebrafish ORN channel sweep.](experiments/olfactory/zebrafish/channel_sweep/results/zebrafish_channel_sweep.png)
+![Figure 4. Zebrafish ORN channel sweep.](../experiments/olfactory/zebrafish/channel_sweep/results/zebrafish_channel_sweep.png)
 *Figure 4. Zebrafish channel sweep. Granule cell lateral inhibition provides partial compensation for missing channels, producing a shallower degradation curve than the adult fly.*
 
 ### 3.4 Hardware Boundary: Dropout Dominates Under Calibration
@@ -146,10 +146,10 @@ Technology operating points:
 - Optogenetic stimulation (2P holographic) provides write precision well above the 4-bit threshold
 - FPGA-based systems achieve transmit delay < 1 ms, far below the sensitivity threshold
 
-![Figure 5. Hardware boundary for the adult fly.](experiments/olfactory/drosophila_adult/hardware_boundary/results/hardware_boundary_adult.png)
+![Figure 5. Hardware boundary for the adult fly.](../experiments/olfactory/drosophila_adult/hardware_boundary/results/hardware_boundary_adult.png)
 *Figure 5. Hardware boundary for the adult fly with calibrated PN-to-PN transfer. Each panel sweeps one hardware axis while holding others at ideal. Channel dropout (top right) is the most damaging impairment; read noise and write precision degrade gradually.*
 
-![Figure 6. Hardware boundary for zebrafish.](experiments/olfactory/zebrafish/hardware_boundary/results/hardware_boundary_zebrafish.png)
+![Figure 6. Hardware boundary for zebrafish.](../experiments/olfactory/zebrafish/hardware_boundary/results/hardware_boundary_zebrafish.png)
 *Figure 6. Hardware boundary for zebrafish with calibrated mitral-to-mitral transfer. Dropout remains the binding constraint; the zebrafish's lateral inhibition provides partial robustness to noise and quantization.*
 
 ### 3.5 Calibration Efficiency Is Primarily Dimensional
@@ -165,7 +165,7 @@ Calibration sample efficiency — how many shared odors are needed before the tr
 
 The required sample count grows sub-linearly with N² because receptor response profiles are correlated (nearby ORN types respond to overlapping odor sets), providing implicit regularization. However, the overall trend is dominated by the number of free parameters in the regression, not by biological architecture. This means calibration efficiency, as currently measured, does not distinguish organisms — it measures the dimensionality of the mapping problem.
 
-![Figure 7. Calibration sample efficiency across organisms.](experiments/olfactory/scaling/results/calibration_efficiency.png)
+![Figure 7. Calibration sample efficiency across organisms.](../experiments/olfactory/scaling/results/calibration_efficiency.png)
 *Figure 7. Calibration sample efficiency: odor identification accuracy vs. number of training samples. Saturation point scales with receptor-type count, reflecting the N² parameter count of ridge regression rather than biological architecture.*
 
 ### 3.6 PN/Mitral Channel Sweep: Write Site Matters
@@ -177,10 +177,10 @@ The 2D sweep of read and write projection neuron counts reveals an asymmetry: wr
 
 This asymmetry exists because the calibration transform can compensate for incomplete read information (it learns to predict unread channels from correlated read channels), but it cannot compensate for an unwritten channel (the receiver's downstream circuit requires input at that site). The effect is strongest in the adult fly and zebrafish, where the downstream expansion layer (KCs / Dp neurons) amplifies missing write channels.
 
-![Figure 8. Adult fly PN channel sweep heatmap.](experiments/olfactory/drosophila_adult/pn_channel_sweep/results/adult_pn_channel_sweep.png)
+![Figure 8. Adult fly PN channel sweep heatmap.](../experiments/olfactory/drosophila_adult/pn_channel_sweep/results/adult_pn_channel_sweep.png)
 *Figure 8. Adult fly PN channel sweep: 2D heatmaps of transfer metrics vs. read and write PN counts. Write count (x-axis) dominates: reading all PNs but writing few yields worse transfer than reading few but writing all.*
 
-![Figure 9. Zebrafish mitral cell channel sweep heatmap.](experiments/olfactory/zebrafish/pn_channel_sweep/results/zebrafish_mitral_channel_sweep.png)
+![Figure 9. Zebrafish mitral cell channel sweep heatmap.](../experiments/olfactory/zebrafish/pn_channel_sweep/results/zebrafish_mitral_channel_sweep.png)
 *Figure 9. Zebrafish mitral cell channel sweep. The same write-dominance pattern holds, with granule cell lateral inhibition providing smoother gradients than the fly.*
 
 ### 3.7 Cross-Organism Scaling
